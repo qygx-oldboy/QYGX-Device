@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.ProReportMapper">
+
+    <resultMap type="ProInspect" id="ProInspectResult">
+        <id     property="id"      column="id"      />
+        <result property="qrCode"    column="qr_code"    />
+        <result property="productCode"     column="product_code"     />
+        <result property="productType"   column="product_type"   />
+        <result property="materialType"    column="material_type"    />
+        <result property="materialQuality"      column="material_quality"      />
+        <result property="quantityStd"    column="quantity_std"    />
+        <result property="beginTime"      column="begin_time"      />
+        <result property="endTime"    column="end_time"    />
+        <result property="runTime"    column="run_time"    />
+        <result property="inspectedNum"    column="inspected_num"    />
+        <result property="okNum"    column="ok_num"    />
+        <result property="ngNum"    column="ng_num"    />
+    </resultMap>
+
+    <sql id="selectInspect">
+        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num
+        from inspect
+    </sql>
+
+<!--    &lt;!&ndash; 查询条件 &ndash;&gt;-->
+<!--    <sql id="sqlwhereSearch">-->
+<!--        <where>-->
+<!--            <if test="configId !=null">-->
+<!--                and config_id = #{configId}-->
+<!--            </if>-->
+<!--            <if test="configKey !=null and configKey != ''">-->
+<!--                and config_key = #{configKey}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </sql>-->
+
+
+
+    <select id="selectInspectList" parameterType="ProInspect" resultMap="ProInspectResult">
+        <include refid="selectInspect"/>
+        <where>
+            <if test="productType != null and productType != ''">
+                AND product_type = #{productType}
+            </if>
+            <if test="materialQuality != null and materialQuality != ''">
+                AND material_quality = #{materialQuality}
+            </if>
+<!--            <if test="configKey != null and configKey != ''">-->
+<!--                AND config_key like concat('%', #{configKey}, '%')-->
+<!--            </if>-->
+<!--            <if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;-->
+<!--                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')-->
+<!--            </if>-->
+<!--            <if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;-->
+<!--                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')-->
+<!--            </if>-->
+        </where>
+    </select>
+
+
+    <select id="selectBreedList" resultMap="ProInspectResult">
+        select id,product_type,material_quality from inspect GROUP BY product_type,material_quality
+    </select>
+
+
+    <select id="selectInspectListByTime" parameterType="ProInspect" resultMap="ProInspectResult">
+        <include refid="selectInspect"/>
+        <where>
+            begin_time &gt; #{beginTime}  and  begin_time &lt; #{endTime}
+        <if test="productType != null and productType != ''">
+            AND product_type = #{productType}
+        </if>
+        <if test="materialQuality != null and materialQuality != ''">
+            AND material_quality = #{materialQuality}
+        </if>
+        </where>
+
+    </select>
+
+
+
+
+</mapper>
