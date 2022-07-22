@@ -113,7 +113,7 @@ export default {
         {
           type: "slider",
           start: 0,
-          end: 100,
+          end: 30,
           backgroundColor: "rgba(0, 0, 0, 0)", // 区域滚条背景颜色
           fillerColor: "rgba(0, 0, 0, 0.05)", // 区域滚条蒙层颜色
         },

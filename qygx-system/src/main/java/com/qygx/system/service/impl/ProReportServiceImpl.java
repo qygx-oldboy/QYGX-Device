@@ -1,17 +1,25 @@
 package com.qygx.system.service.impl;
 
 import com.qygx.common.annotation.DataSource;
+import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.common.enums.DataSourceType;
+import com.qygx.common.exception.ServiceException;
 import com.qygx.common.utils.DateUtils;
+import com.qygx.common.utils.SecurityUtils;
+import com.qygx.common.utils.StringUtils;
+import com.qygx.common.utils.bean.BeanValidators;
 import com.qygx.system.domain.ProInspect;
 import com.qygx.system.domain.vo.BreedVo;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.domain.vo.QualityVo;
 import com.qygx.system.mapper.ProReportMapper;
 import com.qygx.system.service.IProReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Validator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,8 +27,13 @@ import java.util.*;
 @Service
 public class ProReportServiceImpl implements IProReportService {
 
+    private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
+
     @Autowired
     private ProReportMapper reportMapper;
+
+    @Autowired
+    protected Validator validator;
 
 
     @Override
@@ -59,7 +72,7 @@ public class ProReportServiceImpl implements IProReportService {
     @Override
     @DataSource(value = DataSourceType.SLAVE)
     public List selectBreedList() {
-        List<ProInspect> breeds = this.reportMapper.selectBreedList();
+        List<ProInspect> breeds = reportMapper.selectBreedList();
         List<BreedVo> result = new ArrayList<>();
         for (int i = 0; i < breeds.size(); i++) {
             String productType = breeds.get(i).getProductType();
@@ -84,7 +97,7 @@ public class ProReportServiceImpl implements IProReportService {
 
         proInspect.setBeginTime(dates[0]);
         proInspect.setEndTime(dates[1]);
-        List<ProInspect> proInspects = this.reportMapper.selectInspectListByTime(proInspect);
+        List<ProInspect> proInspects = reportMapper.selectInspectListByTime(proInspect);
 
         for (ProInspect pi: proInspects ) {
             int checkNum = pi.getInspectedNum();
@@ -108,5 +121,147 @@ public class ProReportServiceImpl implements IProReportService {
         return new QualityVo(date,ban);
     }
 
+
+    /**
+     * 查询inspect
+     *
+     * @param id inspect主键
+     * @return inspect
+     */
+    @Override
+    public ProInspect selectProInspectById(Long id)
+    {
+        return reportMapper.selectInspectById(id);
+    }
+
+
+    /**
+     * 查询inspect列表
+     *
+     * @param proInspect inspect
+     * @return inspect
+     */
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public List<ProInspect> selectProInspectList(ProInspect proInspect)
+    {
+        return reportMapper.selectInspectList(proInspect);
+    }
+
+    /**
+     * 新增inspect
+     *
+     * @param proInspect inspect
+     * @return 结果
+     */
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public int insertProInspect(ProInspect proInspect)
+    {
+        return reportMapper.insertInspect(proInspect);
+    }
+
+    /**
+     * 修改inspect
+     *
+     * @param proInspect inspect
+     * @return 结果
+     */
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public int updateProInspect(ProInspect proInspect)
+    {
+        return reportMapper.updateInspect(proInspect);
+    }
+
+    /**
+     * 批量删除inspect
+     *
+     * @param ids 需要删除的inspect主键
+     * @return 结果
+     */
+    @Override
+    public int deleteProInspectByIds(Long[] ids)
+    {
+        return reportMapper.deleteInspectByIds(ids);
+    }
+
+    /**
+     * 删除inspect信息
+     *
+     * @param id inspect主键
+     * @return 结果
+     */
+    @Override
+    public int deleteProInspectById(Long id)
+    {
+        return reportMapper.deleteInspectById(id);
+    }
+
+    /**
+     * 导入检测数据
+     *
+     * @param inspectList 检测数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public String importInspect(List<ProInspect> inspectList, Boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(inspectList) || inspectList.size() == 0)
+        {
+            throw new ServiceException("导入检测数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        for (ProInspect inspect : inspectList)
+        {
+            try
+            {
+                // 验证是否存在这个用户
+                ProInspect i = reportMapper.selectInspectByQrCode(inspect.getQrCode());
+                if (StringUtils.isNull(i))
+                {
+                    BeanValidators.validateWithException(validator, inspect);
+                    this.insertProInspect(inspect);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、批次号 " + inspect.getQrCode() + " 导入成功");
+                }
+                else if (isUpdateSupport)
+                {
+                    BeanValidators.validateWithException(validator, inspect);
+
+                    this.updateProInspect(inspect);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、批次号 " + inspect.getQrCode() + " 更新成功");
+                }
+                else
+                {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、批次号 " + inspect.getQrCode() + " 已存在");
+                }
+            }
+            catch (Exception e)
+            {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、批次号 " + inspect.getQrCode() + " 导入失败：";
+                failureMsg.append(msg + e.getMessage());
+                log.error(msg, e);
+            }
+        }
+        if (failureNum > 0)
+        {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new ServiceException(failureMsg.toString());
+        }
+        else
+        {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
+    }
 
 }

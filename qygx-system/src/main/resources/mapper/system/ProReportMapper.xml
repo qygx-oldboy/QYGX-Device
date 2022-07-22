@@ -18,9 +18,20 @@
         <result property="inspectedNum"    column="inspected_num"    />
         <result property="okNum"    column="ok_num"    />
         <result property="ngNum"    column="ng_num"    />
+        <result property="ng1"    column="ng1"    />
+        <result property="ng2"    column="ng2"    />
+        <result property="ng3"    column="ng3"    />
+        <result property="ng4"    column="ng4"    />
+        <result property="ng5"    column="ng5"    />
+        <result property="ng6"    column="ng6"    />
+        <result property="ng7"    column="ng7"    />
+        <result property="ng8"    column="ng8"    />
+        <result property="ng9"    column="ng9"    />
+        <result property="ng10"    column="ng10"    />
+        <result property="result"    column="result"    />
     </resultMap>
 
-    <sql id="selectInspect">
+    <sql id="selectInspectVo">
         select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num
         from inspect
     </sql>
@@ -40,23 +51,15 @@
 
 
     <select id="selectInspectList" parameterType="ProInspect" resultMap="ProInspectResult">
-        <include refid="selectInspect"/>
+        <include refid="selectInspectVo"/>
         <where>
-            <if test="productType != null and productType != ''">
-                AND product_type = #{productType}
-            </if>
-            <if test="materialQuality != null and materialQuality != ''">
-                AND material_quality = #{materialQuality}
-            </if>
-<!--            <if test="configKey != null and configKey != ''">-->
-<!--                AND config_key like concat('%', #{configKey}, '%')-->
-<!--            </if>-->
-<!--            <if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;-->
-<!--                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')-->
-<!--            </if>-->
-<!--            <if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;-->
-<!--                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')-->
-<!--            </if>-->
+            <if test="qrCode != null  and qrCode != ''"> and qr_code = #{qrCode}</if>
+            <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
+            <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
+            <if test="materialType != null  and materialType != ''"> and material_type = #{materialType}</if>
+            <if test="materialQuality != null  and materialQuality != ''"> and material_quality = #{materialQuality}</if>
+            <if test="inspector != null  and inspector != ''"> and inspector = #{inspector}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
         </where>
     </select>
 
@@ -67,7 +70,7 @@
 
 
     <select id="selectInspectListByTime" parameterType="ProInspect" resultMap="ProInspectResult">
-        <include refid="selectInspect"/>
+        <include refid="selectInspectVo"/>
         <where>
             begin_time &gt; #{beginTime}  and  begin_time &lt; #{endTime}
         <if test="productType != null and productType != ''">
@@ -80,7 +83,119 @@
 
     </select>
 
+    <select id="selectInspectById" parameterType="Long" resultMap="ProInspectResult">
+        <include refid="selectInspectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInspect" parameterType="ProInspect" useGeneratedKeys="true" keyProperty="id">
+        insert into inspect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qrCode != null and qrCode != ''">qr_code,</if>
+            <if test="productCode != null and productCode != ''">product_code,</if>
+            <if test="productType != null and productType != ''">product_type,</if>
+            <if test="materialType != null and materialType != ''">material_type,</if>
+            <if test="materialQuality != null and materialQuality != ''">material_quality,</if>
+            <if test="quantityStd != null">quantity_std,</if>
+            <if test="inspector != null and inspector != ''">inspector,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="runTime != null">run_time,</if>
+            <if test="okPercent != null">ok_percent,</if>
+            <if test="ngPercent != null">ng_percent,</if>
+            <if test="inspectedNum != null">inspected_num,</if>
+            <if test="okNum != null">ok_num,</if>
+            <if test="ngNum != null">ng_num,</if>
+            <if test="ng1 != null">ng1,</if>
+            <if test="ng2 != null">ng2,</if>
+            <if test="ng3 != null">ng3,</if>
+            <if test="ng4 != null">ng4,</if>
+            <if test="ng5 != null">ng5,</if>
+            <if test="ng6 != null">ng6,</if>
+            <if test="ng7 != null">ng7,</if>
+            <if test="ng8 != null">ng8,</if>
+            <if test="ng9 != null">ng9,</if>
+            <if test="ng10 != null">ng10,</if>
+            <if test="result != null">result,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qrCode != null and qrCode != ''">#{qrCode},</if>
+            <if test="productCode != null and productCode != ''">#{productCode},</if>
+            <if test="productType != null and productType != ''">#{productType},</if>
+            <if test="materialType != null and materialType != ''">#{materialType},</if>
+            <if test="materialQuality != null and materialQuality != ''">#{materialQuality},</if>
+            <if test="quantityStd != null">#{quantityStd},</if>
+            <if test="inspector != null and inspector != ''">#{inspector},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="runTime != null">#{runTime},</if>
+            <if test="okPercent != null">#{okPercent},</if>
+            <if test="ngPercent != null">#{ngPercent},</if>
+            <if test="inspectedNum != null">#{inspectedNum},</if>
+            <if test="okNum != null">#{okNum},</if>
+            <if test="ngNum != null">#{ngNum},</if>
+            <if test="ng1 != null">#{ng1},</if>
+            <if test="ng2 != null">#{ng2},</if>
+            <if test="ng3 != null">#{ng3},</if>
+            <if test="ng4 != null">#{ng4},</if>
+            <if test="ng5 != null">#{ng5},</if>
+            <if test="ng6 != null">#{ng6},</if>
+            <if test="ng7 != null">#{ng7},</if>
+            <if test="ng8 != null">#{ng8},</if>
+            <if test="ng9 != null">#{ng9},</if>
+            <if test="ng10 != null">#{ng10},</if>
+            <if test="result != null">#{result},</if>
+        </trim>
+    </insert>
 
 
+    <update id="updateInspect" parameterType="ProInspect">
+        update inspect
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qrCode != null and qrCode != ''">qr_code = #{qrCode},</if>
+            <if test="productCode != null and productCode != ''">product_code = #{productCode},</if>
+            <if test="productType != null and productType != ''">product_type = #{productType},</if>
+            <if test="materialType != null and materialType != ''">material_type = #{materialType},</if>
+            <if test="materialQuality != null and materialQuality != ''">material_quality = #{materialQuality},</if>
+            <if test="quantityStd != null">quantity_std = #{quantityStd},</if>
+            <if test="inspector != null and inspector != ''">inspector = #{inspector},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="runTime != null">run_time = #{runTime},</if>
+            <if test="okPercent != null">ok_percent = #{okPercent},</if>
+            <if test="ngPercent != null">ng_percent = #{ngPercent},</if>
+            <if test="inspectedNum != null">inspected_num = #{inspectedNum},</if>
+            <if test="okNum != null">ok_num = #{okNum},</if>
+            <if test="ngNum != null">ng_num = #{ngNum},</if>
+            <if test="ng1 != null">ng1 = #{ng1},</if>
+            <if test="ng2 != null">ng2 = #{ng2},</if>
+            <if test="ng3 != null">ng3 = #{ng3},</if>
+            <if test="ng4 != null">ng4 = #{ng4},</if>
+            <if test="ng5 != null">ng5 = #{ng5},</if>
+            <if test="ng6 != null">ng6 = #{ng6},</if>
+            <if test="ng7 != null">ng7 = #{ng7},</if>
+            <if test="ng8 != null">ng8 = #{ng8},</if>
+            <if test="ng9 != null">ng9 = #{ng9},</if>
+            <if test="ng10 != null">ng10 = #{ng10},</if>
+            <if test="result != null">result = #{result},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInspectById" parameterType="Long">
+        delete from inspect where id = #{id}
+    </delete>
+
+    <delete id="deleteInspectByIds" parameterType="String">
+        delete from inspect where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectInspectByQrCode" parameterType="String" resultMap="ProInspectResult">
+        <include refid="selectInspectVo"/>
+        where qr_code = #{qrCode}
+    </select>
 
 </mapper>

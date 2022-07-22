@@ -28,4 +28,54 @@ public interface ProReportMapper {
      *
      */
     public List<ProInspect> selectInspectListByTime(ProInspect proInspect);
+
+
+    /**
+     * 查询inspect
+     *
+     * @param id inspect主键
+     * @return inspect
+     */
+    public ProInspect selectInspectById(Long id);
+
+
+
+    /**
+     * 新增inspect
+     *
+     * @param inspect inspect
+     * @return 结果
+     */
+    public int insertInspect(ProInspect inspect);
+
+    /**
+     * 修改inspect
+     *
+     * @param inspect inspect
+     * @return 结果
+     */
+    public int updateInspect(ProInspect inspect);
+
+    /**
+     * 删除inspect
+     *
+     * @param id inspect主键
+     * @return 结果
+     */
+    public int deleteInspectById(Long id);
+
+    /**
+     * 批量删除inspect
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteInspectByIds(Long[] ids);
+
+    /**
+     * 查询inspect
+     *
+     *
+     */
+    public ProInspect selectInspectByQrCode(String qrCode);
 }

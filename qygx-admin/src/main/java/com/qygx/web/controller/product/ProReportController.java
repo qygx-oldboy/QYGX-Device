@@ -1,8 +1,12 @@
 package com.qygx.web.controller.product;
 
+import com.qygx.common.annotation.Log;
 import com.qygx.common.core.controller.BaseController;
 import com.qygx.common.core.domain.AjaxResult;
-import com.qygx.common.utils.DateUtils;
+import com.qygx.common.core.domain.entity.SysUser;
+import com.qygx.common.core.page.TableDataInfo;
+import com.qygx.common.enums.BusinessType;
+import com.qygx.common.utils.poi.ExcelUtil;
 import com.qygx.system.domain.ProInspect;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.service.IProReportService;
@@ -10,9 +14,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,6 +98,94 @@ public class ProReportController extends BaseController {
         return AjaxResult.success(reportService.info());
     }
 
+    /**
+     * 查询inspect列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ProInspect proInspect)
+    {
+        startPage();
+        List<ProInspect> list = reportService.selectProInspectList(proInspect);
+        return getDataTable(list);
+    }
+
+
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<ProInspect> util = new ExcelUtil<ProInspect>(ProInspect.class);
+        util.importTemplateExcel(response, "检验数据");
+    }
+
+    /**
+     * 导出inspect列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:export')")
+    @Log(title = "inspect", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, ProInspect proInspect)
+    {
+        List<ProInspect> list = reportService.selectProInspectList(proInspect);
+        ExcelUtil<ProInspect> util = new ExcelUtil<ProInspect>(ProInspect.class);
+        util.exportExcel(response, list, "inspect数据");
+    }
+
+    /**
+     * 获取inspect详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(reportService.selectProInspectById(id));
+    }
+
+    /**
+     * 新增inspect
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:add')")
+    @Log(title = "inspect", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody ProInspect proInspect)
+    {
+        return toAjax(reportService.insertProInspect(proInspect));
+    }
+
+    /**
+     * 修改inspect
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:edit')")
+    @Log(title = "inspect", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody ProInspect proInspect)
+    {
+        return toAjax(reportService.updateProInspect(proInspect));
+    }
+
+    /**
+     * 删除inspect
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:remove')")
+    @Log(title = "inspect", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
+        return toAjax(reportService.deleteProInspectByIds(ids));
+    }
+
+
+    @Log(title = "检验列表", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('product:inspect:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<ProInspect> util = new ExcelUtil<>(ProInspect.class);
+        List<ProInspect> inspectList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = reportService.importInspect(inspectList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
 
 }
 
