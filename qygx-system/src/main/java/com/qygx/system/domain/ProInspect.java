@@ -128,6 +128,17 @@ public class ProInspect extends BaseEntity
     @Excel(name = "处理结果")
     private String result;
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /** 状态 */
+    private Integer status;
+
     public void setId(Long id)
     {
         this.id = id;
@@ -359,19 +370,6 @@ public class ProInspect extends BaseEntity
         this.result = result;
     }
 
-    public String getResult()
-    {
-        return result;
-    }
-
-    public Date getRunTime() {
-        return runTime;
-    }
-
-    public void setRunTime(Date runTime) {
-        this.runTime = runTime;
-    }
-
     @Override
     public String toString() {
         return "ProInspect{" +
@@ -402,6 +400,22 @@ public class ProInspect extends BaseEntity
                 ", ng9=" + ng9 +
                 ", ng10=" + ng10 +
                 ", result='" + result + '\'' +
+                ", status=" + status +
                 '}';
     }
+
+    public String getResult()
+    {
+        return result;
+    }
+
+    public Date getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(Date runTime) {
+        this.runTime = runTime;
+    }
+
+
 }

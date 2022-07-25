@@ -29,10 +29,11 @@
         <result property="ng9"    column="ng9"    />
         <result property="ng10"    column="ng10"    />
         <result property="result"    column="result"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectInspectVo">
-        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num
+        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num,status,result
         from inspect
     </sql>
 
@@ -48,6 +49,14 @@
 <!--        </where>-->
 <!--    </sql>-->
 
+
+    <select id="selectInspectChart" parameterType="ProInspect" resultMap="ProInspectResult">
+        <include refid="selectInspectVo"/>
+        <where>
+            <if test="qrCode != null  and qrCode != ''"> and qr_code = #{qrCode}</if>
+            <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
+        </where>
+    </select>
 
 
     <select id="selectInspectList" parameterType="ProInspect" resultMap="ProInspectResult">
@@ -180,6 +189,7 @@
             <if test="ng9 != null">ng9 = #{ng9},</if>
             <if test="ng10 != null">ng10 = #{ng10},</if>
             <if test="result != null">result = #{result},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>

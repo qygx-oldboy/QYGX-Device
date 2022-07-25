@@ -256,7 +256,7 @@ import {
 import { getToken } from "@/utils/auth";
 
 export default {
-  name: "Inspect",
+  name: "GirdQulity",
   data() {
     return {
       // 遮罩层

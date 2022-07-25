@@ -7,8 +7,19 @@ import java.util.List;
 
 public interface ProReportMapper {
 
+
+
+
     /**
-     * 查询统计
+     * 查询检查图表
+     *
+     *
+     */
+    public List<ProInspect> selectInspectChart(ProInspect proInspect);
+
+
+    /**
+     * 查询检查列表
      *
      *
      */

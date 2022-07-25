@@ -39,7 +39,7 @@ public class ProReportServiceImpl implements IProReportService {
     @Override
     @DataSource(value = DataSourceType.SLAVE)
     public List<InspectVo> selectInspectList(ProInspect proInspect) throws ParseException {
-        List<ProInspect> listInspect = reportMapper.selectInspectList(proInspect);
+        List<ProInspect> listInspect = reportMapper.selectInspectChart(proInspect);
         List<InspectVo> inspectVos = new ArrayList<>();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");//设置日期格式
         for (int i = 0; i < listInspect.size(); i++) {
@@ -129,6 +129,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return inspect
      */
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public ProInspect selectProInspectById(Long id)
     {
         return reportMapper.selectInspectById(id);
@@ -145,7 +146,16 @@ public class ProReportServiceImpl implements IProReportService {
     @DataSource(value = DataSourceType.SLAVE)
     public List<ProInspect> selectProInspectList(ProInspect proInspect)
     {
-        return reportMapper.selectInspectList(proInspect);
+        List<ProInspect>  list =  reportMapper.selectInspectList(proInspect);
+        if(list.size() > 0){
+            for (ProInspect pi: list) {
+                int okNum = pi.getOkNum();
+                if(okNum == 0 && pi.getStatus() == null){
+                    pi.setStatus(0);
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -171,6 +181,7 @@ public class ProReportServiceImpl implements IProReportService {
     @DataSource(value = DataSourceType.SLAVE)
     public int updateProInspect(ProInspect proInspect)
     {
+        proInspect.setStatus(1); //已处理
         return reportMapper.updateInspect(proInspect);
     }
 

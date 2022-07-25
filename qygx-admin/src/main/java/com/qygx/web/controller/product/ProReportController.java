@@ -106,11 +106,6 @@ public class ProReportController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ProInspect proInspect)
     {
-
-//        PageDomain pageDomain = TableSupport.getPageDomain();
-//        pageDomain.setOrderByColumn("beginTime");
-//        pageDomain.setIsAsc("desc");
-//        startOrderBy();
         startPage();
         List<ProInspect> list = reportService.selectProInspectList(proInspect);
         return getDataTable(list);
