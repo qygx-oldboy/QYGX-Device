@@ -65,7 +65,7 @@
         </el-form>
 
         <ve-line
-          height="500px"
+          height="450px"
           :data="chartData"
           :settings="chartSettings"
           :extend="chartExtend"

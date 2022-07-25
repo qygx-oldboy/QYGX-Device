@@ -3,8 +3,9 @@ package com.qygx.web.controller.product;
 import com.qygx.common.annotation.Log;
 import com.qygx.common.core.controller.BaseController;
 import com.qygx.common.core.domain.AjaxResult;
-import com.qygx.common.core.domain.entity.SysUser;
+import com.qygx.common.core.page.PageDomain;
 import com.qygx.common.core.page.TableDataInfo;
+import com.qygx.common.core.page.TableSupport;
 import com.qygx.common.enums.BusinessType;
 import com.qygx.common.utils.poi.ExcelUtil;
 import com.qygx.system.domain.ProInspect;
@@ -105,6 +106,11 @@ public class ProReportController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ProInspect proInspect)
     {
+
+//        PageDomain pageDomain = TableSupport.getPageDomain();
+//        pageDomain.setOrderByColumn("beginTime");
+//        pageDomain.setIsAsc("desc");
+//        startOrderBy();
         startPage();
         List<ProInspect> list = reportService.selectProInspectList(proInspect);
         return getDataTable(list);

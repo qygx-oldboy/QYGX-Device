@@ -59,8 +59,10 @@
             <if test="materialType != null  and materialType != ''"> and material_type = #{materialType}</if>
             <if test="materialQuality != null  and materialQuality != ''"> and material_quality = #{materialQuality}</if>
             <if test="inspector != null  and inspector != ''"> and inspector = #{inspector}</if>
+            <if test="okNum != null">and ok_num = #{okNum}</if>
             <if test="beginTime != null "> and begin_time = #{beginTime}</if>
         </where>
+        order by begin_time desc
     </select>
 
 

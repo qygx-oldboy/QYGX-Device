@@ -40,7 +40,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="开始时间" prop="beginTime">
+      <!-- <el-form-item label="开始时间" prop="beginTime">
         <el-date-picker
           clearable
           v-model="queryParams.beginTime"
@@ -49,7 +49,7 @@
           placeholder="请选择开始时间"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button
           type="primary"
@@ -109,7 +109,7 @@
       />
       <el-table-column
         label="生产编号"
-        width="165"
+        width="110"
         align="center"
         prop="productCode"
       />
@@ -120,13 +120,13 @@
       <el-table-column label="物料类型" align="center" prop="materialType" />
       <el-table-column
         label="材料"
-        width="165"
+        width="110"
         align="center"
         prop="materialQuality"
       />
       <el-table-column
         label="标准成盘数"
-        width="165"
+        width="110"
         align="center"
         prop="quantityStd"
       />
@@ -138,7 +138,7 @@
         width="180"
       >
         <template slot-scope="scope">
-          <span>{{scope.row.beginTime }}</span>
+          <span>{{ scope.row.beginTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -161,8 +161,8 @@
           <span>{{ scope.row.runTime }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="良率" align="center" prop="okPercent" />
-      <el-table-column label="不良率" align="center" prop="ngPercent" />
+      <!-- <el-table-column label="良率" align="center" prop="okPercent" />
+      <el-table-column label="不良率" align="center" prop="ngPercent" /> -->
       <el-table-column label="材质不良" align="center" prop="ng1" />
       <el-table-column label="失园" align="center" prop="ng2" />
       <el-table-column label="内裂" align="center" prop="ng3" />
@@ -202,8 +202,13 @@
       @pagination="getList"
     />
 
-     <!-- 用户导入对话框 -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <!-- 用户导入对话框 -->
+    <el-dialog
+      :title="upload.title"
+      :visible.sync="upload.open"
+      width="400px"
+      append-to-body
+    >
       <el-upload
         ref="upload"
         :limit="1"
@@ -223,7 +228,13 @@
             <el-checkbox v-model="upload.updateSupport" /> 是否更新已经存在的数据
           </div> -->
           <span>仅允许导入xls、xlsx格式文件。</span>
-          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+          <el-link
+            type="primary"
+            :underline="false"
+            style="font-size: 12px; vertical-align: baseline"
+            @click="importTemplate"
+            >下载模板</el-link
+          >
         </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -243,7 +254,6 @@ import {
   updateInspect,
 } from "@/api/product/girdQuality";
 import { getToken } from "@/utils/auth";
-
 
 export default {
   name: "Inspect",
@@ -279,7 +289,7 @@ export default {
         inspector: null,
         beginTime: null,
       },
-        // 数据导入参数
+      // 数据导入参数
       upload: {
         // 是否显示弹出层（数据导入）
         open: false,
@@ -292,7 +302,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/product/report/importData"
+        url: process.env.VUE_APP_BASE_API + "/product/report/importData",
       },
     };
   },
@@ -342,19 +352,22 @@ export default {
         `inspect_${new Date().getTime()}.xlsx`
       );
     },
-      /** 导入按钮操作 */
+    /** 导入按钮操作 */
     handleImport() {
       this.upload.title = "数据导入";
       this.upload.open = true;
     },
 
-     /** 下载模板操作 */
+    /** 下载模板操作 */
     importTemplate() {
-      this.download('product/report/importTemplate', {
-      }, `inspect_template_${new Date().getTime()}.xlsx`)
+      this.download(
+        "product/report/importTemplate",
+        {},
+        `inspect_template_${new Date().getTime()}.xlsx`
+      );
     },
 
-  // 文件上传中处理
+    // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
       this.upload.isUploading = true;
     },
@@ -363,15 +376,19 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      this.$alert(
+        "<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" +
+          response.msg +
+          "</div>",
+        "导入结果",
+        { dangerouslyUseHTMLString: true }
+      );
       this.getList();
     },
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
-    }
-
-
+    },
   },
 };
 </script>
