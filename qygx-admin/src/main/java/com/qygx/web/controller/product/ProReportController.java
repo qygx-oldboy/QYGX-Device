@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -159,7 +160,7 @@ public class ProReportController extends BaseController {
     @PreAuthorize("@ss.hasPermi('product:inspect:edit')")
     @Log(title = "inspect", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProInspect proInspect)
+    public AjaxResult edit( @RequestBody ProInspect proInspect)
     {
         return toAjax(reportService.updateProInspect(proInspect));
     }

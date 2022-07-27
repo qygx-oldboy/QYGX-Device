@@ -1,6 +1,17 @@
 <template>
-  <div class="app-container home">
-    <ve-line :data="chartData" :settings="chartSettings"></ve-line>
+   <div>
+    <el-input v-model="url" type="text" style="width: 20%" /> &nbsp; &nbsp;
+    <el-button @click="join" type="primary">连接</el-button>
+    <el-button @click="exit" type="danger">断开</el-button>
+
+    <br />
+    <el-input type="textarea" v-model="message" :rows="9" />
+    <el-button type="info" @click="send">发送消息</el-button>
+    <br />
+    <br />
+    <el-input type="textarea" v-model="text_content" :rows="9" /> 返回内容
+    <br />
+    <br />
   </div>
 </template>
 
@@ -8,35 +19,44 @@
 export default {
   name: "Index",
   data() {
-    this.chartSettings = {
-      yAxisType: ["0.[00]a", "0.[00]%"],
-      axisSite: {
-        right: ["下单率"],
-      },
-      yAxisName: ["数值轴", "比率轴"],
+   return {
+      url: "ws://127.0.0.1:8080/webSocket",
+      message: "",
+      text_content: "",
+      ws: null,
+    };
+  },
   
-    };
-    return {
-      // 版本号
-      version: "3.8.3",
-      chartData: {
-        columns: ["日期", "访问用户", "下单用户", "下单率"],
-        rows: [
-          { 日期: "1/1", 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
-          { 日期: "1/2", 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
-          { 日期: "1/3", 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
-          { 日期: "1/4", 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
-          { 日期: "1/5", 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
-          { 日期: "1/6", 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
-        ],
-      },
-    };
-  },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
+     join() {
+      const wsuri = this.url;
+      this.ws = new WebSocket(wsuri);
+      const self = this;
+      this.ws.onopen = function (event) {
+        self.text_content = self.text_content + "已经打开连接!" + "\n";
+      };
+      this.ws.onmessage = function (event) {
+        console.info(event.data);
+        self.text_content = event.data + "\n";
+      };
+      this.ws.onclose = function (event) {
+        self.text_content = self.text_content + "已经关闭连接!" + "\n";
+      };
     },
-  },
+    exit() {
+      if (this.ws) {
+        this.ws.close();
+        this.ws = null;
+      }
+    },
+    send() {
+      if (this.ws) {
+        this.ws.send(this.message);
+      } else {
+        alert("未连接到服务器");
+      }
+    },
+  }
 };
 </script>
 

@@ -30,10 +30,14 @@
         <result property="ng10"    column="ng10"    />
         <result property="result"    column="result"    />
         <result property="status"    column="status"    />
+        <result property="remark1"    column="remark1"    />
+        <result property="remark2"    column="remark2"    />
+        <result property="remark3"    column="remark3"    />
+        <result property="remark4"    column="remark4"    />
     </resultMap>
 
     <sql id="selectInspectVo">
-        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num,status,result
+        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num,status,result,remark1,remark2,remark3,remark4
         from inspect
     </sql>
 
@@ -53,8 +57,8 @@
     <select id="selectInspectChart" parameterType="ProInspect" resultMap="ProInspectResult">
         <include refid="selectInspectVo"/>
         <where>
-            <if test="qrCode != null  and qrCode != ''"> and qr_code = #{qrCode}</if>
-            <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
+            <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
+            <if test="materialQuality != null  and materialQuality != ''"> and material_quality = #{materialQuality}</if>
         </where>
     </select>
 
@@ -128,6 +132,10 @@
             <if test="ng9 != null">ng9,</if>
             <if test="ng10 != null">ng10,</if>
             <if test="result != null">result,</if>
+            <if test="remark1 != null">remark1,</if>
+            <if test="remark2 != null">remark2,</if>
+            <if test="remark3 != null">remark3,</if>
+            <if test="remark4 != null">remark4,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="qrCode != null and qrCode != ''">#{qrCode},</if>
@@ -156,6 +164,10 @@
             <if test="ng9 != null">#{ng9},</if>
             <if test="ng10 != null">#{ng10},</if>
             <if test="result != null">#{result},</if>
+            <if test="remark1 != null">${remark1}</if>
+            <if test="remark2 != null">${remark2}</if>
+            <if test="remark3 != null">${remark3}</if>
+            <if test="remark4 != null">${remark4}</if>
         </trim>
     </insert>
 
@@ -189,6 +201,10 @@
             <if test="ng9 != null">ng9 = #{ng9},</if>
             <if test="ng10 != null">ng10 = #{ng10},</if>
             <if test="result != null">result = #{result},</if>
+            <if test="remark1 != null and remark1 != ''">remark1 = #{remark1},</if>
+            <if test="remark2 != null and remark2 != ''">remark2 = #{remark2},</if>
+            <if test="remark3 != null and remark3 != ''">remark3 = #{remark3},</if>
+            <if test="remark4 != null and remark4 != ''">remark4 = #{remark4},</if>
             <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}

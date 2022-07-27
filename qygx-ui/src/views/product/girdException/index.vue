@@ -54,6 +54,21 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="multiple"
+          @click="batchHandleAnalysis"
+          v-hasPermi="['product:inspect:edit']"
+          >分析改善</el-button
+        >
+      </el-col>
+    </el-row>
+
     <el-table
       ref="tables"
       v-loading="loading"
@@ -62,7 +77,12 @@
       :default-sort="defaultSort"
       @sort-change="handleSortChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="selectEnable"
+      />
       <el-table-column
         label="批次号"
         width="180"
@@ -133,7 +153,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleView(scope.row)"
+            @click="handleAnalysis(scope.row)"
             v-hasPermi="['product:inspect:edit']"
             >分析改善</el-button
           >
@@ -149,35 +169,62 @@
       @pagination="getList"
     />
 
-
-
-
-
-<el-dialog title="分析改善" :visible.sync="open" width="780px" append-to-body>
+    <el-dialog
+      title="分析改善"
+      :visible.sync="open"
+      width="780px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      
-         <el-col :span="24">
-            <el-form-item label="内容" prop="result">
-              <!-- <editor v-model="form.result" :min-height="192"/> -->
-
-                <el-input
-                type="textarea"
-                :autosize="{ minRows: 16, maxRows: 32}"
-                placeholder="请输入内容"
-                height="192"
-                v-model="form.result">
-                </el-input>
-
-            </el-form-item>
-            
-          </el-col>
+        <el-col :span="24">
+          <el-form-item label="原因分析" prop="remark1">
+            <!-- <editor v-model="form.result" :min-height="192"/> -->
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+              placeholder="请输入内容"
+              height="192"
+              v-model="form.remark1"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item label="临时措施" prop="remark2">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+              placeholder="请输入内容"
+              height="192"
+              v-model="form.remark2"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item label="长期措施" prop="remark3">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+              placeholder="请输入内容"
+              height="192"
+              v-model="form.remark3"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item label="效果验证" prop="remark4">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+              placeholder="请输入内容"
+              height="192"
+              v-model="form.remark4"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -231,15 +278,27 @@ export default {
       },
       // 表单参数
       form: {
-        result: undefined
+        remark1: undefined,
+        remark2: undefined,
+        remark3: undefined,
+        remark4: undefined,
       },
       // 表单校验
       rules: {
-         result: [
-          { required: true, message: "分析建议不能为空", trigger: "blur" },
-          { min: 24, max: 80, message: "长度在 24 到 80 个字符", trigger: "blur" }
+        remark1: [
+          { required: true, message: "原因分析不能为空", trigger: "blur" },
+          // { min: 24, max: 80, message: "长度在 24 到 80 个字符", trigger: "blur" }
         ],
-      }
+        remark2: [
+          { required: true, message: "临时措施不能为空", trigger: "blur" },
+        ],
+        remark3: [
+          { required: true, message: "长期措施不能为空", trigger: "blur" },
+        ],
+        remark4: [
+          { required: true, message: "效果验证不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -278,6 +337,7 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
+
     /** 排序触发事件 */
     handleSortChange(column, prop, order) {
       this.queryParams.orderByColumn = column.prop;
@@ -286,38 +346,60 @@ export default {
     },
 
     /** 操作 */
-    handleView(row) {
-      
-       const id = row.id || this.ids
-        getInspect(id).then(response => {
-            console.info(response);
-            this.form = response.data;
-            this.open = true;
-           
-        });
-     
+    handleAnalysis(row) {
+      const id = row.id;
+      getInspect(id).then((response) => {
+        console.info(response);
+        this.form = response.data;
+        this.open = true;
+      });
     },
 
-     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    /** 批量操作 */
+    batchHandleAnalysis() {
+      this.open = true;
+    },
+
+    /** 提交按钮 */
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
-          updateInspect(this.form).then(response => {
+          if (this.ids.length > 1) {
+            for (const id of this.ids) {
+              this.form.id = id;
+              updateInspect(this.form);
+            }
+            this.$modal.msgSuccess("处理成功");
+            this.open = false;
+            this.getList();
+          } else {
+            updateInspect(this.form).then((response) => {
               this.$modal.msgSuccess("处理成功");
               this.open = false;
               this.getList();
             });
+          }
         }
       });
     },
     // 表单重置
     reset() {
       this.form = {
-        result: undefined
+        remark1: undefined,
+        remark2: undefined,
+        remark3: undefined,
+        remark4: undefined,
       };
       this.resetForm("form");
     },
-   
+
+    // 已处理的，不能勾选
+    selectEnable(row, rowIndex) {
+      if (row.status == 1) {
+        return false;
+      }
+      return true;
+    },
   },
 };
 </script>
