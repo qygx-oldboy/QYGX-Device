@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.MaintainPlanMapper">
+
+    <resultMap type="MaintainPlan" id="MaintainPlanResult">
+        <result property="planId"    column="plan_id"    />
+        <result property="intervalDays"    column="interval_days"    />
+        <result property="useState"    column="use_state"    />
+        <result property="maintainerId"    column="maintainer_id"    />
+        <result property="maintainerNickName"    column="maintainer_nick_name"    />
+        <result property="auditorId"    column="auditor_id"    />
+        <result property="auditorNickName"    column="auditor_nick_name"    />
+        <result property="level"    column="level"    />
+        <result property="name"    column="name"    />
+        <result property="firstMaintainTime"    column="first_maintain_time"    />
+        <result property="lastMaintainTime"    column="last_maintain_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deviceType"    column="device_type"    />
+    </resultMap>
+
+    <resultMap id="MaintainPlanMaintainPlanDetailResult" type="MaintainPlan" extends="MaintainPlanResult">
+        <collection property="maintainPlanDetailList" notNullColumn="sub_plan_detail_id" javaType="java.util.List" resultMap="MaintainPlanDetailResult" />
+    </resultMap>
+
+    <resultMap type="MaintainPlanDetail" id="MaintainPlanDetailResult">
+        <result property="planDetailId"    column="sub_plan_detail_id"    />
+        <result property="content"    column="sub_content"    />
+        <result property="standard"    column="sub_standard"    />
+        <result property="planId"    column="sub_plan_id"    />
+    </resultMap>
+
+    <sql id="selectMaintainPlanVo">
+        select a.plan_id, a.interval_days, a.use_state, a.maintainer_id, a.maintainer_nick_name, a.auditor_id, a.auditor_nick_name, a.level, a.name, a.first_maintain_time, a.last_maintain_time, a.create_by, a.create_time, a.update_by, a.update_time, a.remark, a.device_type,
+               b.plan_detail_id as sub_plan_detail_id, b.content as sub_content, b.standard as sub_standard, b.plan_id as sub_plan_id
+        from maintain_plan a
+                 left join maintain_plan_detail b on b.plan_id = a.plan_id
+    </sql>
+
+    <select id="selectMaintainPlanList" parameterType="MaintainPlan" resultMap="MaintainPlanMaintainPlanDetailResult">
+        <include refid="selectMaintainPlanVo"/>
+        <where>
+            <if test="intervalDays != null "> and a.interval_days = #{intervalDays}</if>
+            <if test="useState != null  and useState != ''"> and a.use_state = #{useState}</if>
+            <if test="maintainerId != null "> and a.maintainer_id = #{maintainerId}</if>
+            <if test="maintainerNickName != null  and maintainerNickName != ''"> and a.maintainer_nick_name like concat('%', #{maintainerNickName}, '%')</if>
+            <if test="auditorId != null "> and a.auditor_id = #{auditorId}</if>
+            <if test="auditorNickName != null  and auditorNickName != ''"> and a.auditor_nick_name like concat('%', #{auditorNickName}, '%')</if>
+            <if test="level != null "> and a.level = #{level}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="firstMaintainTime != null "> and a.first_maintain_time = #{firstMaintainTime}</if>
+            <if test="lastMaintainTime != null "> and a.last_maintain_time = #{lastMaintainTime}</if>
+            <if test="deviceType != null  and deviceType != ''"> and a.device_type = #{deviceType}</if>
+        </where>
+    </select>
+
+    <select id="selectMaintainPlanByPlanId" parameterType="Long" resultMap="MaintainPlanMaintainPlanDetailResult">
+        select a.plan_id, a.interval_days, a.use_state, a.maintainer_id, a.maintainer_nick_name, a.auditor_id, a.auditor_nick_name, a.level, a.name, a.first_maintain_time, a.last_maintain_time, a.create_by, a.create_time, a.update_by, a.update_time, a.remark, a.device_type,
+               b.plan_detail_id as sub_plan_detail_id, b.content as sub_content, b.standard as sub_standard, b.plan_id as sub_plan_id
+        from maintain_plan a
+                 left join maintain_plan_detail b on b.plan_id = a.plan_id
+        where a.plan_id = #{planId}
+    </select>
+
+    <insert id="insertMaintainPlan" parameterType="MaintainPlan" useGeneratedKeys="true" keyProperty="planId">
+        insert into maintain_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="intervalDays != null">interval_days,</if>
+            <if test="useState != null">use_state,</if>
+            <if test="maintainerId != null">maintainer_id,</if>
+            <if test="maintainerNickName != null">maintainer_nick_name,</if>
+            <if test="auditorId != null">auditor_id,</if>
+            <if test="auditorNickName != null">auditor_nick_name,</if>
+            <if test="level != null">level,</if>
+            <if test="name != null">name,</if>
+            <if test="firstMaintainTime != null">first_maintain_time,</if>
+            <if test="lastMaintainTime != null">last_maintain_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="deviceType != null">device_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="intervalDays != null">#{intervalDays},</if>
+            <if test="useState != null">#{useState},</if>
+            <if test="maintainerId != null">#{maintainerId},</if>
+            <if test="maintainerNickName != null">#{maintainerNickName},</if>
+            <if test="auditorId != null">#{auditorId},</if>
+            <if test="auditorNickName != null">#{auditorNickName},</if>
+            <if test="level != null">#{level},</if>
+            <if test="name != null">#{name},</if>
+            <if test="firstMaintainTime != null">#{firstMaintainTime},</if>
+            <if test="lastMaintainTime != null">#{lastMaintainTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMaintainPlan" parameterType="MaintainPlan">
+        update maintain_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="intervalDays != null">interval_days = #{intervalDays},</if>
+            <if test="useState != null">use_state = #{useState},</if>
+            <if test="maintainerId != null">maintainer_id = #{maintainerId},</if>
+            <if test="maintainerNickName != null">maintainer_nick_name = #{maintainerNickName},</if>
+            <if test="auditorId != null">auditor_id = #{auditorId},</if>
+            <if test="auditorNickName != null">auditor_nick_name = #{auditorNickName},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="firstMaintainTime != null">first_maintain_time = #{firstMaintainTime},</if>
+            <if test="lastMaintainTime != null">last_maintain_time = #{lastMaintainTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+        </trim>
+        where plan_id = #{planId}
+    </update>
+
+    <delete id="deleteMaintainPlanByPlanId" parameterType="Long">
+        delete from maintain_plan where plan_id = #{planId}
+    </delete>
+
+    <delete id="deleteMaintainPlanByPlanIds" parameterType="String">
+        delete from maintain_plan where plan_id in
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMaintainPlanDetailByPlanIds" parameterType="String">
+        delete from maintain_plan_detail where plan_id in
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMaintainPlanDetailByPlanId" parameterType="Long">
+        delete from maintain_plan_detail where plan_id = #{planId}
+    </delete>
+
+    <insert id="batchMaintainPlanDetail">
+        insert into maintain_plan_detail( plan_detail_id, content, standard, plan_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.planDetailId}, #{item.content}, #{item.standard}, #{item.planId})
+        </foreach>
+    </insert>
+
+    <select id="checkPlanUnique" parameterType="MaintainPlan" resultType="int">
+        select count(1) from maintain_plan where device_type = #{deviceType} and level = #{level}  and use_state = "0" limit 1
+    </select>
+</mapper>
+
+

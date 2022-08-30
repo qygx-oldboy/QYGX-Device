@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.MiddleDevicePlanMapper">
+
+    <resultMap type="MiddleDevicePlan" id="MiddleDevicePlanResult">
+        <result property="id"    column="id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="planId"    column="plan_id"    />
+        <result property="thisTime"    column="this_time"    />
+        <result property="nextTime"    column="next_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMiddleDevicePlanVo">
+        select id, device_id, plan_id, this_time, next_time, del_flag from middle_device_plan
+    </sql>
+
+    <select id="selectMiddleDevicePlanList" parameterType="MiddleDevicePlan" resultMap="MiddleDevicePlanResult">
+        <include refid="selectMiddleDevicePlanVo"/>
+        <where>
+            <if test="deviceId != null "> and device_id = #{deviceId}</if>
+            <if test="planId != null "> and plan_id = #{planId}</if>
+            <if test="thisTime != null "> and this_time = #{thisTime}</if>
+            <if test="nextTime != null "> and next_time = #{nextTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMiddleDevicePlanById" parameterType="Long" resultMap="MiddleDevicePlanResult">
+        <include refid="selectMiddleDevicePlanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMiddleDevicePlan" parameterType="MiddleDevicePlan" useGeneratedKeys="true" keyProperty="id">
+        insert into middle_device_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">device_id,</if>
+            <if test="planId != null">plan_id,</if>
+            <if test="thisTime != null">this_time,</if>
+            <if test="nextTime != null">next_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="planId != null">#{planId},</if>
+            <if test="thisTime != null">#{thisTime},</if>
+            <if test="nextTime != null">#{nextTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMiddleDevicePlan" parameterType="MiddleDevicePlan">
+        update middle_device_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="planId != null">plan_id = #{planId},</if>
+            <if test="thisTime != null">this_time = #{thisTime},</if>
+            <if test="nextTime != null">next_time = #{nextTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMiddleDevicePlanById" parameterType="Long">
+        delete from middle_device_plan where id = #{id}
+    </delete>
+
+    <delete id="deleteMiddleDevicePlanByIds" parameterType="String">
+        delete from middle_device_plan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="checkMiddleUnique" parameterType="MiddleDevicePlan" resultType="int">
+        select count(1) from middle_device_plan where device_id = #{deviceId} and plan_id = #{planId} limit 1
+    </select>
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.DeviceMaintainSheetMapper">
+
+    <resultMap type="DeviceMaintainSheet" id="DeviceMaintainSheetResult">
+        <result property="maintainSheetId"    column="maintain_sheet_id"    />
+        <result property="sheetNumber"    column="sheet_number"    />
+        <result property="maintainerId"    column="maintainer_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="DeviceMaintainSheetDeviceMaintainDetailResult" type="DeviceMaintainSheet" extends="DeviceMaintainSheetResult">
+        <collection property="deviceMaintainDetailList" notNullColumn="sub_maintain_detail_id" javaType="java.util.List" resultMap="DeviceMaintainDetailResult" />
+    </resultMap>
+
+    <resultMap type="DeviceMaintainDetail" id="DeviceMaintainDetailResult">
+        <result property="maintainDetailId"    column="sub_maintain_detail_id"    />
+        <result property="maintainSheetId"    column="sub_maintain_sheet_id"    />
+        <result property="content"    column="sub_content"    />
+        <result property="standard"    column="sub_standard"    />
+        <result property="isNormal"    column="sub_is_normal"    />
+        <result property="remark"    column="sub_remark"    />
+    </resultMap>
+
+    <sql id="selectDeviceMaintainSheetVo">
+        select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
+               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark
+        from device_maintain_sheet a
+                 left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
+
+    </sql>
+
+    <select id="selectDeviceMaintainSheetList" parameterType="DeviceMaintainSheet" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
+        <include refid="selectDeviceMaintainSheetVo"/>
+        <where>
+            <if test="sheetNumber != null  and sheetNumber != ''"> and a.sheet_number = #{sheetNumber}</if>
+            <if test="maintainerId != null "> and a.maintainer_id = #{maintainerId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="endTime != null "> and a.end_time = #{endTime}</if>
+            <if test="deviceId != null "> and a.device_id = #{deviceId}</if>
+        </where>
+    </select>
+
+    <select id="selectDeviceMaintainSheetByMaintainSheetId" parameterType="Long" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
+        select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
+               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark
+        from device_maintain_sheet a
+                 left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
+        where a.maintain_sheet_id = #{maintainSheetId}
+    </select>
+
+    <insert id="insertDeviceMaintainSheet" parameterType="DeviceMaintainSheet" useGeneratedKeys="true" keyProperty="maintainSheetId">
+        insert into device_maintain_sheet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sheetNumber != null">sheet_number,</if>
+            <if test="maintainerId != null">maintainer_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sheetNumber != null">#{sheetNumber},</if>
+            <if test="maintainerId != null">#{maintainerId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceMaintainSheet" parameterType="DeviceMaintainSheet">
+        update device_maintain_sheet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sheetNumber != null">sheet_number = #{sheetNumber},</if>
+            <if test="maintainerId != null">maintainer_id = #{maintainerId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where maintain_sheet_id = #{maintainSheetId}
+    </update>
+
+    <delete id="deleteDeviceMaintainSheetByMaintainSheetId" parameterType="Long">
+        delete from device_maintain_sheet where maintain_sheet_id = #{maintainSheetId}
+    </delete>
+
+    <delete id="deleteDeviceMaintainSheetByMaintainSheetIds" parameterType="String">
+        delete from device_maintain_sheet where maintain_sheet_id in
+        <foreach item="maintainSheetId" collection="array" open="(" separator="," close=")">
+            #{maintainSheetId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDeviceMaintainDetailByMaintainSheetIds" parameterType="String">
+        delete from device_maintain_detail where maintain_sheet_id in
+        <foreach item="maintainSheetId" collection="array" open="(" separator="," close=")">
+            #{maintainSheetId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDeviceMaintainDetailByMaintainSheetId" parameterType="Long">
+        delete from device_maintain_detail where maintain_sheet_id = #{maintainSheetId}
+    </delete>
+
+    <insert id="batchDeviceMaintainDetail">
+        insert into device_maintain_detail( maintain_detail_id, maintain_sheet_id, content, standard, is_normal, remark) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.maintainDetailId}, #{item.maintainSheetId}, #{item.content}, #{item.standard}, #{item.isNormal}, #{item.remark})
+        </foreach>
+    </insert>
+</mapper>
