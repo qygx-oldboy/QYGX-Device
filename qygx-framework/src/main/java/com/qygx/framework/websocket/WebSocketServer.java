@@ -9,6 +9,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  * 
  * @author ruoyi
  */
+//@ConditionalOnClass(value = WebSocketConfig.class)
 @ServerEndpoint("/webSocket")
 @Component
 public class WebSocketServer

@@ -1,8 +1,5 @@
 package com.qygx.system.mapper;
 import com.qygx.system.domain.ProInspect;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
 import java.util.List;
 
 public interface ProReportMapper {
@@ -24,6 +21,8 @@ public interface ProReportMapper {
      *
      */
     public List<ProInspect> selectInspectList(ProInspect proInspect);
+
+
 
 
     /**

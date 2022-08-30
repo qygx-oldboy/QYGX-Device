@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/qygx/uploadPath
+  profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
@@ -62,6 +62,7 @@ spring:
   # redis 配置
   redis:
     # 地址
+    #host: ruoyi-redis
     host: localhost
     # 端口，默认为6379
     port: 6379
@@ -121,3 +122,11 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+
+# 启元光学相关配置
+qygx:
+  # 良率
+  lianglv: 0.50
+
+

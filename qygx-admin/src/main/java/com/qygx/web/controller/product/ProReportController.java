@@ -113,6 +113,20 @@ public class ProReportController extends BaseController {
     }
 
 
+    /**
+     * 查询inspect列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping("/unusualList")
+    public TableDataInfo unusualList(ProInspect proInspect)
+    {
+        startPage();
+        List<ProInspect> unusualList = reportService.selectProInspectUnusualList(proInspect);
+        return getDataTable(unusualList);
+    }
+
+
+
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)
     {

@@ -11,11 +11,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class TestDemo {
 
@@ -32,5 +33,11 @@ public class TestDemo {
 
     }
 
+    @Test()
+    public void testTime()  {
+        Date d2 = new Date();
+        System.out.println(d2);
+
+    }
 
 }

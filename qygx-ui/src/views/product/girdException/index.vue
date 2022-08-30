@@ -67,6 +67,18 @@
           >分析改善</el-button
         >
       </el-col>
+       <!-- <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="multiple"
+          @click="batchHandleAnalysis"
+          v-hasPermi="['product:exception:edit']"
+          >修改审批</el-button
+        >
+      </el-col> -->
     </el-row>
 
     <el-table
@@ -92,7 +104,8 @@
       <el-table-column label="生产编号" align="center" prop="productCode" />
       <el-table-column label="检验数" align="center" prop="inspectedNum" />
       <el-table-column label="合格数" align="center" prop="okNum" />
-      <el-table-column label="不良数" align="center" prop="ngNum" />
+      <el-table-column label="不合格原因" align="center" prop="ngStr" />
+      <!-- <el-table-column label="不良数" align="center" prop="ngNum" /> -->
       <el-table-column label="生产类型" align="center" prop="productType" />
       <!-- <el-table-column label="物料类型" align="center" prop="materialType" /> -->
       <el-table-column
@@ -236,6 +249,10 @@ import {
   addInspect,
   updateInspect,
 } from "@/api/product/girdQuality";
+
+import {
+  unusualListInspect
+} from "@/api/product/girdExcepition";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -274,7 +291,7 @@ export default {
         materialQuality: null,
         inspector: null,
         beginTime: null,
-        okNum: 0,
+        okNum: null,
       },
       // 表单参数
       form: {
@@ -308,7 +325,7 @@ export default {
     /** 查询inspect列表 */
     getList() {
       this.loading = true;
-      listInspect(this.queryParams).then((response) => {
+      unusualListInspect(this.queryParams).then((response) => {
         this.inspectList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -349,7 +366,6 @@ export default {
     handleAnalysis(row) {
       const id = row.id;
       getInspect(id).then((response) => {
-        console.info(response);
         this.form = response.data;
         this.open = true;
       });

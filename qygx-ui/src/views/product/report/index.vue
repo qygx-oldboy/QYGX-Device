@@ -48,20 +48,24 @@
       </el-form-item> -->
       </el-form>
 
-      <ve-line
+      <ve-histogram
         height="650px"
         :data="chartData"
         :settings="chartSettings"
         :extend="chartExtend"
         :toolbox="toolbox"
         :data-zoom="dataZoom"
-      ></ve-line>
+        :after-set-option="afterSetOption"
+      ></ve-histogram>
     </el-col>
   </div>
 </template>
 
 <script>
 import { chartInspect, breedList } from "@/api/product/report";
+import echarts from "echarts/lib/echarts";
+import LineChartVue from "../../dashboard/LineChart.vue";
+import BarChartVue from "../../dashboard/BarChart.vue";
 
 export default {
   name: "report",
@@ -78,10 +82,46 @@ export default {
           checkNum: "检验数",
           yieldRate: "良率",
         },
-        //area: true, //面积图
+        showLine: ["yieldRate"],
       },
       chartData: {},
       chartExtend: {
+        "yAxis.0.splitArea": {
+          show: true,
+          areaStyle: {
+            color: ["#94FFAB"],
+          },
+        },
+
+        color: ["blue", "red"],
+        // "series.0.label": {
+        //   show: true,
+        //   position: "top",
+        // },
+        // "series.1.label": {
+        //   show: true,
+        //   position: "top",
+        //   formatter: function (data) {
+        //     return (data.data * 100).toFixed(2) + "%";
+        //   },
+        // },
+
+        yAxis: {
+          // 基本和xAxis中的配置一样
+          splitNumber: 10, // Y轴索引间隔
+        },
+        tooltip: {
+          padding: 5, // 提示框浮层内边距，单位px
+          textStyle: {
+            color: "#FFF", // 文字的颜色
+            fontStyle: "normal", // 文字字体的风格（'normal'，无样式；'italic'，斜体；'oblique'，倾斜字体）
+            fontWeight: "normal", // 文字字体的粗细（'normal'，无样式；'bold'，加粗；'bolder'，加粗的基础上再加粗；'lighter'，变细；数字定义粗细也可以，取值范围100至700）
+            fontSize: "15", // 文字字体大小
+            lineHeight: "40", // 行高
+          },
+          alwaysShowContent: true,
+        },
+
         // series: {
         //   // 是否显示折线提示点
         //   showSymbol: true,
@@ -216,6 +256,31 @@ export default {
         this.proInspect = {};
         this.getCharts();
       }
+    },
+
+    //vcharts 勺子函数
+    afterSetOption(chart) {
+      chart.setOption({
+        series: [
+          {
+            type: "bar",
+            label: {
+              show: true,
+              position: "top",
+            },
+          },
+          {
+            type: "line",
+            label: {
+              show: true,
+              position: "top",
+              formatter: function (data) {
+                return (data.data * 100).toFixed(2) + "%";
+              }
+            },
+          },
+        ],
+      });
     },
   },
   mounted() {

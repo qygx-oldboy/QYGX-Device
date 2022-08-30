@@ -67,11 +67,11 @@ public class ProInspect extends BaseEntity
 
     /** 良率 */
     @Excel(name = "良率")
-    private Integer okPercent;
+    private Double okPercent;
 
     /** 不良率 */
     @Excel(name = "不良率")
-    private Integer ngPercent;
+    private Double ngPercent;
 
     /** 检验数 */
     @Excel(name = "检验数")
@@ -126,23 +126,34 @@ public class ProInspect extends BaseEntity
     private Integer ng10;
 
     /** 处理结果 */
-    @Excel(name = "处理结果")
+
     private String result;
 
 
     /** 原因分析 */
-    @Excel(name = "原因分析")
+
     private String remark1;
     /** 临时措施 */
-    @Excel(name = "临时措施")
+
     private String remark2;
 
     /** 长期措施 */
-    @Excel(name = "长期措施")
+
     private String remark3;
     /** 效果验证 */
-    @Excel(name = "效果验证")
+
     private String remark4;
+
+    //临时字段  不合格原因
+    private String ngStr;
+
+    public String getNgStr() {
+        return ngStr;
+    }
+
+    public void setNgStr(String ngStr) {
+        this.ngStr = ngStr;
+    }
 
     public Integer getStatus() {
         return status;
@@ -150,6 +161,26 @@ public class ProInspect extends BaseEntity
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Double getOkPercent() {
+        return okPercent;
+    }
+
+    public void setOkPercent(Double okPercent) {
+        this.okPercent = okPercent;
+    }
+
+    public Double getNgPercent() {
+        return ngPercent;
+    }
+
+    public void setNgPercent(Double ngPercent) {
+        this.ngPercent = ngPercent;
+    }
+
+    public void setInspectedNum(Integer inspectedNum) {
+        this.inspectedNum = inspectedNum;
     }
 
     /** 状态 */
@@ -278,28 +309,7 @@ public class ProInspect extends BaseEntity
         return endTime;
     }
 
-    public void setOkPercent(Integer okPercent)
-    {
-        this.okPercent = okPercent;
-    }
 
-    public Integer getOkPercent()
-    {
-        return okPercent;
-    }
-    public void setNgPercent(Integer ngPercent)
-    {
-        this.ngPercent = ngPercent;
-    }
-
-    public Integer getNgPercent()
-    {
-        return ngPercent;
-    }
-    public void setInspectedNum(Integer inspectedNum)
-    {
-        this.inspectedNum = inspectedNum;
-    }
 
     public Integer getInspectedNum()
     {
@@ -418,6 +428,22 @@ public class ProInspect extends BaseEntity
         this.result = result;
     }
 
+
+
+
+    public String getResult()
+    {
+        return result;
+    }
+
+    public Date getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(Date runTime) {
+        this.runTime = runTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -472,6 +498,7 @@ public class ProInspect extends BaseEntity
             return false;
         if (getRemark4() != null ? !getRemark4().equals(inspect.getRemark4()) : inspect.getRemark4() != null)
             return false;
+        if (getNgStr() != null ? !getNgStr().equals(inspect.getNgStr()) : inspect.getNgStr() != null) return false;
         return getStatus() != null ? getStatus().equals(inspect.getStatus()) : inspect.getStatus() == null;
     }
 
@@ -508,6 +535,7 @@ public class ProInspect extends BaseEntity
         result1 = 31 * result1 + (getRemark2() != null ? getRemark2().hashCode() : 0);
         result1 = 31 * result1 + (getRemark3() != null ? getRemark3().hashCode() : 0);
         result1 = 31 * result1 + (getRemark4() != null ? getRemark4().hashCode() : 0);
+        result1 = 31 * result1 + (getNgStr() != null ? getNgStr().hashCode() : 0);
         result1 = 31 * result1 + (getStatus() != null ? getStatus().hashCode() : 0);
         return result1;
     }
@@ -546,22 +574,8 @@ public class ProInspect extends BaseEntity
                 ", remark2='" + remark2 + '\'' +
                 ", remark3='" + remark3 + '\'' +
                 ", remark4='" + remark4 + '\'' +
+                ", ngStr='" + ngStr + '\'' +
                 ", status=" + status +
                 '}';
     }
-
-    public String getResult()
-    {
-        return result;
-    }
-
-    public Date getRunTime() {
-        return runTime;
-    }
-
-    public void setRunTime(Date runTime) {
-        this.runTime = runTime;
-    }
-
-
 }

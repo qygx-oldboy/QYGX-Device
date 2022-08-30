@@ -8,10 +8,10 @@
             <tbody>
               <tr>
                 <td class="el-table__cell is-leaf">
-                  <div class="cell" >日期</div>
+                  <div class="cell">日期</div>
                 </td>
                 <td class="el-table__cell is-leaf">
-                  <div class="cell" >{{ info.date }}</div>
+                  <div class="cell">{{ info.date }}</div>
                 </td>
                 <td class="el-table__cell is-leaf">
                   <div class="cell">班次</div>
@@ -19,9 +19,7 @@
                 <td class="el-table__cell is-leaf">
                   <div class="cell">{{ info.ban }}</div>
                 </td>
-                
               </tr>
-             
             </tbody>
           </table>
         </div>
@@ -79,17 +77,17 @@
 
 <script>
 import { breedList } from "@/api/product/report";
-import { chartGetShift,getInfo} from "@/api/product/quality";
+import { chartGetShift, getInfo } from "@/api/product/quality";
 
 export default {
   name: "quality",
 
   data() {
     return {
-         // 基础信息
+      // 基础信息
       info: {
-         date: undefined,
-         ban: undefined,
+        date: undefined,
+        ban: undefined,
       },
       chartSettings: {
         yAxisType: ["0.[00]%"],
@@ -98,12 +96,39 @@ export default {
         // },
         // yAxisName: ["数值轴", "比率轴"],
         labelMap: {
-        //   checkNum: "检验数",
+          //   checkNum: "检验数",
           yieldRate: "良率",
         },
       },
       chartData: {},
-      chartExtend: {},
+      chartExtend: {
+        "yAxis.0.splitArea": {
+          show: true,
+          areaStyle: {
+            color: ["#94FFAB"],
+          },
+        },
+
+        color: ["red"],
+        series: {
+          type: "line",
+          label: {
+            show: true,
+            position: "top",
+            formatter: function (data) {
+           
+              return (data.data[1] * 100).toFixed(1) + "%";
+            }
+          }
+        },
+        yAxis: {
+          // 基本和xAxis中的配置一样
+          splitNumber: 10, // Y轴索引间隔
+        },
+        tooltip: {
+          alwaysShowContent: true,
+        },
+      },
       // 配置图标按钮(下载图片等等)
       toolbox: {
         // right: 100,
@@ -113,13 +138,13 @@ export default {
       },
       // 设置区域缩放（需要引入模块才能操作）
       dataZoom: [
-        // {
-        //   type: "slider",
-        //   start: 0,
-        //   end: 100,
-        //   backgroundColor: "rgba(0, 0, 0, 0)", // 区域滚条背景颜色
-        //   fillerColor: "rgba(0, 0, 0, 0.05)", // 区域滚条蒙层颜色
-        // },
+        {
+          type: "slider",
+          start: 0,
+          end: 100,
+          backgroundColor: "rgba(0, 0, 0, 0)", // 区域滚条背景颜色
+          fillerColor: "rgba(0, 0, 0, 0.05)", // 区域滚条蒙层颜色
+        },
       ],
 
       options: [
@@ -148,12 +173,11 @@ export default {
       state: "",
       //按xxx分类的值
       value: "选项1",
-     
     };
   },
   created() {
-     this.getInfo();
-     this.getCharts();
+    this.getInfo();
+    this.getCharts();
   },
 
   methods: {
@@ -221,7 +245,6 @@ export default {
       this.loadAll();
     },
     inputSearch(message) {
-    
       if (this.state == null || this.state == "") {
         this.proInspect = {};
         this.getCharts();

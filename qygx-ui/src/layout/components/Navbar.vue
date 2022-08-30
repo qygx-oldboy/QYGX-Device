@@ -69,6 +69,7 @@ import RuoYiGit from "@/components/RuoYi/Git";
 import RuoYiDoc from "@/components/RuoYi/Doc";
 import { Notification } from "element-ui";
 import moment from "moment";
+import axios from "axios";
 
 export default {
   components: {
@@ -103,7 +104,8 @@ export default {
 
   data() {
     return {
-      url: "ws://127.0.0.1:8080/webSocket",
+      //url: "ws://" + process.env.VUE_APP_BASE_SOCKET + "/webSocket",
+      url: process.env.VUE_APP_BASE_SOCKET,
       message: "",
       text_content: "",
       ws: null,
@@ -117,21 +119,26 @@ export default {
     // Router.prototype.push = function push(location) {
     //   return originalPush.call(this, location).catch((err) => err);
     // };
-
-    const wsuri = this.url;
+   
+    // const wsuri = "ws://106.14.139.90:8080/webSocket";
+    const wsuri = "ws://127.0.0.1:8080/webSocket";
     this.ws = new WebSocket(wsuri);
     const self = this;
     this.ws.onopen = function (event) {
       self.text_content = self.text_content + "已经打开连接!" + "\n";
     };
     this.ws.onmessage = function (event) {
-      self.text_content = event.data + "\n";
-      console.info(self.text_content);
 
-      if (event.data.indexof("qrCode") > -1) {
+      self.text_content = event.data + "\n";
+
+
+      if (event.data.indexOf("qrCode") > -1) {
         var messageBody = JSON.parse(event.data);
+
+
+        const rates = (messageBody.okPercent * 100).toFixed(2) + '%'; //转百分比
         Notification.error({
-          title: "良率过低预警",
+          title: "良率异常告警",
           dangerouslyUseHTMLString: true,
           message:
             "<strong>时间：" +
@@ -141,15 +148,17 @@ export default {
             " " +
             "  <br/> <i> 批次：" +
             messageBody.qrCode +
+             "  <br/> <i> 良率：" +
+            rates +
             "  <br/> <i> 检验员：" +
             messageBody.inspector +
             "</i> </strong>",
           duration: 0,
           position: "bottom-right",
-          // onClick: function () {
-          //   self.warnDetailByWarnid(); //自定义回调,message为传的参数
-          //   // 点击跳转的页面
-          // },
+          onClick: function () {
+            self.warnDetailByWarnid(); //自定义回调,message为传的参数
+            // 点击跳转的页面
+          },
         });
       }
 
@@ -205,12 +214,12 @@ export default {
         .catch(() => {});
     },
 
-    warnDetailByWarnid(warnid) {
+    warnDetailByWarnid() {
       // 跳转预警详情页面
       this.$router.push({
-        path: "/XXX/XXX",
+        path: "/product/girdException",
         query: {
-          warnid: warnid,
+          // warnid: warnid,
         },
       });
     },

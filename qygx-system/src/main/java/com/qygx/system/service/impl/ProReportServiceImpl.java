@@ -1,11 +1,10 @@
 package com.qygx.system.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.qygx.common.annotation.DataSource;
-import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.common.enums.DataSourceType;
 import com.qygx.common.exception.ServiceException;
 import com.qygx.common.utils.DateUtils;
-import com.qygx.common.utils.SecurityUtils;
 import com.qygx.common.utils.StringUtils;
 import com.qygx.common.utils.bean.BeanValidators;
 import com.qygx.system.domain.ProInspect;
@@ -17,6 +16,7 @@ import com.qygx.system.service.IProReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
@@ -31,6 +31,9 @@ public class ProReportServiceImpl implements IProReportService {
 
     @Autowired
     private ProReportMapper reportMapper;
+
+    @Value("${qygx.lianglv}")
+    private double  LIANGLV;  //良率设定值
 
     @Autowired
     protected Validator validator;
@@ -86,6 +89,12 @@ public class ProReportServiceImpl implements IProReportService {
         return result;
     }
 
+    /**
+     * 查询当前白班或夜班的 检测情况
+     * @param proInspect
+     * @return
+     * @throws ParseException
+     */
     @Override
     @DataSource(value = DataSourceType.SLAVE)
     public List<InspectVo> selectShiftInspectList(ProInspect proInspect) throws ParseException {
@@ -146,16 +155,48 @@ public class ProReportServiceImpl implements IProReportService {
     @DataSource(value = DataSourceType.SLAVE)
     public List<ProInspect> selectProInspectList(ProInspect proInspect)
     {
-        List<ProInspect>  list =  reportMapper.selectInspectList(proInspect);
-        if(list.size() > 0){
-            for (ProInspect pi: list) {
+        return reportMapper.selectInspectList(proInspect);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public List<ProInspect> selectProInspectUnusualList(ProInspect proInspect) {
+        List<ProInspect>  allList =  reportMapper.selectInspectList(proInspect);
+        List<ProInspect>  unList = new ArrayList<>();
+        if(allList.size() > 0){
+            Map<Integer,String> map;
+            for (ProInspect pi: allList) {
                 int okNum = pi.getOkNum();
-                if(okNum == 0 && pi.getStatus() == null){
-                    pi.setStatus(0);
+                int inspectedNum =  pi.getInspectedNum();
+                double liangLv =  (float)okNum/inspectedNum;
+                if(liangLv < LIANGLV){
+                    map = new HashMap<>();
+                    map.put(pi.getNg1() == null ? 0:pi.getNg1(),"材质不良");
+                    map.put(pi.getNg2() == null ? 0:pi.getNg2(),"失圆");
+                    map.put(pi.getNg3() == null ? 0:pi.getNg3(),"内裂");
+                    map.put(pi.getNg4() == null ? 0:pi.getNg4(),"坑点");
+                    map.put(pi.getNg5() == null ? 0:pi.getNg5(),"尺寸不良");
+                    map.put(pi.getNg6() == null ? 0:pi.getNg6(),"发雾");
+                    map.put(pi.getNg7() == null ? 0:pi.getNg7(),"伤痕");
+                    map.put(pi.getNg8() == null ? 0:pi.getNg8(),"印渍");
+                    map.put(pi.getNg9() == null ? 0:pi.getNg9(),"不洁");
+                    map.put(pi.getNg10() == null ? 0:pi.getNg10(),"其他");
+                    Integer[] arr = map.keySet().toArray(new Integer[map.size()]);
+                    // Integer[] --> int[]
+                    int[] num=Arrays.stream(arr).mapToInt(Integer::valueOf).toArray();
+                    int max = Arrays.stream(num).max().getAsInt();
+                    if(max > 0 ){
+                        pi.setNgStr(map.get(max));
+                    }
+                    if(pi.getStatus() == null){
+                        pi.setStatus(0);
+                    }
+                    pi.setOkPercent(liangLv);
+                    unList.add(pi);
                 }
             }
         }
-        return list;
+        return unList;
     }
 
     /**

@@ -37,7 +37,8 @@
     </resultMap>
 
     <sql id="selectInspectVo">
-        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num,status,result,remark1,remark2,remark3,remark4
+        select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num
+             ,ng1,ng2,ng3,ng4,ng5,ng6,ng7,ng8,ng9,ng10,status,remark1,remark2,remark3,remark4
         from inspect
     </sql>
 
@@ -60,6 +61,7 @@
             <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
             <if test="materialQuality != null  and materialQuality != ''"> and material_quality = #{materialQuality}</if>
         </where>
+        order by begin_time asc
     </select>
 
 
@@ -77,6 +79,8 @@
         </where>
         order by begin_time desc
     </select>
+
+
 
 
     <select id="selectBreedList" resultMap="ProInspectResult">

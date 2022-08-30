@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.DeviceArchivesMapper">
+    
+    <resultMap type="DeviceArchives" id="DeviceArchivesResult">
+        <result property="deviceId"    column="device_id"    />
+        <result property="ip"    column="ip"    />
+        <result property="name"    column="name"    />
+        <result property="standard"    column="standard"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="manufacturer"    column="manufacturer"    />
+        <result property="status"    column="status"    />
+        <result property="location"    column="location"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDeviceArchivesVo">
+        select device_id, ip, name, standard, device_type, manufacturer, status, location, create_by, create_time, update_by, update_time from device_archives
+    </sql>
+
+    <select id="selectDeviceArchivesList" parameterType="DeviceArchives" resultMap="DeviceArchivesResult">
+        <include refid="selectDeviceArchivesVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDeviceArchivesByDeviceId" parameterType="Long" resultMap="DeviceArchivesResult">
+        <include refid="selectDeviceArchivesVo"/>
+        where device_id = #{deviceId}
+    </select>
+        
+    <insert id="insertDeviceArchives" parameterType="DeviceArchives" useGeneratedKeys="true" keyProperty="deviceId">
+        insert into device_archives
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ip != null">ip,</if>
+            <if test="name != null">name,</if>
+            <if test="standard != null">standard,</if>
+            <if test="deviceType != null">device_type,</if>
+            <if test="manufacturer != null">manufacturer,</if>
+            <if test="status != null">status,</if>
+            <if test="location != null">location,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ip != null">#{ip},</if>
+            <if test="name != null">#{name},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="manufacturer != null">#{manufacturer},</if>
+            <if test="status != null">#{status},</if>
+            <if test="location != null">#{location},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeviceArchives" parameterType="DeviceArchives">
+        update device_archives
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="manufacturer != null">manufacturer = #{manufacturer},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where device_id = #{deviceId}
+    </update>
+
+    <delete id="deleteDeviceArchivesByDeviceId" parameterType="Long">
+        delete from device_archives where device_id = #{deviceId}
+    </delete>
+
+    <delete id="deleteDeviceArchivesByDeviceIds" parameterType="String">
+        delete from device_archives where device_id in 
+        <foreach item="deviceId" collection="array" open="(" separator="," close=")">
+            #{deviceId}
+        </foreach>
+    </delete>
+
+    <select id="checkDeviceNameUnique" parameterType="String" resultType="int">
+        select count(1) from device_archives where name = #{deviceName} limit 1
+    </select>
+</mapper>

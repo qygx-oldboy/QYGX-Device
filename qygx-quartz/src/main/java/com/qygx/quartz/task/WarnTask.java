@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * 定时任务调度-预警管理测试
  *
  */
-@Component("warntask")
+@Component("warnTask")
 public class WarnTask {
 
     @Autowired

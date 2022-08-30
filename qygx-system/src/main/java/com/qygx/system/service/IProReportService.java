@@ -30,6 +30,16 @@ public interface IProReportService {
      */
     public List<ProInspect> selectProInspectList(ProInspect proInspect);
 
+
+    /**
+     * 查询异常inspect列表
+     *
+     * @param proInspect inspect
+     * @return inspect集合
+     */
+    public List<ProInspect> selectProInspectUnusualList(ProInspect proInspect);
+
+
     /**
      * 查分组
      *
