@@ -58,4 +58,12 @@ public interface IDeviceMaintainSheetService
      * @return 结果
      */
     public int deleteDeviceMaintainSheetByMaintainSheetId(Long maintainSheetId);
+
+    /**
+     * 批量提交保养记录
+     *
+     * @param maintainSheetIds 保养记录主键集合
+     * @return 结果
+     */
+    public int submitDeviceMaintainSheetByMaintainSheetIds(Long[] maintainSheetIds);
 }

@@ -45,7 +45,7 @@
           clearable
           v-model="queryParams.beginTime"
           type="date"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd hh:mm:ss"
           placeholder="请选择开始时间"
         >
         </el-date-picker>

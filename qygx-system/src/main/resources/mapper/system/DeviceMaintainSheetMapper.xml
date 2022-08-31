@@ -16,7 +16,23 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="maintainer"    column="maintainer_id" javaType="SysUser" resultMap="userResult" />
+        <association property="device"    column="device_id" javaType="DeviceArchives" resultMap="deviceResult" />
     </resultMap>
+
+    <resultMap id="userResult" type="SysUser">
+        <id     property="userId"       column="user_id"      />
+        <result property="nickName"     column="nick_name"    />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="DeviceArchives">
+        <id     property="deviceId"       column="device_id"      />
+        <result property="name"     column="name"    />
+        <result property="location"     column="location"    />
+        <result property="ip"     column="ip"    />
+        <result property="manufacturer"     column="manufacturer"    />
+    </resultMap>
+
 
     <resultMap id="DeviceMaintainSheetDeviceMaintainDetailResult" type="DeviceMaintainSheet" extends="DeviceMaintainSheetResult">
         <collection property="deviceMaintainDetailList" notNullColumn="sub_maintain_detail_id" javaType="java.util.List" resultMap="DeviceMaintainDetailResult" />
@@ -33,9 +49,12 @@
 
     <sql id="selectDeviceMaintainSheetVo">
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
-               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark
+               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark,
+               u.nick_name,d.name,d.location,d.manufacturer
         from device_maintain_sheet a
                  left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
+                 left join sys_user u on a.maintainer_id = u.user_id
+                 left join device_archives d on a.device_id = d.device_id
 
     </sql>
 
@@ -45,16 +64,20 @@
             <if test="sheetNumber != null  and sheetNumber != ''"> and a.sheet_number = #{sheetNumber}</if>
             <if test="maintainerId != null "> and a.maintainer_id = #{maintainerId}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
-            <if test="endTime != null "> and a.end_time = #{endTime}</if>
+            <if test="createTime != null "> and a.create_time = #{createTime}</if>
             <if test="deviceId != null "> and a.device_id = #{deviceId}</if>
+            <if test="maintainerName != null "> and u.nick_name like concat('%', #{maintainerName}, '%')</if>
+            <if test="deviceName != null "> and d.name like concat('%', #{deviceName}, '%')</if>
         </where>
     </select>
 
     <select id="selectDeviceMaintainSheetByMaintainSheetId" parameterType="Long" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
-               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark
+               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark,
+               d.name,d.ip,d.location,d.manufacturer
         from device_maintain_sheet a
                  left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
+                 left join device_archives d on a.device_id = d.device_id
         where a.maintain_sheet_id = #{maintainSheetId}
     </select>
 
@@ -131,4 +154,11 @@
             ( #{item.maintainDetailId}, #{item.maintainSheetId}, #{item.content}, #{item.standard}, #{item.isNormal}, #{item.remark})
         </foreach>
     </insert>
+
+    <delete id="submitDeviceMaintainSheetByMaintainSheetIds" parameterType="String">
+        update device_maintain_sheet set status = "2",end_time =  CURRENT_TIMESTAMP() where maintain_sheet_id in
+        <foreach item="maintainSheetId" collection="array" open="(" separator="," close=")">
+            #{maintainSheetId}
+        </foreach>
+    </delete>
 </mapper>

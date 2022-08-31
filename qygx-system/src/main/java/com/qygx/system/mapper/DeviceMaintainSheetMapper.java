@@ -84,4 +84,12 @@ public interface DeviceMaintainSheetMapper
      * @return 结果
      */
     public int deleteDeviceMaintainDetailByMaintainSheetId(Long maintainSheetId);
+
+    /**
+     * 批量提交保养记录
+     *
+     * @param maintainSheetIds 数据主键集合
+     * @return 结果
+     */
+    public int submitDeviceMaintainSheetByMaintainSheetIds(Long[] maintainSheetIds);
 }

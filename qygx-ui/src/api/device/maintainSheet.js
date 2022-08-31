@@ -42,3 +42,12 @@ export function delMaintainSheet(maintainSheetId) {
     method: 'delete'
   })
 }
+
+
+// 删除保养记录
+export function submitMaintainSheet(maintainSheetId) {
+  return request({
+    url: '/device/maintainSheet/submit/' + maintainSheetId,
+    method: 'put'
+  })
+}

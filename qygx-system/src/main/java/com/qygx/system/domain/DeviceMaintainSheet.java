@@ -3,6 +3,7 @@ package com.qygx.system.domain;
 import java.util.List;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qygx.common.core.domain.entity.SysUser;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.qygx.common.annotation.Excel;
@@ -50,6 +51,48 @@ public class DeviceMaintainSheet extends BaseEntity
 
     /** 保养记录明细信息 */
     private List<DeviceMaintainDetail> deviceMaintainDetailList;
+
+    private SysUser maintainer;
+
+    private DeviceArchives device;
+
+
+    private String maintainerName;
+
+    private String deviceName;
+
+
+    public String getMaintainerName() {
+        return maintainerName;
+    }
+
+    public void setMaintainerName(String maintainerName) {
+        this.maintainerName = maintainerName;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public DeviceArchives getDevice() {
+        return device;
+    }
+
+    public void setDevice(DeviceArchives device) {
+        this.device = device;
+    }
+
+    public SysUser getMaintainer() {
+        return maintainer;
+    }
+
+    public void setMaintainer(SysUser maintainer) {
+        this.maintainer = maintainer;
+    }
 
     public void setMaintainSheetId(Long maintainSheetId)
     {

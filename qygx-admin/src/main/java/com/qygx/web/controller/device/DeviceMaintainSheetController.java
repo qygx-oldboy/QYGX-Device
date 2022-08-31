@@ -101,4 +101,15 @@ public class DeviceMaintainSheetController extends BaseController
     {
         return toAjax(deviceMaintainSheetService.deleteDeviceMaintainSheetByMaintainSheetIds(maintainSheetIds));
     }
+
+    /**
+     * 提交保养记录
+     */
+    @PreAuthorize("@ss.hasPermi('device:maintainSheet:edit')")
+    @Log(title = "保养记录", businessType = BusinessType.UPDATE)
+    @PutMapping("/submit/{maintainSheetIds}")
+    public AjaxResult submit(@PathVariable Long[] maintainSheetIds)
+    {
+        return toAjax(deviceMaintainSheetService.submitDeviceMaintainSheetByMaintainSheetIds(maintainSheetIds));
+    }
 }

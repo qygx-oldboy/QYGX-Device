@@ -77,6 +77,7 @@ public class DeviceMaintainSheetServiceImpl implements IDeviceMaintainSheetServi
         deviceMaintainSheet.setUpdateTime(DateUtils.getNowDate());
         deviceMaintainSheetMapper.deleteDeviceMaintainDetailByMaintainSheetId(deviceMaintainSheet.getMaintainSheetId());
         insertDeviceMaintainDetail(deviceMaintainSheet);
+        deviceMaintainSheet.setStatus("1"); //已处理
         return deviceMaintainSheetMapper.updateDeviceMaintainSheet(deviceMaintainSheet);
     }
 
@@ -130,5 +131,20 @@ public class DeviceMaintainSheetServiceImpl implements IDeviceMaintainSheetServi
                 deviceMaintainSheetMapper.batchDeviceMaintainDetail(list);
             }
         }
+    }
+
+
+    /**
+     * 批量提交保养记录
+     *
+     * @param maintainSheetIds 保养记录主键
+     * @return 结果
+     */
+    @Transactional
+    @Override
+    public int submitDeviceMaintainSheetByMaintainSheetIds(Long[] maintainSheetIds)
+    {
+
+        return deviceMaintainSheetMapper.submitDeviceMaintainSheetByMaintainSheetIds(maintainSheetIds);
     }
 }

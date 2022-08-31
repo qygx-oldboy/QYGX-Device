@@ -6,7 +6,7 @@
       size="small"
       :inline="true"
       v-show="showSearch"
-      label-width="136px"
+      label-width="68px"
     >
       <el-form-item label="计划名称" prop="name">
         <el-input
@@ -16,10 +16,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="保养负责人" prop="maintainerNickName">
+      <el-form-item label="保养人" prop="maintainerNickName">
         <el-input
           v-model="queryParams.maintainerNickName"
-          placeholder="请输入保养负责人"
+          placeholder="请输入保养人"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -290,8 +290,6 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="负责人" prop="maintainerId">
-              <!-- <el-input v-model="form.person" placeholder="请输入保养负责人" /> -->
-
               <el-select
                 v-model="form.maintainerId"
                 placeholder="请选择保养人"
@@ -320,6 +318,11 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+
+
+
+          
         </el-row>
         <el-row>
           <el-col>
@@ -618,7 +621,6 @@ export default {
       const planId = row.planId || this.ids;
       getPlan(planId).then((response) => {
         this.form = response.data;
-        console.info(this.form);
         this.maintainPlanDetailList = response.data.maintainPlanDetailList;
         this.open = true;
         this.title = "修改保养计划";
