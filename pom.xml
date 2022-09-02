@@ -186,6 +186,13 @@
                 <version>${qygx.version}</version>
             </dependency>
 
+            <!-- mes模块-->
+            <dependency>
+                <groupId>com.qygx</groupId>
+                <artifactId>qygx-mes</artifactId>
+                <version>${qygx.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -196,6 +203,7 @@
         <module>qygx-quartz</module>
         <module>qygx-generator</module>
         <module>qygx-common</module>
+        <module>qygx-mes</module>
     </modules>
     <packaging>pom</packaging>
 

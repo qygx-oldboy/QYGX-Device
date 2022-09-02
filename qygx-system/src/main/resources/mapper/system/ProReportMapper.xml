@@ -34,6 +34,7 @@
         <result property="remark2"    column="remark2"    />
         <result property="remark3"    column="remark3"    />
         <result property="remark4"    column="remark4"    />
+        <result property="lianglv"    column="lianglv"    />
     </resultMap>
 
     <sql id="selectInspectVo">
@@ -76,6 +77,7 @@
             <if test="inspector != null  and inspector != ''"> and inspector = #{inspector}</if>
             <if test="okNum != null">and ok_num = #{okNum}</if>
             <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="lianglv != null "> and ok_num/inspected_num &lt;= #{lianglv}</if>
         </where>
         order by begin_time desc
     </select>

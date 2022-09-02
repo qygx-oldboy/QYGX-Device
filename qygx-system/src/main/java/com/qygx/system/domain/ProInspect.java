@@ -147,6 +147,19 @@ public class ProInspect extends BaseEntity
     //临时字段  不合格原因
     private String ngStr;
 
+    //良率阈值 0.50
+    private double lianglv;
+
+    public double getLianglv() {
+        return lianglv;
+    }
+
+    public void setLianglv(double lianglv) {
+        this.lianglv = lianglv;
+    }
+
+
+
     public String getNgStr() {
         return ngStr;
     }

@@ -209,7 +209,7 @@
             <template slot-scope="scope">
               <el-select v-model="scope.row.isNormal" placeholder="运行状态">
                 <el-option
-                  v-for="dict in dict.type.device_maintain_state"
+                  v-for="dict in dict.type.mes_mt_result"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
@@ -248,7 +248,7 @@ import {
 
 export default {
   name: "MaintainSheet",
-  dicts: ["business_handle_state", "device_maintain_state"],
+  dicts: ["business_handle_state", "mes_mt_result"],
   data() {
     return {
       // 遮罩层

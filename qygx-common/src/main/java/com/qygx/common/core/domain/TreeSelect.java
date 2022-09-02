@@ -1,15 +1,17 @@
 package com.qygx.common.core.domain;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.qygx.common.core.domain.entity.ItemType;
 import com.qygx.common.core.domain.entity.SysDept;
 import com.qygx.common.core.domain.entity.SysMenu;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Treeselect树结构实体类
- * 
+ *
  * @author ruoyi
  */
 public class TreeSelect implements Serializable
@@ -35,6 +37,13 @@ public class TreeSelect implements Serializable
     {
         this.id = dept.getDeptId();
         this.label = dept.getDeptName();
+        this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(ItemType dept)
+    {
+        this.id = dept.getItemTypeId();
+        this.label = dept.getItemTypeName();
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 

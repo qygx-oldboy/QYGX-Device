@@ -67,6 +67,17 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['product:inspect:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="info"
           plain
           icon="el-icon-upload2"
@@ -340,6 +351,17 @@ export default {
       this.ids = selection.map((item) => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
+    },
+
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除inspect编号为"' + ids + '"的数据项？').then(function() {
+        return delInspect(ids);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
     },
 
     /** 导出按钮操作 */

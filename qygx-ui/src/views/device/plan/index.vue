@@ -33,7 +33,7 @@
         /> -->
         <el-select v-model="queryParams.level" placeholder="请选择保养等级">
           <el-option
-            v-for="dict in dict.type.device_maintain_level"
+            v-for="dict in dict.type.mes_mt_level"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -124,7 +124,7 @@
       <el-table-column label="设备类型" align="center" prop="deviceType" width="120">
         <template slot-scope="scope">
           <dict-tag
-            :options="dict.type.qygx_device_type"
+            :options="dict.type.mes_device_type"
             :value="scope.row.deviceType"
           />
         </template>
@@ -132,7 +132,7 @@
       <el-table-column label="保养等级" align="center" prop="level" width="100">
         <template slot-scope="scope">
           <dict-tag
-            :options="dict.type.device_maintain_level"
+            :options="dict.type.mes_mt_level"
             :value="scope.row.level"
           />
         </template>
@@ -254,7 +254,7 @@
             <el-form-item label="设备类型" prop="deviceType">
               <el-select v-model="form.deviceType" placeholder="请选择设备类型">
                 <el-option
-                  v-for="dict in dict.type.qygx_device_type"
+                  v-for="dict in dict.type.mes_device_type"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
@@ -310,7 +310,7 @@
             <el-form-item label="保养等级" prop="level">
               <el-select v-model="form.level" placeholder="请选择保养等级">
                 <el-option
-                  v-for="dict in dict.type.device_maintain_level"
+                  v-for="dict in dict.type.mes_mt_level"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
@@ -471,7 +471,7 @@ import {
 
 export default {
   name: "Plan",
-  dicts: ["sys_normal_disable", "device_maintain_level", "qygx_device_type"],
+  dicts: ["sys_normal_disable", "mes_mt_level", "mes_device_type"],
   data() {
     return {
       // 遮罩层

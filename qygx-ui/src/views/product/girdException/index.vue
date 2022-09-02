@@ -63,7 +63,7 @@
           size="mini"
           :disabled="multiple"
           @click="batchHandleAnalysis"
-          v-hasPermi="['product:inspect:edit']"
+          v-hasPermi="['product:inspect:query']"
           >分析改善</el-button
         >
       </el-col>
@@ -167,7 +167,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleAnalysis(scope.row)"
-            v-hasPermi="['product:inspect:edit']"
+            v-hasPermi="['product:inspect:query']"
             >分析改善</el-button
           >
         </template>

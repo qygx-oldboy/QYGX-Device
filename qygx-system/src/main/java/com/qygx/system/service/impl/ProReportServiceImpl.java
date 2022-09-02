@@ -161,8 +161,8 @@ public class ProReportServiceImpl implements IProReportService {
     @Override
     @DataSource(value = DataSourceType.SLAVE)
     public List<ProInspect> selectProInspectUnusualList(ProInspect proInspect) {
+        proInspect.setLianglv(LIANGLV);
         List<ProInspect>  allList =  reportMapper.selectInspectList(proInspect);
-        List<ProInspect>  unList = new ArrayList<>();
         if(allList.size() > 0){
             Map<Integer,String> map;
             for (ProInspect pi: allList) {
@@ -192,11 +192,10 @@ public class ProReportServiceImpl implements IProReportService {
                         pi.setStatus(0);
                     }
                     pi.setOkPercent(liangLv);
-                    unList.add(pi);
                 }
             }
         }
-        return unList;
+        return allList;
     }
 
     /**
@@ -233,6 +232,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public int deleteProInspectByIds(Long[] ids)
     {
         return reportMapper.deleteInspectByIds(ids);

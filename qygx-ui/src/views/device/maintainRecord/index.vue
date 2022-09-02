@@ -194,7 +194,7 @@
           <el-table-column label="状态" prop="isNormal" width="160">
             <template slot-scope="scope">
               <dict-tag
-                :options="dict.type.device_maintain_state"
+                :options="dict.type.mes_mt_result"
                 :value="scope.row.isNormal"
               />
             </template>
@@ -221,7 +221,7 @@ import {
 
 export default {
   name: "MaintainSheet",
-  dicts: ["business_handle_state", "device_maintain_state"],
+  dicts: ["business_handle_state", "mes_mt_result"],
   data() {
     return {
       // 遮罩层

@@ -23,7 +23,7 @@
           clearable
         >
           <el-option
-            v-for="dict in dict.type.qygx_device_type"
+            v-for="dict in dict.type.mes_device_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -110,7 +110,7 @@
       <el-table-column label="设备类型" align="center" prop="deviceType">
         <template slot-scope="scope">
           <dict-tag
-            :options="dict.type.qygx_device_type"
+            :options="dict.type.mes_device_type"
             :value="scope.row.deviceType"
           />
         </template>
@@ -164,7 +164,7 @@
         <el-form-item label="设备类型" prop="deviceType">
           <el-select v-model="form.deviceType" placeholder="请选择设备类型">
             <el-option
-              v-for="dict in dict.type.qygx_device_type"
+              v-for="dict in dict.type.mes_device_type"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
@@ -200,7 +200,7 @@ import {
 
 export default {
   name: "Archives",
-  dicts: ["qygx_device_type"],
+  dicts: ["mes_device_type"],
   data() {
     return {
       // 遮罩层
