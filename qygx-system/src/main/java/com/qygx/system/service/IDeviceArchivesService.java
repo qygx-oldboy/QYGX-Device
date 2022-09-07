@@ -2,6 +2,7 @@ package com.qygx.system.service;
 
 import java.util.List;
 import com.qygx.system.domain.DeviceArchives;
+import com.qygx.system.domain.ProInspect;
 
 /**
  * archivesService接口
@@ -66,4 +67,13 @@ public interface IDeviceArchivesService
      * @return 结果
      */
     public String checkDeviceNameUnique(String deviceName);
+
+    /**
+     * 导入设备
+     * @param deviceList
+     * @param isUpdateSupport
+     * @param operName
+     * @return
+     */
+    public String importDevice(List<DeviceArchives> deviceList, Boolean isUpdateSupport, String operName);
 }

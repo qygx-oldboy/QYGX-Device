@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qygx.system.mapper.DeviceArchivesMapper">
-    
+
     <resultMap type="DeviceArchives" id="DeviceArchivesResult">
         <result property="deviceId"    column="device_id"    />
+        <result property="deviceCode"    column="device_code"    />
         <result property="ip"    column="ip"    />
         <result property="name"    column="name"    />
         <result property="standard"    column="standard"    />
@@ -17,29 +18,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="assetCode"    column="asset_code"    />
     </resultMap>
 
     <sql id="selectDeviceArchivesVo">
-        select device_id, ip, name, standard, device_type, manufacturer, status, location, create_by, create_time, update_by, update_time from device_archives
+        select device_id, device_code, ip, name, standard, device_type, manufacturer, status, location, create_by, create_time, update_by, update_time, asset_code from device_archives
     </sql>
 
     <select id="selectDeviceArchivesList" parameterType="DeviceArchives" resultMap="DeviceArchivesResult">
         <include refid="selectDeviceArchivesVo"/>
-        <where>  
+        <where>
+            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="standard != null  and standard != ''"> and standard = #{standard}</if>
             <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="manufacturer != null  and manufacturer != ''"> and manufacturer = #{manufacturer}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="assetCode != null  and assetCode != ''"> and asset_code = #{assetCode}</if>
         </where>
     </select>
-    
+
     <select id="selectDeviceArchivesByDeviceId" parameterType="Long" resultMap="DeviceArchivesResult">
         <include refid="selectDeviceArchivesVo"/>
         where device_id = #{deviceId}
     </select>
-        
+
     <insert id="insertDeviceArchives" parameterType="DeviceArchives" useGeneratedKeys="true" keyProperty="deviceId">
         insert into device_archives
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null">device_code,</if>
             <if test="ip != null">ip,</if>
             <if test="name != null">name,</if>
             <if test="standard != null">standard,</if>
@@ -51,8 +60,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="assetCode != null">asset_code,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null">#{deviceCode},</if>
             <if test="ip != null">#{ip},</if>
             <if test="name != null">#{name},</if>
             <if test="standard != null">#{standard},</if>
@@ -64,12 +75,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="assetCode != null">#{assetCode},</if>
+        </trim>
     </insert>
 
     <update id="updateDeviceArchives" parameterType="DeviceArchives">
         update device_archives
         <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceCode != null">device_code = #{deviceCode},</if>
             <if test="ip != null">ip = #{ip},</if>
             <if test="name != null">name = #{name},</if>
             <if test="standard != null">standard = #{standard},</if>
@@ -81,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="assetCode != null">asset_code = #{assetCode},</if>
         </trim>
         where device_id = #{deviceId}
     </update>
@@ -90,13 +104,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDeviceArchivesByDeviceIds" parameterType="String">
-        delete from device_archives where device_id in 
+        delete from device_archives where device_id in
         <foreach item="deviceId" collection="array" open="(" separator="," close=")">
             #{deviceId}
         </foreach>
     </delete>
-
-    <select id="checkDeviceNameUnique" parameterType="String" resultType="int">
-        select count(1) from device_archives where name = #{deviceName} limit 1
-    </select>
 </mapper>

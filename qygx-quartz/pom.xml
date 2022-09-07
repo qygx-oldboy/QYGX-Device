@@ -38,6 +38,10 @@
             <groupId>com.qygx</groupId>
             <artifactId>qygx-framework</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.qygx</groupId>
+            <artifactId>qygx-mes</artifactId>
+        </dependency>
 
     </dependencies>
 

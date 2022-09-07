@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.csm.mapper.CsmConsumaUseMapper">
+    
+    <resultMap type="CsmConsumaUse" id="CsmConsumaUseResult">
+        <result property="consumaUseId"    column="consuma_use_id"    />
+        <result property="consumaId"    column="consuma_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="replaceTime"    column="replace_time"    />
+        <result property="useTime"    column="use_time"    />
+        <result property="nextReplaceTime"    column="next_replace_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCsmConsumaUseVo">
+        select consuma_use_id, consuma_id, device_id, replace_time, use_time, next_replace_time, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from csm_consuma_use
+    </sql>
+
+    <select id="selectCsmConsumaUseList" parameterType="CsmConsumaUse" resultMap="CsmConsumaUseResult">
+        <include refid="selectCsmConsumaUseVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectCsmConsumaUseByConsumaUseId" parameterType="Long" resultMap="CsmConsumaUseResult">
+        <include refid="selectCsmConsumaUseVo"/>
+        where consuma_use_id = #{consumaUseId}
+    </select>
+        
+    <insert id="insertCsmConsumaUse" parameterType="CsmConsumaUse" useGeneratedKeys="true" keyProperty="consumaUseId">
+        insert into csm_consuma_use
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="consumaId != null">consuma_id,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="replaceTime != null">replace_time,</if>
+            <if test="useTime != null">use_time,</if>
+            <if test="nextReplaceTime != null">next_replace_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="attr1 != null">attr1,</if>
+            <if test="attr2 != null">attr2,</if>
+            <if test="attr3 != null">attr3,</if>
+            <if test="attr4 != null">attr4,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="consumaId != null">#{consumaId},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="replaceTime != null">#{replaceTime},</if>
+            <if test="useTime != null">#{useTime},</if>
+            <if test="nextReplaceTime != null">#{nextReplaceTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="attr1 != null">#{attr1},</if>
+            <if test="attr2 != null">#{attr2},</if>
+            <if test="attr3 != null">#{attr3},</if>
+            <if test="attr4 != null">#{attr4},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsmConsumaUse" parameterType="CsmConsumaUse">
+        update csm_consuma_use
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consumaId != null">consuma_id = #{consumaId},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="replaceTime != null">replace_time = #{replaceTime},</if>
+            <if test="useTime != null">use_time = #{useTime},</if>
+            <if test="nextReplaceTime != null">next_replace_time = #{nextReplaceTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="attr2 != null">attr2 = #{attr2},</if>
+            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where consuma_use_id = #{consumaUseId}
+    </update>
+
+    <delete id="deleteCsmConsumaUseByConsumaUseId" parameterType="Long">
+        delete from csm_consuma_use where consuma_use_id = #{consumaUseId}
+    </delete>
+
+    <delete id="deleteCsmConsumaUseByConsumaUseIds" parameterType="String">
+        delete from csm_consuma_use where consuma_use_id in 
+        <foreach item="consumaUseId" collection="array" open="(" separator="," close=")">
+            #{consumaUseId}
+        </foreach>
+    </delete>
+</mapper>

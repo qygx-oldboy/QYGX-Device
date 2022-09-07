@@ -1,6 +1,8 @@
 package com.qygx.quartz.service.impl;
 import com.qygx.common.utils.DateUtils;
 import com.qygx.common.utils.StringUtils;
+import com.qygx.mes.dv.domain.DvCheckMachinery;
+import com.qygx.mes.dv.mapper.DvCheckMachineryMapper;
 import com.qygx.quartz.service.DeviceMaintainService;
 import com.qygx.system.domain.*;
 import com.qygx.system.mapper.DeviceArchivesMapper;
@@ -25,12 +27,7 @@ public class DeviceMaintainServiceImpl implements DeviceMaintainService {
     private MaintainPlanMapper planMapper;
 
     @Autowired
-    private DeviceArchivesMapper archivesMapper;
-
-
-    @Autowired
-    private MiddleDevicePlanMapper devicePlanMapper;
-
+    private DvCheckMachineryMapper dvCheckMapper;
 
     @Autowired
     private DeviceMaintainSheetMapper sheetMapper;
@@ -49,113 +46,79 @@ public class DeviceMaintainServiceImpl implements DeviceMaintainService {
     @Override
     public void generateSheet() {
 
-        //todo  查询所有开启的保养计划，
-        //废弃todo  遍历保养计划， 根据设备类型  添加/删除 “设备-计划中间表”
-        //废弃todo  遍历中间表，当“下次时间”为空的时候，则根据保养计划首次时间，生成保养单 （如果当前时间>保养计划首次时间，则立即或者 间隔天数 生成保养单）
-        //废弃todo  否则根据“下次时间”生成保养单
-
+        //todo  查询所有开启的保养计划
         List<MaintainPlan> maintainPlans = planMapper.selectMaintainPlanList(new MaintainPlan());
         List<MaintainPlan> openPlans =  maintainPlans.stream().filter(m -> m.getUseState().equals("0")).collect(Collectors.toList());
+        Date time = DateUtils.parseDate(DateUtils.getDate());  //当前日期
+        Calendar calendar = Calendar.getInstance();
 
-        //List<MiddleDevicePlan> middleDevicePlans = devicePlanMapper.selectMiddleDevicePlanList(new MiddleDevicePlan());
-
-        Date time = DateUtils.parseDate(DateUtils.getDate());
 
         for (MaintainPlan plan:
                 openPlans) {
-            //根据设备类型查询设备
-            DeviceArchives deviceArchives =  new DeviceArchives();
-            deviceArchives.setDeviceType(plan.getDeviceType());
-            List<DeviceArchives> das = archivesMapper.selectDeviceArchivesList(deviceArchives);
-
-//            for (DeviceArchives da:
-//                    das ) {
-//                MiddleDevicePlan middleDevicePlan =  new MiddleDevicePlan();
-//                middleDevicePlan.setDeviceId(da.getDeviceId());
-//                middleDevicePlan.setPlanId(plan.getPlanId());
-//                //如果中间表没有该记录， 添加记录
-//                if(this.checkMiddleUnique(middleDevicePlan).equals("0")){
-//                    devicePlanMapper.insertMiddleDevicePlan(middleDevicePlan);
-//                }
-//            }
-            //todo  如果最后一次保养时间为空， 则按照首次保养计划时间 生成保养单，生成后记录最后一次保养时间
+            //todo  如果最后一次保养时间为空， 则按照设备首次保养计划时间 提前一周 生成保养单，生成后记录最后一次保养时间
             //todo  如果最后一次保养时间不为空，则判断 当前时间 与 最后一次保养时间+间隔时间 （当前时间小于，则到达间隔时间生成保养单，大于则立即生成）
 
-            if(StringUtils.isNull(plan.getLastMaintainTime())){
-                Date firstMaintainTime = plan.getFirstMaintainTime();
-                //Date1 时间与 Date2 相等
-                if(firstMaintainTime.compareTo(time) == 0){
-                    for (DeviceArchives da:
-                            das ) {
-
-                        //添加保养任务
-                        DeviceMaintainSheet sheet = new DeviceMaintainSheet();
-                        sheet.setDeviceId(da.getDeviceId());  //设备id
-                        sheet.setMaintainerId(plan.getMaintainerId()); //保养人id
-                        sheet.setStatus("0"); //未完成
-                        sheet.setCreateTime(time);
-                        sheetMapper.insertDeviceMaintainSheet(sheet);
-
-
-                        //添加保养任务详情
-                        List<DeviceMaintainDetail> sheetDetailList = new ArrayList<>();
-                        Long maintainSheetId = sheet.getMaintainSheetId();
-                        List<MaintainPlanDetail> planDetailList = plan.getMaintainPlanDetailList();
-                        for (MaintainPlanDetail planDetail:
-                                planDetailList) {
-                            DeviceMaintainDetail d =  new DeviceMaintainDetail();
-                            d.setContent(planDetail.getContent());
-                            d.setStandard(planDetail.getStandard());
-                            d.setMaintainSheetId(maintainSheetId);
-                            sheetDetailList.add(d);
-                        }
-                        sheetMapper.batchDeviceMaintainDetail(sheetDetailList);
-
+            //查询该计划下 所有的设备
+            DvCheckMachinery dvCheck = new DvCheckMachinery();
+            dvCheck.setPlanId(plan.getPlanId());
+            List<DvCheckMachinery> checkList = dvCheckMapper.selectDvCheckMachineryList(dvCheck);
+            for (DvCheckMachinery check:
+                    checkList ) {
+                if (StringUtils.isNull(check.getLastTime())) {
+                    Date firstTime = check.getFirstTime();
+                    calendar.setTime(firstTime);
+                    calendar.add(Calendar.WEEK_OF_YEAR, -1);
+                    Date time1 = calendar.getTime();
+                    //Date1 时间与 Date2 相等
+                    if (time1.compareTo(time) == 0) {
+                        this.generateSheetByPlan(plan,check);
                     }
-                    plan.setLastMaintainTime(time);
-                    planMapper.updateMaintainPlan(plan);
                 }
-            }else{
-                // 得到几天后(间隔)的时间
-                Calendar now = Calendar.getInstance();
-                now.setTime(plan.getLastMaintainTime());
-                now.set(Calendar.DATE, now.get(Calendar.DATE) + plan.getIntervalDays().intValue());
-                if(now.getTime().compareTo(time) == 0 || now.getTime().compareTo(time) < 0 ){
-                    for (DeviceArchives da:
-                            das ) {
-                        DeviceMaintainSheet sheet = new DeviceMaintainSheet();
-                        sheet.setDeviceId(da.getDeviceId());  //设备id
-                        sheet.setMaintainerId(plan.getMaintainerId()); //保养人id
-                        sheet.setStatus("0"); //未完成
-                        sheet.setCreateTime(time);
-                        sheetMapper.insertDeviceMaintainSheet(sheet);
+                else{
+                    // 得到几天后(间隔)的时间
+
+                    calendar.setTime(check.getLastTime());
+                    calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + plan.getIntervalDays().intValue() - 7);
+                    if(calendar.getTime().compareTo(time) == 0 || calendar.getTime().compareTo(time) < 0 ){
+                        generateSheetByPlan(plan,check);
                     }
-                    plan.setLastMaintainTime(time);
-                    planMapper.updateMaintainPlan(plan);
                 }
             }
-
-
         }
-
-
-
     }
 
 
     /**
-     * 校验 设备和计划  在中间表 是否唯一
-     *
-     * @param middleDevicePlan
-     * @return 结果
+     * 实际生成保养单
+     * @param plan
+     * @param check
      */
-    public String checkMiddleUnique(MiddleDevicePlan middleDevicePlan)
+    public void generateSheetByPlan(MaintainPlan plan,DvCheckMachinery check)
     {
-        int count = devicePlanMapper.checkMiddleUnique(middleDevicePlan);
-        if (count > 0)
-        {
-            return "1";
-        }
-        return "0";
+            //添加保养任务
+            DeviceMaintainSheet sheet = new DeviceMaintainSheet();
+            sheet.setDeviceId(check.getMachineryId());
+
+            sheet.setMaintainerId(plan.getMaintainerId());
+            sheet.setStatus("0");
+            sheet.setDeadline(check.getFirstTime()); //截止时间
+            sheetMapper.insertDeviceMaintainSheet(sheet);
+
+            //添加保养任务详情
+            List<DeviceMaintainDetail> sheetDetailList = new ArrayList<>();
+            Long maintainSheetId = sheet.getMaintainSheetId();
+            List<MaintainPlanDetail> planDetailList = plan.getMaintainPlanDetailList();
+            for (MaintainPlanDetail planDetail:
+                    planDetailList) {
+                DeviceMaintainDetail d =  new DeviceMaintainDetail();
+                d.setContent(planDetail.getContent());
+                d.setStandard(planDetail.getStandard());
+                d.setMaintainSheetId(maintainSheetId);
+                sheetDetailList.add(d);
+            }
+            sheetMapper.batchDeviceMaintainDetail(sheetDetailList);
+
+            check.setLastTime(DateUtils.parseDate(DateUtils.getDate()));
+            dvCheckMapper.updateDvCheckMachinery(check);
     }
 }

@@ -102,7 +102,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="任务编号" align="center" prop="maintainSheetId" />
-      <!-- <el-table-column label="设备id" align="center" prop="deviceId" /> -->
+      <el-table-column label="设备编码" align="center" prop="device.deviceCode" />
       <el-table-column label="设备名称" align="center" prop="device.name" />
       <!-- <el-table-column
         label="生产厂商"
@@ -132,6 +132,17 @@
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d}") }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="截止时间"
+        align="center"
+        prop="deadline"
+        width="180"
+      >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.deadline, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
 
@@ -166,15 +177,16 @@
       <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-row>
           <el-col :span="12">
+            <el-form-item label="设备编码：" prop="deviceCode">
+              {{ device.deviceCode }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="设备名称：" prop="name">
               {{ device.name }}
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="设备ip：" prop="ip">
-              {{ device.ip }}
-            </el-form-item>
-          </el-col>
+         
         </el-row>
         <el-row>
           <el-col :span="12">
@@ -188,7 +200,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="设备ip：" prop="ip">
+              {{ device.ip }}
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-divider content-position="center">保养记录明细信息</el-divider>
         <el-table

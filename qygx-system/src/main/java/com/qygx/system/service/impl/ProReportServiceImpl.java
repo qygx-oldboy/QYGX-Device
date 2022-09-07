@@ -27,7 +27,7 @@ import java.util.*;
 @Service
 public class ProReportServiceImpl implements IProReportService {
 
-    private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ProReportServiceImpl.class);
 
     @Autowired
     private ProReportMapper reportMapper;

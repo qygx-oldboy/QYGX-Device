@@ -47,7 +47,7 @@ public class MaintainPlan extends BaseEntity
 
     /** 保养等级 */
     @Excel(name = "保养等级")
-    private Long level;
+    private String level;
 
     /** 计划名称 */
     @Excel(name = "计划名称")
@@ -133,12 +133,12 @@ public class MaintainPlan extends BaseEntity
     {
         return auditorNickName;
     }
-    public void setLevel(Long level)
+    public void setLevel(String level)
     {
         this.level = level;
     }
 
-    public Long getLevel()
+    public String getLevel()
     {
         return level;
     }

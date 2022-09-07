@@ -11,6 +11,7 @@
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="endTime"    column="end_time"    />
+        <result property="deadline"    column="deadline"    />
         <result property="deviceId"    column="device_id"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateBy"    column="update_by"    />
@@ -27,6 +28,7 @@
 
     <resultMap id="deviceResult" type="DeviceArchives">
         <id     property="deviceId"       column="device_id"      />
+        <result property="deviceCode"     column="device_code"    />
         <result property="name"     column="name"    />
         <result property="location"     column="location"    />
         <result property="ip"     column="ip"    />
@@ -48,9 +50,9 @@
     </resultMap>
 
     <sql id="selectDeviceMaintainSheetVo">
-        select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
+        select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time,a.deadline, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
                b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark,
-               u.nick_name,d.name,d.location,d.manufacturer
+               u.nick_name,d.device_code,d.name,d.location,d.manufacturer
         from device_maintain_sheet a
                  left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
                  left join sys_user u on a.maintainer_id = u.user_id
@@ -74,7 +76,7 @@
     <select id="selectDeviceMaintainSheetByMaintainSheetId" parameterType="Long" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
                b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark,
-               d.name,d.ip,d.location,d.manufacturer
+               d.device_code,d.name,d.ip,d.location,d.manufacturer
         from device_maintain_sheet a
                  left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
                  left join device_archives d on a.device_id = d.device_id
@@ -89,6 +91,7 @@
             <if test="status != null">status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="endTime != null">end_time,</if>
+            <if test="deadline != null">deadline,</if>
             <if test="deviceId != null">device_id,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateBy != null">update_by,</if>
@@ -101,6 +104,7 @@
             <if test="status != null">#{status},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="endTime != null">#{endTime},</if>
+            <if test="deadline != null">#{deadline},</if>
             <if test="deviceId != null">#{deviceId},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>

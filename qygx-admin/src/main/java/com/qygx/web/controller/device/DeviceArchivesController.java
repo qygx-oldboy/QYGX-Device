@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qygx.common.constant.DeviceConstants;
 import com.qygx.common.constant.UserConstants;
+import com.qygx.system.domain.ProInspect;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import com.qygx.system.domain.DeviceArchives;
 import com.qygx.system.service.IDeviceArchivesService;
 import com.qygx.common.utils.poi.ExcelUtil;
 import com.qygx.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * archivesController
@@ -47,6 +49,33 @@ public class DeviceArchivesController extends BaseController
         startPage();
         List<DeviceArchives> list = deviceArchivesService.selectDeviceArchivesList(deviceArchives);
         return getDataTable(list);
+    }
+
+    /**
+     * 导入archives列表
+     */
+    @PreAuthorize("@ss.hasPermi('device:archives:import')")
+    @Log(title = "archives", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<DeviceArchives> util = new ExcelUtil<DeviceArchives>(DeviceArchives.class);
+        List<DeviceArchives> deviceList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = deviceArchivesService.importDevice(deviceList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+
+
+    /**
+     * 下载导入模块
+     * @param response
+     */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<DeviceArchives> util = new ExcelUtil<DeviceArchives>(DeviceArchives.class);
+        util.importTemplateExcel(response, "设备数据");
     }
 
     /**

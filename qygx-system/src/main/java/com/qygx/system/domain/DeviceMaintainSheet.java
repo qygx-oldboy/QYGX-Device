@@ -49,6 +49,12 @@ public class DeviceMaintainSheet extends BaseEntity
     @Excel(name = "设备id")
     private Long deviceId;
 
+
+    /** 截止时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "截止时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date deadline;
+
     /** 保养记录明细信息 */
     private List<DeviceMaintainDetail> deviceMaintainDetailList;
 
@@ -168,6 +174,14 @@ public class DeviceMaintainSheet extends BaseEntity
     public void setDeviceMaintainDetailList(List<DeviceMaintainDetail> deviceMaintainDetailList)
     {
         this.deviceMaintainDetailList = deviceMaintainDetailList;
+    }
+
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
     }
 
     @Override

@@ -67,7 +67,7 @@
           >新增</el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -78,7 +78,7 @@
           v-hasPermi="['device:plan:edit']"
           >修改</el-button
         >
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -165,7 +165,7 @@
         width="100"
       />
 
-      <el-table-column
+      <!-- <el-table-column
         label="首次保养计划时间"
         align="center"
         prop="firstMaintainTime"
@@ -189,7 +189,7 @@
             parseTime(scope.row.lastMaintainTime, "{y}-{m}-{d}")
           }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
       <el-table-column label="备注" align="center" prop="remark" />
@@ -205,6 +205,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['device:plan:edit']"
+            v-if="scope.row.useState == 1"
             >修改</el-button
           >
           <el-button
@@ -250,9 +251,12 @@
               <el-input v-model="form.name" placeholder="请输入计划名称" />
             </el-form-item>
           </el-col>
+
+        
+          
           <el-col :span="12">
             <el-form-item label="设备类型" prop="deviceType">
-              <el-select v-model="form.deviceType" placeholder="请选择设备类型">
+              <el-select v-model="form.deviceType" placeholder="请选择设备类型" :disabled=isEdit>
                 <el-option
                   v-for="dict in dict.type.mes_device_type"
                   :key="dict.value"
@@ -263,7 +267,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item label="计划时间" prop="firstMaintainTime">
               <el-date-picker
@@ -276,6 +280,9 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+          
+        </el-row> -->
+        <el-row>
           <el-col :span="12">
             <el-form-item label="间隔天数" prop="intervalDays">
               <el-input-number
@@ -286,6 +293,20 @@
               />&nbsp;天
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="保养等级" prop="level">
+              <el-select v-model="form.level" placeholder="请选择保养等级">
+                <el-option
+                  v-for="dict in dict.type.mes_mt_level"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          
         </el-row>
         <el-row>
           <el-col :span="12">
@@ -305,27 +326,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-
           <el-col :span="12">
-            <el-form-item label="保养等级" prop="level">
-              <el-select v-model="form.level" placeholder="请选择保养等级">
-                <el-option
-                  v-for="dict in dict.type.mes_mt_level"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-
-
-
-          
-        </el-row>
-        <el-row>
-          <el-col>
             <el-form-item label="状态" prop="useState">
               <el-radio-group v-model="form.useState">
                 <el-radio
@@ -351,7 +352,13 @@
           </el-col>
         </el-row>
 
-        <el-divider content-position="center">保养计划明细信息</el-divider>
+
+        <el-tabs type="border-card">        
+        <el-tab-pane label="设备清单" v-if="isShow"> 
+          <Checkmachinery ref="machinerylist"  :planId="form.planId" :deviceType="form.deviceType" :key="new Date().getTime()" ></Checkmachinery>        
+        </el-tab-pane>
+        <el-tab-pane label="保养项目">
+          <!-- <Checksubject ref="subjectlist" :optType="optType" :planId="form.planId" ></Checksubject> -->
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button
@@ -406,6 +413,10 @@
             </template>
           </el-table-column>
         </el-table>
+        </el-tab-pane>
+      </el-tabs>
+
+  
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -468,10 +479,12 @@ import {
   changePlanStatus,
   deviceTreeselect,
 } from "@/api/device/plan";
+import Checkmachinery from "./machinery.vue"
 
 export default {
   name: "Plan",
   dicts: ["sys_normal_disable", "mes_mt_level", "mes_device_type"],
+  components:{Checkmachinery},
   data() {
     return {
       // 遮罩层
@@ -498,7 +511,7 @@ export default {
       open: false,
       // 保养人选项
       maintainerOptions: [],
-
+      isShow: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -509,6 +522,7 @@ export default {
       },
       // 表单参数
       form: {},
+      isEdit: false,
 
       // 表单校验
       rules: {
@@ -522,8 +536,8 @@ export default {
           },
         ],
 
-        firstMaintainTime: [
-          { required: true, message: "计划时间不能为空", trigger: "blur" },
+        deviceType: [
+          { required: true, message: "设备类型不能为空", trigger: "blur" },
         ],
       },
     };
@@ -549,22 +563,6 @@ export default {
       });
     },
 
-    // /** 查询设备树结构 */
-    // getDeviceTreeselect() {
-    //   deviceTreeselect().then((response) => {
-    //     this.deviceOptions = response.data;
-    //     console.info(this.deviceOptions);
-    //   });
-    // },
-
-    //   /** 根据计划ID查询设备树结构 */
-    // getPlanDeviceTreeselect(planId) {
-    //   return planDeviceTreeselect(planId).then((response) => {
-    //     this.deviceOptions = response.devices;
-    //     return response;
-    //   });
-    // },
-
     // 取消按钮
     cancel() {
       this.open = false;
@@ -580,8 +578,7 @@ export default {
         maintainerNickName: null,
         level: null,
         name: null,
-        firstMaintainTime: null,
-        lastMaintainTime: null,
+        deviceType:null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -609,13 +606,18 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+     
       this.reset();
       this.getTreeselect();
       this.open = true;
       this.title = "添加保养计划";
+      this.isShow = false;
+      this.isEdit = false;
     },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
+    
       this.reset();
       this.getTreeselect();
       const planId = row.planId || this.ids;
@@ -625,7 +627,11 @@ export default {
         this.open = true;
         this.title = "修改保养计划";
       });
+      this.isShow = true;
+      this.isEdit = true;
     },
+
+
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
@@ -633,10 +639,14 @@ export default {
           this.form.maintainPlanDetailList = this.maintainPlanDetailList;
           if (this.form.planId != null) {
             updatePlan(this.form).then((response) => {
+              
+              this.$refs.machinerylist.onMachinerySubmit();
+
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
+          
           } else {
             addPlan(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");
@@ -703,7 +713,7 @@ export default {
 
     // 计划状态修改
     handleStatusChange(row) {
-      console.info(row);
+  
       let text = row.useState === "0" ? "启用" : "停用";
       this.$modal
         .confirm('确认要"' + text + '""' + row.name + '"计划吗？')
@@ -720,7 +730,6 @@ export default {
 
     //下拉框传递多个参数id
     changeValue(event) {
-      console.info(event);
       this.maintainerId = event.userId;
       this.maintainerNickName = event.nickName;
     },

@@ -66,5 +66,13 @@ public interface DeviceArchivesMapper
      * @param deviceName 设备名称
      * @return 结果
      */
-    public int checkDeviceNameUnique(String deviceName);
+    //public int checkDeviceNameUnique(String deviceName);
+
+    /**
+     * 查询archives
+     *
+     * @param deviceCode 设备编码
+     * @return archives
+     */
+    public DeviceArchives selectDeviceByCode(String  deviceCode);
 }

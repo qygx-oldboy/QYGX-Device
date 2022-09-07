@@ -181,7 +181,21 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  }
+  },
+  {
+    path: '/mes/csm/consumause',
+    component: Layout,
+    hidden: true,
+    permissions: ['mes:csm:consumause:list'],
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/mes/csm/consumause/index'),
+        name: 'consumauseList',
+        meta: { title: '备件设置', activeMenu: '/mes/csm/consumause' }
+      }
+    ]
+  },
 ]
 
 // 防止连续点击多次路由报错
