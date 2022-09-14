@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.pro.mapper.ProTraceMapper">
+    
+    <resultMap type="ProTrace" id="ProTraceResult">
+        <result property="traceId"    column="trace_id"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="processId"    column="process_id"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="processName"    column="process_name"    />
+        <result property="machineryId"    column="machinery_id"    />
+        <result property="machineryCode"    column="machinery_code"    />
+        <result property="machineryName"    column="machinery_name"    />
+        <result property="operator"    column="operator"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectProTraceVo">
+        select trace_id, item_code, item_name, process_id, process_code, process_name, machinery_id, machinery_code, machinery_name, operator, start_time, duration, end_time, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from pro_trace
+    </sql>
+
+    <select id="selectProTraceList" parameterType="ProTrace" resultMap="ProTraceResult">
+        <include refid="selectProTraceVo"/>
+        <where>  
+            <if test="itemCode != null  and itemCode != ''"> and item_code = #{itemCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectProTraceByTraceId" parameterType="Long" resultMap="ProTraceResult">
+        <include refid="selectProTraceVo"/>
+        where trace_id = #{traceId}
+    </select>
+        
+    <insert id="insertProTrace" parameterType="ProTrace" useGeneratedKeys="true" keyProperty="traceId">
+        insert into pro_trace
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemCode != null and itemCode != ''">item_code,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="processCode != null">process_code,</if>
+            <if test="processName != null">process_name,</if>
+            <if test="machineryId != null">machinery_id,</if>
+            <if test="machineryCode != null and machineryCode != ''">machinery_code,</if>
+            <if test="machineryName != null and machineryName != ''">machinery_name,</if>
+            <if test="operator != null">operator,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="attr1 != null">attr1,</if>
+            <if test="attr2 != null">attr2,</if>
+            <if test="attr3 != null">attr3,</if>
+            <if test="attr4 != null">attr4,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="processCode != null">#{processCode},</if>
+            <if test="processName != null">#{processName},</if>
+            <if test="machineryId != null">#{machineryId},</if>
+            <if test="machineryCode != null and machineryCode != ''">#{machineryCode},</if>
+            <if test="machineryName != null and machineryName != ''">#{machineryName},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="attr1 != null">#{attr1},</if>
+            <if test="attr2 != null">#{attr2},</if>
+            <if test="attr3 != null">#{attr3},</if>
+            <if test="attr4 != null">#{attr4},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProTrace" parameterType="ProTrace">
+        update pro_trace
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemCode != null and itemCode != ''">item_code = #{itemCode},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="processCode != null">process_code = #{processCode},</if>
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="machineryId != null">machinery_id = #{machineryId},</if>
+            <if test="machineryCode != null and machineryCode != ''">machinery_code = #{machineryCode},</if>
+            <if test="machineryName != null and machineryName != ''">machinery_name = #{machineryName},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="attr2 != null">attr2 = #{attr2},</if>
+            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where trace_id = #{traceId}
+    </update>
+
+    <delete id="deleteProTraceByTraceId" parameterType="Long">
+        delete from pro_trace where trace_id = #{traceId}
+    </delete>
+
+    <delete id="deleteProTraceByTraceIds" parameterType="String">
+        delete from pro_trace where trace_id in 
+        <foreach item="traceId" collection="array" open="(" separator="," close=")">
+            #{traceId}
+        </foreach>
+    </delete>
+</mapper>
