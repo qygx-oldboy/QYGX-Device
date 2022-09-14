@@ -101,6 +101,7 @@ public class DeviceMaintainServiceImpl implements DeviceMaintainService {
 
             sheet.setMaintainerId(plan.getMaintainerId());
             sheet.setStatus("0");
+            sheet.setCreateTime(DateUtils.getNowDate());
             sheet.setDeadline(check.getFirstTime()); //截止时间
             sheetMapper.insertDeviceMaintainSheet(sheet);
 

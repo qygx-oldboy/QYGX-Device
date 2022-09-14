@@ -36,13 +36,13 @@
     </resultMap>
 
     <sql id="selectMaintainPlanVo">
-        select a.plan_id, a.interval_days, a.use_state, a.maintainer_id, a.maintainer_nick_name, a.auditor_id, a.auditor_nick_name, a.level, a.name, a.first_maintain_time, a.last_maintain_time, a.create_by, a.create_time, a.update_by, a.update_time, a.remark, a.device_type,
-               b.plan_detail_id as sub_plan_detail_id, b.content as sub_content, b.standard as sub_standard, b.plan_id as sub_plan_id
+        select a.plan_id, a.interval_days, a.use_state, a.maintainer_id, a.maintainer_nick_name, a.auditor_id, a.auditor_nick_name, a.level, a.name, a.first_maintain_time, a.last_maintain_time, a.create_by, a.create_time, a.update_by, a.update_time, a.remark, a.device_type
+
         from maintain_plan a
-                 left join maintain_plan_detail b on b.plan_id = a.plan_id
+
     </sql>
 
-    <select id="selectMaintainPlanList" parameterType="MaintainPlan" resultMap="MaintainPlanMaintainPlanDetailResult">
+    <select id="selectMaintainPlanList" parameterType="MaintainPlan" resultMap="MaintainPlanResult">
         <include refid="selectMaintainPlanVo"/>
         <where>
             <if test="intervalDays != null "> and a.interval_days = #{intervalDays}</if>
@@ -57,6 +57,7 @@
             <if test="lastMaintainTime != null "> and a.last_maintain_time = #{lastMaintainTime}</if>
             <if test="deviceType != null  and deviceType != ''"> and a.device_type = #{deviceType}</if>
         </where>
+
     </select>
 
     <select id="selectMaintainPlanByPlanId" parameterType="Long" resultMap="MaintainPlanMaintainPlanDetailResult">

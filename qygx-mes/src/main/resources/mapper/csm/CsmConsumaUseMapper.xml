@@ -3,12 +3,13 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qygx.mes.csm.mapper.CsmConsumaUseMapper">
-    
+
     <resultMap type="CsmConsumaUse" id="CsmConsumaUseResult">
         <result property="consumaUseId"    column="consuma_use_id"    />
         <result property="consumaId"    column="consuma_id"    />
         <result property="deviceId"    column="device_id"    />
         <result property="replaceTime"    column="replace_time"    />
+        <result property="cycle"    column="cycle"    />
         <result property="useTime"    column="use_time"    />
         <result property="nextReplaceTime"    column="next_replace_time"    />
         <result property="remark"    column="remark"    />
@@ -20,29 +21,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <association property="consuma"    column="consuma_id" javaType="CsmConsuma" resultMap="consumaResult" />
+        <association property="device"    column="device_id" javaType="DeviceArchives" resultMap="deviceResult" />
     </resultMap>
 
+    <resultMap id="consumaResult" type="CsmConsuma">
+        <id     property="consumaId"    column="consuma_id"     />
+        <result property="consumaCode"    column="consuma_code"    />
+        <result property="consumaName"    column="consuma_name"    />
+        <result property="specs"    column="specs"    />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="DeviceArchives">
+        <id     property="deviceId"    column="device_id"     />
+        <result property="deviceCode"    column="device_code"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+
+
+
+
     <sql id="selectCsmConsumaUseVo">
-        select consuma_use_id, consuma_id, device_id, replace_time, use_time, next_replace_time, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from csm_consuma_use
+        select u.consuma_use_id, u.consuma_id, u.device_id, u.replace_time, u.use_time, u.next_replace_time, u.remark, u.attr1, u.attr2,
+               u.attr3, u.attr4, u.create_by, u.create_time, u.update_by, u.update_time,u.cycle,
+               c.consuma_code,c.consuma_name,c.specs,
+               a.device_code,a.name
+        from csm_consuma_use u
+        left join csm_consuma c on u.consuma_id = c.consuma_id
+        left join device_archives a on u.device_id =  a.device_id
     </sql>
 
     <select id="selectCsmConsumaUseList" parameterType="CsmConsumaUse" resultMap="CsmConsumaUseResult">
-        <include refid="selectCsmConsumaUseVo"/>
-        <where>  
+        select u.consuma_use_id, u.consuma_id, u.device_id, u.replace_time, u.use_time, u.next_replace_time, u.remark, u.attr1, u.attr2,
+        u.attr3, u.attr4, u.create_by, u.create_time, u.update_by, u.update_time,u.cycle,
+        c.consuma_code,c.consuma_name,c.specs,
+        a.device_code,a.name
+        from csm_consuma_use u
+        left join csm_consuma c on u.consuma_id = c.consuma_id
+        left join device_archives a on u.device_id =  a.device_id
+        <where>
+            <if test="consumaId != null and consumaId != ''">and u.consuma_id = #{consumaId}</if>
+            <if test="deviceId != null and deviceId != ''">and u.device_id = #{deviceId}</if>
+            <if test="replaceTime != null and replaceTime != ''">and u.replace_time = #{replaceTime}</if>
+            <if test="useTime != null and useTime != ''">and u.use_time = #{useTime}</if>
+            <if test="nextReplaceTime != null and nextReplaceTime != ''">and u.next_replace_time = #{nextReplaceTime}</if>
+            <if test="consumaName != null and consumaName != ''">and c.consuma_name like concat('%', #{consumaName}, '%')</if>
+            <if test="expireDay != null and expireDay != ''">and date_add(date(u.next_replace_time), INTERVAL  #{expireDay} DAY) <![CDATA[ <= ]]> CURDATE()</if>
         </where>
     </select>
-    
+
     <select id="selectCsmConsumaUseByConsumaUseId" parameterType="Long" resultMap="CsmConsumaUseResult">
         <include refid="selectCsmConsumaUseVo"/>
-        where consuma_use_id = #{consumaUseId}
+        where u.consuma_use_id = #{consumaUseId}
     </select>
-        
+
     <insert id="insertCsmConsumaUse" parameterType="CsmConsumaUse" useGeneratedKeys="true" keyProperty="consumaUseId">
         insert into csm_consuma_use
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="consumaId != null">consuma_id,</if>
             <if test="deviceId != null">device_id,</if>
             <if test="replaceTime != null">replace_time,</if>
+            <if test="cycle != null">cycle,</if>
             <if test="useTime != null">use_time,</if>
             <if test="nextReplaceTime != null">next_replace_time,</if>
             <if test="remark != null">remark,</if>
@@ -59,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="consumaId != null">#{consumaId},</if>
             <if test="deviceId != null">#{deviceId},</if>
             <if test="replaceTime != null">#{replaceTime},</if>
+            <if test="cycle != null">#{cycle},</if>
             <if test="useTime != null">#{useTime},</if>
             <if test="nextReplaceTime != null">#{nextReplaceTime},</if>
             <if test="remark != null">#{remark},</if>
@@ -80,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceId != null">device_id = #{deviceId},</if>
             <if test="replaceTime != null">replace_time = #{replaceTime},</if>
             <if test="useTime != null">use_time = #{useTime},</if>
+            <if test="cycle != null">cycle = #{cycle},</if>
             <if test="nextReplaceTime != null">next_replace_time = #{nextReplaceTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="attr1 != null">attr1 = #{attr1},</if>
@@ -99,7 +141,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCsmConsumaUseByConsumaUseIds" parameterType="String">
-        delete from csm_consuma_use where consuma_use_id in 
+        delete from csm_consuma_use where consuma_use_id in
         <foreach item="consumaUseId" collection="array" open="(" separator="," close=")">
             #{consumaUseId}
         </foreach>

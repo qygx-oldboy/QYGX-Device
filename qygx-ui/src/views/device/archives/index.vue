@@ -165,7 +165,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="设备id" align="center" prop="deviceId" /> -->
       <el-table-column label="设备编码" align="center" prop="deviceCode">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
@@ -173,7 +173,7 @@
             v-hasPermi="['device:archives:edit']"
             >{{ scope.row.deviceCode }}</el-button
           >
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="设备名称" align="center" prop="name" />
       <el-table-column label="资产编号" align="center" prop="assetCode" />
@@ -202,7 +202,7 @@
             type="text"
             icon="el-icon-s-shop"
             @click="handleConsuma(scope.row.deviceId)"
-            v-hasPermi="['device:archives:edit']"
+            v-hasPermi="['mes:csm:consuma:edit']"
           >备件</el-button>
           <el-button
             size="mini"
@@ -588,8 +588,7 @@ export default {
 
     //备件
     handleConsuma(deviceId){
-      //this.$router.push({ path: '/mes/wm/location/index', query: { warehouseId: warehouseId || 0 ,optType: this.optType} })
-      this.$router.push({ path: '/mes/csm/consumause/index'})
+      this.$router.push({ path: '/device/consuma/index',query: { deviceId: deviceId || 0}})
     },
   },
 };

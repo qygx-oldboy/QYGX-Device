@@ -22,7 +22,7 @@ import com.qygx.framework.security.handle.LogoutSuccessHandlerImpl;
 
 /**
  * spring security配置
- * 
+ *
  * @author ruoyi
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      */
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     /**
      * 认证失败处理类
      */
@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      */
     @Autowired
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
-    
+
     /**
      * 跨域过滤器
      */
@@ -115,6 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
               //  .antMatchers("/prod-socket/webSocket/**").permitAll()
                 .antMatchers("/webSocket/**").permitAll()
+                .antMatchers("/mobile/login/**").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

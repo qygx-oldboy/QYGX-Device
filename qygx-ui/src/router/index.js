@@ -134,6 +134,21 @@ export const dynamicRoutes = [
       }
     ]
   },
+  {
+    path: '/mes/trace-history',
+    component: Layout,
+    hidden: true,
+    permissions: ['mes:pro:trace:edit'],
+    children: [
+      {
+        path: 'index/:itemCode',
+        component: () => import('@/views/mes/pro/trace/history'),
+        name: 'TraceHistory',
+        meta: { title: '生产追溯', activeMenu: '/mes/pro/trace' }
+      }
+    ]
+  },
+
 
   {
     path: '/system/autocodePart',
@@ -183,19 +198,26 @@ export const dynamicRoutes = [
     ]
   },
   {
-    path: '/mes/csm/consumause',
+    path: '/device/consuma',
     component: Layout,
     hidden: true,
     permissions: ['mes:csm:consumause:list'],
     children: [
       {
         path: 'index',
-        component: () => import('@/views/mes/csm/consumause/index'),
-        name: 'consumauseList',
-        meta: { title: '备件设置', activeMenu: '/mes/csm/consumause' }
+        component: () => import('@/views/device/consuma/index'),
+        name: 'ConsumauseList',
+        meta: { title: '备件设置', activeMenu: '/device/consuma' }
       }
     ]
   },
+
+
+  
+ 
+
+
+
 ]
 
 // 防止连续点击多次路由报错

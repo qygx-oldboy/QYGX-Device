@@ -2,14 +2,13 @@ package com.qygx.mes.csm.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.qygx.system.domain.DeviceArchives;
 import com.qygx.common.annotation.Excel;
 import com.qygx.common.core.domain.BaseEntity;
 
 /**
  * 在用备件对象 csm_consuma_use
- * 
+ *
  * @author qygx
  * @date 2022-09-07
  */
@@ -28,141 +27,195 @@ public class CsmConsumaUse extends BaseEntity
     private Long deviceId;
 
     /** 更换时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "更换时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date replaceTime;
 
     /** 使用时长 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "使用时长", width = 30, dateFormat = "yyyy-MM-dd")
     private Date useTime;
 
     /** 下一次更换时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "下一次更换时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date nextReplaceTime;
+
+    /** 过期天数 */
+    private Long expireDay;
+
+    /** 更换周期 */
+    private Long cycle;
+
 
     /** 预留字段1 */
     private String attr1;
 
     /** 预留字段2 */
     private String attr2;
-
     /** 预留字段3 */
-    private Long attr3;
+    private String attr3;
 
     /** 预留字段4 */
     private Long attr4;
 
-    public void setConsumaUseId(Long consumaUseId) 
+    private String consumaName;
+
+    private CsmConsuma consuma;
+
+    private DeviceArchives device;
+
+    public void setConsumaUseId(Long consumaUseId)
     {
         this.consumaUseId = consumaUseId;
     }
 
-    public Long getConsumaUseId() 
+    public Long getConsumaUseId()
     {
         return consumaUseId;
     }
-    public void setConsumaId(Long consumaId) 
+    public void setConsumaId(Long consumaId)
     {
         this.consumaId = consumaId;
     }
 
-    public Long getConsumaId() 
+    public Long getConsumaId()
     {
         return consumaId;
     }
-    public void setDeviceId(Long deviceId) 
+    public void setDeviceId(Long deviceId)
     {
         this.deviceId = deviceId;
     }
 
-    public Long getDeviceId() 
+    public Long getDeviceId()
     {
         return deviceId;
     }
-    public void setReplaceTime(Date replaceTime) 
+    public void setReplaceTime(Date replaceTime)
     {
         this.replaceTime = replaceTime;
     }
 
-    public Date getReplaceTime() 
+    public Date getReplaceTime()
     {
         return replaceTime;
     }
-    public void setUseTime(Date useTime) 
+    public void setUseTime(Date useTime)
     {
         this.useTime = useTime;
     }
 
-    public Date getUseTime() 
+    public Date getUseTime()
     {
         return useTime;
     }
-    public void setNextReplaceTime(Date nextReplaceTime) 
+    public void setNextReplaceTime(Date nextReplaceTime)
     {
         this.nextReplaceTime = nextReplaceTime;
     }
 
-    public Date getNextReplaceTime() 
+    public Date getNextReplaceTime()
     {
         return nextReplaceTime;
     }
-    public void setAttr1(String attr1) 
+    public void setAttr1(String attr1)
     {
         this.attr1 = attr1;
     }
 
-    public String getAttr1() 
+    public String getAttr1()
     {
         return attr1;
     }
-    public void setAttr2(String attr2) 
+    public void setAttr2(String attr2)
     {
         this.attr2 = attr2;
     }
 
-    public String getAttr2() 
+    public String getAttr2()
     {
         return attr2;
     }
-    public void setAttr3(Long attr3) 
+
+    public void setAttr3(String attr3)
     {
         this.attr3 = attr3;
     }
 
-    public Long getAttr3() 
+    public String getAttr3()
     {
         return attr3;
     }
-    public void setAttr4(Long attr4) 
+
+    public Long getExpireDay() {
+        return expireDay;
+    }
+
+    public void setExpireDay(Long expireDay) {
+        this.expireDay = expireDay;
+    }
+
+    public void setAttr4(Long attr4)
     {
         this.attr4 = attr4;
     }
 
-    public Long getAttr4() 
+    public Long getAttr4()
     {
         return attr4;
     }
 
+    public CsmConsuma getConsuma() {
+        return consuma;
+    }
+
+    public void setConsuma(CsmConsuma consuma) {
+        this.consuma = consuma;
+    }
+
+    public String getConsumaName() {
+        return consumaName;
+    }
+
+    public void setConsumaName(String consumaName) {
+        this.consumaName = consumaName;
+    }
+
+    public DeviceArchives getDevice() {
+        return device;
+    }
+
+    public void setDevice(DeviceArchives device) {
+        this.device = device;
+    }
+
+    public Long getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(Long cycle) {
+        this.cycle = cycle;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("consumaUseId", getConsumaUseId())
-            .append("consumaId", getConsumaId())
-            .append("deviceId", getDeviceId())
-            .append("replaceTime", getReplaceTime())
-            .append("useTime", getUseTime())
-            .append("nextReplaceTime", getNextReplaceTime())
-            .append("remark", getRemark())
-            .append("attr1", getAttr1())
-            .append("attr2", getAttr2())
-            .append("attr3", getAttr3())
-            .append("attr4", getAttr4())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .toString();
+        return "CsmConsumaUse{" +
+                "consumaUseId=" + consumaUseId +
+                ", consumaId=" + consumaId +
+                ", deviceId=" + deviceId +
+                ", replaceTime=" + replaceTime +
+                ", useTime=" + useTime +
+                ", nextReplaceTime=" + nextReplaceTime +
+                ", expireDay=" + expireDay +
+                ", cycle=" + cycle +
+                ", attr1='" + attr1 + '\'' +
+                ", attr2='" + attr2 + '\'' +
+                ", attr3='" + attr3 + '\'' +
+                ", attr4=" + attr4 +
+                ", consumaName='" + consumaName + '\'' +
+                ", consuma=" + consuma +
+                ", device=" + device +
+                '}';
     }
 }

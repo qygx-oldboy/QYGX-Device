@@ -51,16 +51,15 @@
 
     <sql id="selectDeviceMaintainSheetVo">
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time,a.deadline, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
-               b.maintain_detail_id as sub_maintain_detail_id, b.maintain_sheet_id as sub_maintain_sheet_id, b.content as sub_content, b.standard as sub_standard, b.is_normal as sub_is_normal, b.remark as sub_remark,
                u.nick_name,d.device_code,d.name,d.location,d.manufacturer
         from device_maintain_sheet a
-                 left join device_maintain_detail b on b.maintain_sheet_id = a.maintain_sheet_id
+
                  left join sys_user u on a.maintainer_id = u.user_id
                  left join device_archives d on a.device_id = d.device_id
 
     </sql>
 
-    <select id="selectDeviceMaintainSheetList" parameterType="DeviceMaintainSheet" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
+    <select id="selectDeviceMaintainSheetList" parameterType="DeviceMaintainSheet" resultMap="DeviceMaintainSheetResult">
         <include refid="selectDeviceMaintainSheetVo"/>
         <where>
             <if test="sheetNumber != null  and sheetNumber != ''"> and a.sheet_number = #{sheetNumber}</if>
