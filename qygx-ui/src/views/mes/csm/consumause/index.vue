@@ -157,7 +157,8 @@ export default {
         pageSize: 10,
         deviceId: null,
         consumaName:  null,
-        expireDay: null
+        expireDay: null,
+        status: "FINISHED"
       },
       // 表单参数
       form: {},

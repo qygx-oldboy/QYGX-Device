@@ -44,7 +44,7 @@ public class ProReportServiceImpl implements IProReportService {
     public List<InspectVo> selectInspectList(ProInspect proInspect) throws ParseException {
         List<ProInspect> listInspect = reportMapper.selectInspectChart(proInspect);
         List<InspectVo> inspectVos = new ArrayList<>();
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm");//设置日期格式
+       // SimpleDateFormat df = new SimpleDateFormat("HH:mm");//设置日期格式
         for (int i = 0; i < listInspect.size(); i++) {
             Date beginTime = listInspect.get(i).getBeginTime();
             String fmtDate = DateUtils.isClassesDate(beginTime);
@@ -100,8 +100,8 @@ public class ProReportServiceImpl implements IProReportService {
     public List<InspectVo> selectShiftInspectList(ProInspect proInspect) throws ParseException {
         List<InspectVo> inspectVos = new ArrayList<>();
         Date nowDate = DateUtils.getNowDate();
-        //todo 白班 2022-07-18 07:30:00  —— 2022-07-18 19:30:00
-        //todo 夜班 2022-07-18 19:31:00  —— 2022-07-19 07:29:00
+        //todo 白班 07:30:00  —— 19:30:00
+        //todo 夜班 19:31:00  —— 07:29:00
         Date[] dates = DateUtils.classesDateRange(nowDate);
 
         proInspect.setBeginTime(dates[0]);

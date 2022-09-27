@@ -2,6 +2,11 @@ package com.qygx.mes.csm.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qygx.common.utils.DateUtils;
+import com.qygx.common.utils.SecurityUtils;
+import com.qygx.mes.csm.domain.CsmReplaceRecord;
+import com.qygx.mes.csm.service.ICsmReplaceRecordService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,9 @@ public class CsmConsumaUseController extends BaseController
 {
     @Autowired
     private ICsmConsumaUseService csmConsumaUseService;
+
+    @Autowired
+    private ICsmReplaceRecordService recordService;
 
     /**
      * 查询在用备件列表
@@ -88,6 +96,19 @@ public class CsmConsumaUseController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CsmConsumaUse csmConsumaUse)
     {
+        //唯一曾增加一条更换记录
+        if("UNIQUE".equals(csmConsumaUseService.checkBatchNoUnique(csmConsumaUse.getbatchNo()))){
+            CsmReplaceRecord record = new CsmReplaceRecord();
+            record.setConsumaCode(csmConsumaUse.getConsuma().getConsumaCode());
+            record.setConsumaName(csmConsumaUse.getConsuma().getConsumaName());
+            record.setBatchNo(csmConsumaUse.getbatchNo());
+            record.setdeviceCode(csmConsumaUse.getDevice().getDeviceCode());
+            record.setdeviceName(csmConsumaUse.getDevice().getName());
+            record.setReplaceTime(DateUtils.getNowDate());
+            record.setNickName(SecurityUtils.getUsername());
+            record.setSpecs(csmConsumaUse.getConsuma().getSpecs());
+            recordService.insertCsmReplaceRecord(record);
+        }
         return toAjax(csmConsumaUseService.updateCsmConsumaUse(csmConsumaUse));
     }
 

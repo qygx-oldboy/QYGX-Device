@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.csm.mapper.CsmReplaceRecordMapper">
+
+    <resultMap type="CsmReplaceRecord" id="CsmReplaceRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="consumaCode"    column="consuma_code"    />
+        <result property="consumaName"    column="consuma_name"    />
+        <result property="specs"    column="specs"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="replaceTime"    column="replace_time"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="deviceCode"    column="device_code"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCsmReplaceRecordVo">
+        select record_id, consuma_code, consuma_name, specs, nick_name, replace_time, batch_no, remark, device_code, device_name, attr3, attr4, create_by, create_time, update_by, update_time from csm_replace_record
+    </sql>
+
+    <select id="selectCsmReplaceRecordList" parameterType="CsmReplaceRecord" resultMap="CsmReplaceRecordResult">
+        <include refid="selectCsmReplaceRecordVo"/>
+        <where>
+            <if test="consumaCode != null  and consumaCode != ''"> and consuma_code = #{consumaCode}</if>
+            <if test="consumaName != null  and consumaName != ''"> and consuma_name like concat('%', #{consumaName}, '%')</if>
+            <if test="specs != null  and specs != ''"> and specs = #{specs}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+<!--            <if test="replaceTime != null "> and replace_time = #{replaceTime}</if>-->
+            <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
+            <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name = #{deviceName}</if>
+            <if test="attr3 != null "> and attr3 = #{attr3}</if>
+            <if test="attr4 != null "> and attr4 = #{attr4}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(replace_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(replace_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCsmReplaceRecordByRecordId" parameterType="Long" resultMap="CsmReplaceRecordResult">
+        <include refid="selectCsmReplaceRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertCsmReplaceRecord" parameterType="CsmReplaceRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into csm_replace_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="consumaCode != null and consumaCode != ''">consuma_code,</if>
+            <if test="consumaName != null and consumaName != ''">consuma_name,</if>
+            <if test="specs != null">specs,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="replaceTime != null">replace_time,</if>
+            <if test="batchNo != null">batch_no,</if>
+            <if test="remark != null">remark,</if>
+            <if test="deviceCode != null">device_code,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="attr3 != null">attr3,</if>
+            <if test="attr4 != null">attr4,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="consumaCode != null and consumaCode != ''">#{consumaCode},</if>
+            <if test="consumaName != null and consumaName != ''">#{consumaName},</if>
+            <if test="specs != null">#{specs},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="replaceTime != null">#{replaceTime},</if>
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="deviceCode != null">#{deviceCode},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="attr3 != null">#{attr3},</if>
+            <if test="attr4 != null">#{attr4},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCsmReplaceRecord" parameterType="CsmReplaceRecord">
+        update csm_replace_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consumaCode != null and consumaCode != ''">consuma_code = #{consumaCode},</if>
+            <if test="consumaName != null and consumaName != ''">consuma_name = #{consumaName},</if>
+            <if test="specs != null">specs = #{specs},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="replaceTime != null">replace_time = #{replaceTime},</if>
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="deviceCode != null">device_code = #{deviceCode},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteCsmReplaceRecordByRecordId" parameterType="Long">
+        delete from csm_replace_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteCsmReplaceRecordByRecordIds" parameterType="String">
+        delete from csm_replace_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

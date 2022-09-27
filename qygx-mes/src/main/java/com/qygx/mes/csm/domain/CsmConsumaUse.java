@@ -47,9 +47,12 @@ public class CsmConsumaUse extends BaseEntity
     /** 更换周期 */
     private Long cycle;
 
+    /** 状态 */
+    @Excel(name = "状态")
+    private String status;
 
-    /** 预留字段1 */
-    private String attr1;
+    /** 备件批次 */
+    private String batchNo;
 
     /** 预留字段2 */
     private String attr2;
@@ -119,14 +122,14 @@ public class CsmConsumaUse extends BaseEntity
     {
         return nextReplaceTime;
     }
-    public void setAttr1(String attr1)
+    public void setbatchNo(String batchNo)
     {
-        this.attr1 = attr1;
+        this.batchNo = batchNo;
     }
 
-    public String getAttr1()
+    public String getbatchNo()
     {
-        return attr1;
+        return batchNo;
     }
     public void setAttr2(String attr2)
     {
@@ -198,6 +201,14 @@ public class CsmConsumaUse extends BaseEntity
         this.cycle = cycle;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "CsmConsumaUse{" +
@@ -209,7 +220,8 @@ public class CsmConsumaUse extends BaseEntity
                 ", nextReplaceTime=" + nextReplaceTime +
                 ", expireDay=" + expireDay +
                 ", cycle=" + cycle +
-                ", attr1='" + attr1 + '\'' +
+                ", status='" + status + '\'' +
+                ", batchNo='" + batchNo + '\'' +
                 ", attr2='" + attr2 + '\'' +
                 ", attr3='" + attr3 + '\'' +
                 ", attr4=" + attr4 +

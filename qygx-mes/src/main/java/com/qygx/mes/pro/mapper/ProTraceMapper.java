@@ -5,15 +5,15 @@ import com.qygx.mes.pro.domain.ProTrace;
 
 /**
  * 生产追溯Mapper接口
- * 
+ *
  * @author qygx
  * @date 2022-09-12
  */
-public interface ProTraceMapper 
+public interface ProTraceMapper
 {
     /**
      * 查询生产追溯
-     * 
+     *
      * @param traceId 生产追溯主键
      * @return 生产追溯
      */
@@ -21,7 +21,7 @@ public interface ProTraceMapper
 
     /**
      * 查询生产追溯列表
-     * 
+     *
      * @param proTrace 生产追溯
      * @return 生产追溯集合
      */
@@ -29,7 +29,7 @@ public interface ProTraceMapper
 
     /**
      * 新增生产追溯
-     * 
+     *
      * @param proTrace 生产追溯
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface ProTraceMapper
 
     /**
      * 修改生产追溯
-     * 
+     *
      * @param proTrace 生产追溯
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface ProTraceMapper
 
     /**
      * 删除生产追溯
-     * 
+     *
      * @param traceId 生产追溯主键
      * @return 结果
      */
@@ -53,9 +53,17 @@ public interface ProTraceMapper
 
     /**
      * 批量删除生产追溯
-     * 
+     *
      * @param traceIds 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteProTraceByTraceIds(Long[] traceIds);
+
+    /**
+     * 查询生产追溯历史
+     *
+     * @param proTrace 生产追溯
+     * @return 生产追溯集合
+     */
+    public List<ProTrace> selectProTraceHistory(ProTrace proTrace);
 }

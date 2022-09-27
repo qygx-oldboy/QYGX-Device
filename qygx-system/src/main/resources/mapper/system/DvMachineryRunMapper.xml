@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.system.mapper.DvMachineryRunMapper">
+
+    <resultMap type="DvMachineryRun" id="DvMachineryRunResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="machineryCode"    column="machinery_code"    />
+        <result property="machineryName"    column="machinery_name"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="runTime"    column="run_time"    />
+        <result property="planDownTime"    column="plan_down_time"    />
+        <result property="excepitonDownTime"    column="excepiton_down_time"    />
+        <result property="movingTime"    column="moving_time"    />
+        <result property="utilizationRate"    column="utilization_rate"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="shiftName"    column="shift_name"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDvMachineryRunVo">
+        select record_id, device_id, machinery_code, machinery_name, record_date, start_time, end_time, run_time, plan_down_time, excepiton_down_time, moving_time, utilization_rate, attr1, shift_name, attr3, attr4, create_by, create_time, update_by, update_time from dv_machinery_run
+    </sql>
+
+    <select id="selectDvMachineryRunList" parameterType="DvMachineryRun" resultMap="DvMachineryRunResult">
+        <include refid="selectDvMachineryRunVo"/>
+        <where>
+            <if test="machineryCode != null  and machineryCode != ''"> and machinery_code = #{machineryCode}</if>
+            <if test="machineryName != null  and machineryName != ''"> and machinery_name like concat('%', #{machineryName}, '%')</if>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+            <if test="utilizationRate != null "> and utilization_rate = #{utilizationRate}</if>
+        </where>
+    </select>
+
+    <select id="selectDvMachineryRunByRecordId" parameterType="Long" resultMap="DvMachineryRunResult">
+        <include refid="selectDvMachineryRunVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertDvMachineryRun" parameterType="DvMachineryRun" useGeneratedKeys="true" keyProperty="recordId">
+        insert into dv_machinery_run
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">device_id,</if>
+            <if test="machineryCode != null">machinery_code,</if>
+            <if test="machineryName != null">machinery_name,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="runTime != null">run_time,</if>
+            <if test="planDownTime != null">plan_down_time,</if>
+            <if test="excepitonDownTime != null">excepiton_down_time,</if>
+            <if test="movingTime != null">moving_time,</if>
+            <if test="utilizationRate != null">utilization_rate,</if>
+            <if test="attr1 != null">attr1,</if>
+            <if test="shiftName != null">shift_name,</if>
+            <if test="attr3 != null">attr3,</if>
+            <if test="attr4 != null">attr4,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="machineryCode != null">#{machineryCode},</if>
+            <if test="machineryName != null">#{machineryName},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="runTime != null">#{runTime},</if>
+            <if test="planDownTime != null">#{planDownTime},</if>
+            <if test="excepitonDownTime != null">#{excepitonDownTime},</if>
+            <if test="movingTime != null">#{movingTime},</if>
+            <if test="utilizationRate != null">#{utilizationRate},</if>
+            <if test="attr1 != null">#{attr1},</if>
+            <if test="shiftName != null">#{shiftName},</if>
+            <if test="attr3 != null">#{attr3},</if>
+            <if test="attr4 != null">#{attr4},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDvMachineryRun" parameterType="DvMachineryRun">
+        update dv_machinery_run
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="machineryCode != null">machinery_code = #{machineryCode},</if>
+            <if test="machineryName != null">machinery_name = #{machineryName},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="runTime != null">run_time = #{runTime},</if>
+            <if test="planDownTime != null">plan_down_time = #{planDownTime},</if>
+            <if test="excepitonDownTime != null">excepiton_down_time = #{excepitonDownTime},</if>
+            <if test="movingTime != null">moving_time = #{movingTime},</if>
+            <if test="utilizationRate != null">utilization_rate = #{utilizationRate},</if>
+            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="shiftName != null">shift_name = #{shiftName},</if>
+            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteDvMachineryRunByRecordId" parameterType="Long">
+        delete from dv_machinery_run where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteDvMachineryRunByRecordIds" parameterType="String">
+        delete from dv_machinery_run where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+    <select id="selectDvRunByShift" resultMap="DvMachineryRunResult">
+        <include refid="selectDvMachineryRunVo"/>
+        where record_date = #{date}
+        and shift_name = #{shiftName}
+        and device_id = #{deviceId}
+    </select>
+</mapper>

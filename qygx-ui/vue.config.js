@@ -41,14 +41,14 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      [process.env.VUE_APP_BASE_SOCKET]: {
-        target: `http://106.14.139.90:8080`,
-        changeOrigin: true,
-        ws:true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_SOCKET]: ''
-        }
-      }
+      // [process.env.VUE_APP_BASE_SOCKET]: {
+      //   target: `http://106.14.139.90:8080`,
+      //   changeOrigin: true,
+      //   ws:true,
+      //   pathRewrite: {
+      //     ['^' + process.env.VUE_APP_BASE_SOCKET]: ''
+      //   }
+      // }
     },
     disableHostCheck: true
   },

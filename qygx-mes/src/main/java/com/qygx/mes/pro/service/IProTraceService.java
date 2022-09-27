@@ -39,7 +39,7 @@ public interface IProTraceService
      * @param proTrace 生产追溯
      * @return 结果
      */
-    public int insertProTrace(ProTrace proTrace);
+    public int insertProTrace(ProTrace proTrace) throws ParseException;
 
     /**
      * 修改生产追溯

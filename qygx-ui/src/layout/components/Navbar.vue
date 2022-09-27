@@ -120,8 +120,8 @@ export default {
     //   return originalPush.call(this, location).catch((err) => err);
     // };
    
-    // const wsuri = "ws://106.14.139.90:8080/webSocket";
     const wsuri = "ws://127.0.0.1:8080/webSocket";
+    //const wsuri = "ws://139.196.33.253:8080/webSocket";
     this.ws = new WebSocket(wsuri);
     const self = this;
     this.ws.onopen = function (event) {

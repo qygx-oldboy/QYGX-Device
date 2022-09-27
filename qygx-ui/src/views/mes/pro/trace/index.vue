@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="产品物料编码" prop="itemCode">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
+      <el-form-item label="产品/物料编码" prop="itemCode">
         <el-input
           v-model="queryParams.itemCode"
           placeholder="请输入产品物料编码"
@@ -72,18 +72,18 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="产品物料名称" align="center" prop="itemName" /> -->
-      <el-table-column label="工序编码" align="center" prop="processCode" width="140"/>
+      <!-- <el-table-column label="工序编码" align="center" prop="processCode" width="140"/> -->
       <el-table-column label="工序名称" align="center" prop="processName" />
-      <el-table-column label="设备编码" align="center" prop="machineryCode" />
-      <el-table-column label="设备名称" align="center" prop="machineryName" width="140"/>
+      <!-- <el-table-column label="设备编码" align="center" prop="machineryCode" />
+      <el-table-column label="设备名称" align="center" prop="machineryName" width="140"/> -->
       <el-table-column label="作业人员" align="center" prop="operator" />
-      <el-table-column label="开始生产时间" align="center" prop="startTime" width="180">
+      <!-- <el-table-column label="开始生产时间" align="center" prop="startTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="生产时长" align="center" prop="duration" />
-      <el-table-column label="完成生产时间" align="center" prop="endTime" width="180">
+      <el-table-column label="生产时长" align="center" prop="duration" /> -->
+      <el-table-column label="完成时间" align="center" prop="endTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -169,18 +169,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="预留字段1" prop="attr1">
-          <el-input v-model="form.attr1" placeholder="请输入预留字段1" />
-        </el-form-item>
-        <el-form-item label="预留字段2" prop="attr2">
-          <el-input v-model="form.attr2" placeholder="请输入预留字段2" />
-        </el-form-item>
-        <el-form-item label="预留字段3" prop="attr3">
-          <el-input v-model="form.attr3" placeholder="请输入预留字段3" />
-        </el-form-item>
-        <el-form-item label="预留字段4" prop="attr4">
-          <el-input v-model="form.attr4" placeholder="请输入预留字段4" />
-        </el-form-item>
+       
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

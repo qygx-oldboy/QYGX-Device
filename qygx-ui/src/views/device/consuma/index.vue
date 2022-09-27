@@ -63,6 +63,7 @@
 
     <el-table v-loading="loading" :data="consumauseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="备件批次号" align="center" prop="batchNo" />
       <el-table-column label="备件编号" align="center" prop="consuma.consumaCode" />
       <el-table-column label="备件名称" align="center" prop="consuma.consumaName" />
       <el-table-column label="规格型号" align="center" prop="consuma.specs" />
@@ -82,7 +83,11 @@
           <span>{{ parseTime(scope.row.nextReplaceTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.mes_order_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -118,6 +123,11 @@
     <!-- 添加或修改在用备件对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="备件批次号" prop="batchNo">
+          <el-input v-model="form.batchNo" placeholder="请输入备件批次号"/> 
+        </el-form-item>
+
+
         <el-form-item label="更换周期" prop="specs">
           <el-input-number v-model="form.cycle" placeholder="请输入更换周期" @change="calculateNextTime"/> 小时
         </el-form-item>
@@ -163,6 +173,7 @@ import { listConsumause, getConsumause, delConsumause, addConsumause, updateCons
 import ConsumaSelect from "./consumaSelect.vue"
 export default {
   name: "Consuma",
+  dicts: ['mes_order_status'],
   components: { ConsumaSelect },
   data() {
     return {
@@ -261,7 +272,8 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
+        status:null
       };
       this.resetForm("form");
     },
@@ -300,6 +312,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.consumaUseId != null) {
+            this.form.status = 'FINISHED';
             updateConsumause(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -358,6 +371,7 @@ export default {
           const data = {
             consumaId: row.consumaId,
             deviceId: this.deviceId,
+            status: 'PREPARE'
           };
 
           addConsumause(data).then((response) => {

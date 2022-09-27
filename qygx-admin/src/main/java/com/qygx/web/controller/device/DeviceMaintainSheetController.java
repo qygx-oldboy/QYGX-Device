@@ -23,7 +23,7 @@ import com.qygx.common.core.page.TableDataInfo;
 
 /**
  * 保养记录Controller
- * 
+ *
  * @author qygx
  * @date 2022-08-29
  */
@@ -37,7 +37,7 @@ public class DeviceMaintainSheetController extends BaseController
     /**
      * 查询保养记录列表
      */
-    @PreAuthorize("@ss.hasPermi('device:maintainSheet:list')")
+//    @PreAuthorize("@ss.hasPermi('device:maintainSheet:list')")
     @GetMapping("/list")
     public TableDataInfo list(DeviceMaintainSheet deviceMaintainSheet)
     {

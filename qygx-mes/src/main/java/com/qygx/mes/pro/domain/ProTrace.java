@@ -2,10 +2,9 @@ package com.qygx.mes.pro.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.qygx.common.annotation.Excel;
 import com.qygx.common.core.domain.BaseEntity;
+import com.qygx.system.domain.DvMachineryRun;
 
 /**
  * 生产追溯对象 pro_trace
@@ -68,8 +67,9 @@ public class ProTrace extends BaseEntity
     @Excel(name = "完成生产时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
-    /** 预留字段1 */
-    private String attr1;
+    /** 设备运行参数 */
+    @Excel(name = "设备运行参数")
+    private String deviceParam;
 
     /** 预留字段2 */
     private String attr2;
@@ -79,6 +79,8 @@ public class ProTrace extends BaseEntity
 
     /** 预留字段4 */
     private Long attr4;
+
+
 
     public void setTraceId(Long traceId)
     {
@@ -197,14 +199,14 @@ public class ProTrace extends BaseEntity
     {
         return endTime;
     }
-    public void setAttr1(String attr1)
+    public void setdeviceParam(String deviceParam)
     {
-        this.attr1 = attr1;
+        this.deviceParam = deviceParam;
     }
 
-    public String getAttr1()
+    public String getdeviceParam()
     {
-        return attr1;
+        return deviceParam;
     }
     public void setAttr2(String attr2)
     {
@@ -234,31 +236,28 @@ public class ProTrace extends BaseEntity
         return attr4;
     }
 
+
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("traceId", getTraceId())
-            .append("itemCode", getItemCode())
-            .append("itemName", getItemName())
-            .append("processId", getProcessId())
-            .append("processCode", getProcessCode())
-            .append("processName", getProcessName())
-            .append("machineryId", getMachineryId())
-            .append("machineryCode", getMachineryCode())
-            .append("machineryName", getMachineryName())
-            .append("operator", getOperator())
-            .append("startTime", getStartTime())
-            .append("duration", getDuration())
-            .append("endTime", getEndTime())
-            .append("remark", getRemark())
-            .append("attr1", getAttr1())
-            .append("attr2", getAttr2())
-            .append("attr3", getAttr3())
-            .append("attr4", getAttr4())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .toString();
+        return "ProTrace{" +
+                "traceId=" + traceId +
+                ", itemCode='" + itemCode + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", processId=" + processId +
+                ", processCode='" + processCode + '\'' +
+                ", processName='" + processName + '\'' +
+                ", machineryId=" + machineryId +
+                ", machineryCode='" + machineryCode + '\'' +
+                ", machineryName='" + machineryName + '\'' +
+                ", operator='" + operator + '\'' +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + endTime +
+                ", deviceParam='" + deviceParam + '\'' +
+                ", attr2='" + attr2 + '\'' +
+                ", attr3=" + attr3 +
+                ", attr4=" + attr4 +
+                '}';
     }
 }

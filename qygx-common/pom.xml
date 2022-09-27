@@ -52,7 +52,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-  
+
         <!-- JSON工具类 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -148,6 +148,8 @@
             <artifactId>barcode4j-light</artifactId>
             <version>2.0</version>
         </dependency>
+
+
 
     </dependencies>
 
