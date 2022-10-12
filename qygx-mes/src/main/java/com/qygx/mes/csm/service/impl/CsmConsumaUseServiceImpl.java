@@ -112,4 +112,14 @@ public class CsmConsumaUseServiceImpl implements ICsmConsumaUseService
         }
         return "UNIQUE";
     }
+
+    /**
+     * 删除在用备件信息
+     *
+     * @param consumaIds 备件档案主键集合
+     * @return 结果
+     */
+    public int deleteUseByConsumaIds(Long[] consumaIds){
+        return csmConsumaUseMapper.deleteUseByConsumaIds(consumaIds);
+    }
 }

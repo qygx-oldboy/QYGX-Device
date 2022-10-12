@@ -19,10 +19,11 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="assetCode"    column="asset_code"    />
+        <result property="deviceUsage"    column="device_usage"    />
     </resultMap>
 
     <sql id="selectDeviceArchivesVo">
-        select device_id, device_code, ip, name, standard, device_type, manufacturer, status, location, create_by, create_time, update_by, update_time, asset_code from device_archives
+        select device_id, device_code, ip, name, standard, device_type, manufacturer, status, location, create_by, create_time, update_by, update_time, asset_code,device_usage from device_archives
     </sql>
 
     <select id="selectDeviceArchivesList" parameterType="DeviceArchives" resultMap="DeviceArchivesResult">
@@ -37,6 +38,7 @@
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="location != null  and location != ''"> and location = #{location}</if>
             <if test="assetCode != null  and assetCode != ''"> and asset_code = #{assetCode}</if>
+            <if test="deviceUsage != null  and deviceUsage != ''"> and device_usage = #{deviceUsage}</if>
         </where>
     </select>
 
@@ -61,6 +63,7 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="assetCode != null">asset_code,</if>
+            <if test="deviceUsage != null">device_usage,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deviceCode != null">#{deviceCode},</if>
@@ -76,6 +79,7 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="assetCode != null">#{assetCode},</if>
+            <if test="deviceUsage != null">#{deviceUsage},</if>
         </trim>
     </insert>
 
@@ -95,6 +99,7 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="assetCode != null">asset_code = #{assetCode},</if>
+            <if test="deviceUsage != null">device_usage = #{deviceUsage},</if>
         </trim>
         where device_id = #{deviceId}
     </update>

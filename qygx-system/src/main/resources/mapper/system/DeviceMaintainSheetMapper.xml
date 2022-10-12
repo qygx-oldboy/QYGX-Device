@@ -53,10 +53,8 @@
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time,a.deadline, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,
                u.nick_name,d.device_code,d.name,d.location,d.manufacturer
         from device_maintain_sheet a
-
-                 left join sys_user u on a.maintainer_id = u.user_id
-                 left join device_archives d on a.device_id = d.device_id
-
+        left join sys_user u on a.maintainer_id = u.user_id
+        left join device_archives d on a.device_id = d.device_id
     </sql>
 
     <select id="selectDeviceMaintainSheetList" parameterType="DeviceMaintainSheet" resultMap="DeviceMaintainSheetResult">
@@ -71,6 +69,22 @@
             <if test="deviceName != null "> and d.name like concat('%', #{deviceName}, '%')</if>
         </where>
     </select>
+
+    <select id="selectSheetList" parameterType="DeviceMaintainSheet" resultMap="DeviceMaintainSheetResult">
+        <include refid="selectDeviceMaintainSheetVo"/>
+
+        <where>
+            and a.status != "2"
+            <if test="sheetNumber != null  and sheetNumber != ''"> and a.sheet_number = #{sheetNumber}</if>
+            <if test="maintainerId != null "> and a.maintainer_id = #{maintainerId}</if>
+
+            <if test="createTime != null "> and a.create_time = #{createTime}</if>
+            <if test="deviceId != null "> and a.device_id = #{deviceId}</if>
+            <if test="maintainerName != null "> and u.nick_name like concat('%', #{maintainerName}, '%')</if>
+            <if test="deviceName != null "> and d.name like concat('%', #{deviceName}, '%')</if>
+        </where>
+    </select>
+
 
     <select id="selectDeviceMaintainSheetByMaintainSheetId" parameterType="Long" resultMap="DeviceMaintainSheetDeviceMaintainDetailResult">
         select a.maintain_sheet_id, a.sheet_number, a.maintainer_id, a.status, a.create_time, a.end_time, a.device_id, a.create_by, a.update_by, a.update_time, a.remark,

@@ -67,11 +67,11 @@ public class DeviceMaintainServiceImpl implements DeviceMaintainService {
                 if (StringUtils.isNull(check.getLastTime())) {
                     Date firstTime = check.getFirstTime();
                     calendar.setTime(firstTime);
-                    calendar.add(Calendar.WEEK_OF_YEAR, -1);
-                    Date time1 = calendar.getTime();
+                    calendar.add(Calendar.WEEK_OF_YEAR, -1); //提前一周
+                    Date time2 = calendar.getTime();
                     //Date1 时间与 Date2 相等
-                    if (time1.compareTo(time) == 0) {
-                        this.generateSheetByPlan(plan,check);
+                    if (time2.compareTo(time) == 0  || time2.compareTo(time) < 0) {       //当前日期 和 提前一周日期比较
+                        generateSheetByPlan(plan,check);
                     }
                 }
                 else{
@@ -108,8 +108,10 @@ public class DeviceMaintainServiceImpl implements DeviceMaintainService {
             //添加保养任务详情
             List<DeviceMaintainDetail> sheetDetailList = new ArrayList<>();
             Long maintainSheetId = sheet.getMaintainSheetId();
-            List<MaintainPlanDetail> planDetailList = plan.getMaintainPlanDetailList();
-            for (MaintainPlanDetail planDetail:
+
+
+        List<MaintainPlanDetail> planDetailList = planMapper.selectDetailByPlanId(plan.getPlanId());
+        for (MaintainPlanDetail planDetail:
                     planDetailList) {
                 DeviceMaintainDetail d =  new DeviceMaintainDetail();
                 d.setContent(planDetail.getContent());

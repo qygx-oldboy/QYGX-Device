@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qygx.mes.csm.mapper.CsmConsumaMapper">
-    
+
     <resultMap type="CsmConsuma" id="CsmConsumaResult">
         <result property="consumaId"    column="consuma_id"    />
         <result property="consumaCode"    column="consuma_code"    />
@@ -13,8 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="attr1"    column="attr1"    />
         <result property="attr2"    column="attr2"    />
-        <result property="attr3"    column="attr3"    />
-        <result property="attr4"    column="attr4"    />
+        <result property="replaceCycle"    column="replace_cycle"    />
+        <result property="repairCycle"    column="repair_cycle"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -22,22 +22,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCsmConsumaVo">
-        select consuma_id, consuma_code, consuma_name, specs, enable_flag, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from csm_consuma
+        select consuma_id, consuma_code, consuma_name, specs, enable_flag, remark, attr1, attr2, replace_cycle, repair_cycle, create_by, create_time, update_by, update_time from csm_consuma
     </sql>
 
     <select id="selectCsmConsumaList" parameterType="CsmConsuma" resultMap="CsmConsumaResult">
         <include refid="selectCsmConsumaVo"/>
-        <where>  
+        <where>
             <if test="consumaCode != null  and consumaCode != ''"> and consuma_code = #{consumaCode}</if>
             <if test="consumaName != null  and consumaName != ''"> and consuma_name like concat('%', #{consumaName}, '%')</if>
         </where>
     </select>
-    
+
     <select id="selectCsmConsumaByConsumaId" parameterType="Long" resultMap="CsmConsumaResult">
         <include refid="selectCsmConsumaVo"/>
         where consuma_id = #{consumaId}
     </select>
-        
+
     <insert id="insertCsmConsuma" parameterType="CsmConsuma" useGeneratedKeys="true" keyProperty="consumaId">
         insert into csm_consuma
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -48,8 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="attr1 != null">attr1,</if>
             <if test="attr2 != null">attr2,</if>
-            <if test="attr3 != null">attr3,</if>
-            <if test="attr4 != null">attr4,</if>
+            <if test="replaceCycle != null">replace_cycle,</if>
+            <if test="repairCycle != null">repair_cycle,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -63,8 +63,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="attr1 != null">#{attr1},</if>
             <if test="attr2 != null">#{attr2},</if>
-            <if test="attr3 != null">#{attr3},</if>
-            <if test="attr4 != null">#{attr4},</if>
+            <if test="replaceCycle != null">#{replaceCycle},</if>
+            <if test="repairCycle != null">#{repairCycle},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -82,8 +82,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark = #{remark},</if>
             <if test="attr1 != null">attr1 = #{attr1},</if>
             <if test="attr2 != null">attr2 = #{attr2},</if>
-            <if test="attr3 != null">attr3 = #{attr3},</if>
-            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="replaceCycle != null">replace_cycle = #{replaceCycle},</if>
+            <if test="repairCycle != null">repair_cycle = #{repairCycle},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -97,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCsmConsumaByConsumaIds" parameterType="String">
-        delete from csm_consuma where consuma_id in 
+        delete from csm_consuma where consuma_id in
         <foreach item="consumaId" collection="array" open="(" separator="," close=")">
             #{consumaId}
         </foreach>

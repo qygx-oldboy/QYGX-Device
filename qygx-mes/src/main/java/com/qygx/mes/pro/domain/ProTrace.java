@@ -12,7 +12,7 @@ import com.qygx.system.domain.DvMachineryRun;
  * @author qygx
  * @date 2022-09-12
  */
-public class ProTrace extends BaseEntity
+public class ProTrace extends BaseEntity implements Cloneable
 {
     private static final long serialVersionUID = 1L;
 
@@ -259,5 +259,10 @@ public class ProTrace extends BaseEntity
                 ", attr3=" + attr3 +
                 ", attr4=" + attr4 +
                 '}';
+    }
+
+    //实现Cloneable的clone方法，将clone定义为public
+    public ProTrace clone() throws CloneNotSupportedException {
+        return (ProTrace) super.clone();
     }
 }

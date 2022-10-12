@@ -202,12 +202,12 @@ public class DvMachineryRun extends BaseEntity
     {
         return attr1;
     }
-    public void setshiftName(String shiftName)
+    public void setShiftName(String shiftName)
     {
         this.shiftName = shiftName;
     }
 
-    public String getshiftName()
+    public String getShiftName()
     {
         return shiftName;
     }
@@ -246,7 +246,7 @@ public class DvMachineryRun extends BaseEntity
                 .append("movingTime", getMovingTime())
                 .append("utilizationRate", getUtilizationRate())
                 .append("attr1", getAttr1())
-                .append("shiftName", getshiftName())
+                .append("shiftName", getShiftName())
                 .append("attr3", getAttr3())
                 .append("attr4", getAttr4())
                 .append("createBy", getCreateBy())

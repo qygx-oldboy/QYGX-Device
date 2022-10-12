@@ -1,22 +1,24 @@
 package com.qygx.mes.csm.domain;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.qygx.common.annotation.Excel;
 import com.qygx.common.core.domain.BaseEntity;
 
 /**
- * 备件档案对象 csm_consuma
+ * 备件修复记录对象 csm_repair_record
  *
  * @author qygx
- * @date 2022-09-09
+ * @date 2022-10-10
  */
-public class CsmConsuma extends BaseEntity
+public class CsmRepairRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 备件ID */
-    private Long consumaId;
+    /** 记录ID */
+    private Long recordId;
 
     /** 备件编号 */
     @Excel(name = "备件编号")
@@ -30,30 +32,48 @@ public class CsmConsuma extends BaseEntity
     @Excel(name = "规格型号")
     private String specs;
 
-    /** 是否启用 */
-    @Excel(name = "是否启用")
-    private String enableFlag;
+    /** 昵称 */
+    @Excel(name = "昵称")
+    private String nickName;
+
+    /** 修复时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "修复时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date repairTime;
+
+    /** 使用时长 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "使用时长", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date useTime;
+
+    /** 备件批次 */
+    @Excel(name = "备件批次")
+    private String batchNo;
 
     /** 预留字段1 */
+    @Excel(name = "预留字段1")
     private String attr1;
 
     /** 预留字段2 */
+    @Excel(name = "预留字段2")
     private String attr2;
 
     /** 预留字段3 */
-    private Long replaceCycle;
+    @Excel(name = "预留字段3")
+    private Long attr3;
 
     /** 预留字段4 */
-    private Long repairCycle;
+    @Excel(name = "预留字段4")
+    private Long attr4;
 
-    public void setConsumaId(Long consumaId)
+    public void setRecordId(Long recordId)
     {
-        this.consumaId = consumaId;
+        this.recordId = recordId;
     }
 
-    public Long getConsumaId()
+    public Long getRecordId()
     {
-        return consumaId;
+        return recordId;
     }
     public void setConsumaCode(String consumaCode)
     {
@@ -82,14 +102,41 @@ public class CsmConsuma extends BaseEntity
     {
         return specs;
     }
-    public void setEnableFlag(String enableFlag)
+    public void setNickName(String nickName)
     {
-        this.enableFlag = enableFlag;
+        this.nickName = nickName;
     }
 
-    public String getEnableFlag()
+    public String getNickName()
     {
-        return enableFlag;
+        return nickName;
+    }
+    public void setRepairTime(Date repairTime)
+    {
+        this.repairTime = repairTime;
+    }
+
+    public Date getRepairTime()
+    {
+        return repairTime;
+    }
+    public void setUseTime(Date useTime)
+    {
+        this.useTime = useTime;
+    }
+
+    public Date getUseTime()
+    {
+        return useTime;
+    }
+    public void setBatchNo(String batchNo)
+    {
+        this.batchNo = batchNo;
+    }
+
+    public String getBatchNo()
+    {
+        return batchNo;
     }
     public void setAttr1(String attr1)
     {
@@ -109,38 +156,41 @@ public class CsmConsuma extends BaseEntity
     {
         return attr2;
     }
-    public void setreplaceCycle(Long replaceCycle)
+    public void setAttr3(Long attr3)
     {
-        this.replaceCycle = replaceCycle;
+        this.attr3 = attr3;
     }
 
-    public Long getreplaceCycle()
+    public Long getAttr3()
     {
-        return replaceCycle;
+        return attr3;
     }
-    public void setrepairCycle(Long repairCycle)
+    public void setAttr4(Long attr4)
     {
-        this.repairCycle = repairCycle;
+        this.attr4 = attr4;
     }
 
-    public Long getrepairCycle()
+    public Long getAttr4()
     {
-        return repairCycle;
+        return attr4;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("consumaId", getConsumaId())
+            .append("recordId", getRecordId())
             .append("consumaCode", getConsumaCode())
             .append("consumaName", getConsumaName())
             .append("specs", getSpecs())
-            .append("enableFlag", getEnableFlag())
+            .append("nickName", getNickName())
+            .append("repairTime", getRepairTime())
+            .append("useTime", getUseTime())
+            .append("batchNo", getBatchNo())
             .append("remark", getRemark())
             .append("attr1", getAttr1())
             .append("attr2", getAttr2())
-            .append("replaceCycle", getreplaceCycle())
-            .append("repairCycle", getrepairCycle())
+            .append("attr3", getAttr3())
+            .append("attr4", getAttr4())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

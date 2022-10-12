@@ -2,6 +2,10 @@ package com.qygx.mes.csm.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qygx.common.constant.UserConstants;
+import com.qygx.mes.csm.domain.CsmConsumaUse;
+import com.qygx.mes.csm.service.ICsmConsumaUseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,9 @@ public class CsmConsumaController extends BaseController
 {
     @Autowired
     private ICsmConsumaService csmConsumaService;
+
+    @Autowired
+    private ICsmConsumaUseService csmUseService;
 
     /**
      * 查询备件档案列表
@@ -99,6 +106,20 @@ public class CsmConsumaController extends BaseController
 	@DeleteMapping("/{consumaIds}")
     public AjaxResult remove(@PathVariable Long[] consumaIds)
     {
+        //todo 如果该备件有 在用备件，不允许删除
+
+        for (Long consumaId:
+            consumaIds) {
+            CsmConsumaUse csmConsumaUse = new CsmConsumaUse();
+            csmConsumaUse.setConsumaId(consumaId);
+            csmConsumaUse.setStatus("FINISHED");
+            List<CsmConsumaUse> csmConsumaUses = csmUseService.selectCsmConsumaUseList(csmConsumaUse);
+            if (csmConsumaUses.size() > 0)
+            {
+                return AjaxResult.error("删除编号'" +consumaId + "'失败，该备件正在被使用");
+            }
+        }
+        csmUseService.deleteUseByConsumaIds(consumaIds);
         return toAjax(csmConsumaService.deleteCsmConsumaByConsumaIds(consumaIds));
     }
 }

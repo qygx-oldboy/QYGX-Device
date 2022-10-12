@@ -9,19 +9,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="consumaId"    column="consuma_id"    />
         <result property="deviceId"    column="device_id"    />
         <result property="replaceTime"    column="replace_time"    />
-        <result property="cycle"    column="cycle"    />
+        <result property="replaceCycle"    column="replace_cycle"    />
         <result property="useTime"    column="use_time"    />
         <result property="nextReplaceTime"    column="next_replace_time"    />
         <result property="remark"    column="remark"    />
         <result property="batchNo"    column="batch_no"    />
         <result property="attr2"    column="attr2"    />
         <result property="attr3"    column="attr3"    />
-        <result property="attr4"    column="attr4"    />
+        <result property="repairNumber"    column="repair_number"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="status"    column="status"    />
+        <result property="repairTime"    column="repair_time"    />
+        <result property="repairCycle"    column="repair_cycle"    />
+        <result property="nextRepairTime"    column="next_repair_time"    />
         <association property="consuma"    column="consuma_id" javaType="CsmConsuma" resultMap="consumaResult" />
         <association property="device"    column="device_id" javaType="DeviceArchives" resultMap="deviceResult" />
     </resultMap>
@@ -45,7 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectCsmConsumaUseVo">
         select u.consuma_use_id, u.consuma_id, u.device_id, u.replace_time, u.use_time, u.next_replace_time, u.remark, u.batch_no, u.attr2,
-               u.attr3, u.attr4, u.create_by, u.create_time, u.update_by, u.update_time,u.cycle,u.status,
+               u.attr3, u.repair_number, u.create_by, u.create_time, u.update_by, u.update_time,u.replace_cycle,u.status,
+               u.repair_time,u.repair_cycle,u.next_repair_time,u.repair_number,
                c.consuma_code,c.consuma_name,c.specs,
                a.device_code,a.name
         from csm_consuma_use u
@@ -55,7 +59,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCsmConsumaUseList" parameterType="CsmConsumaUse" resultMap="CsmConsumaUseResult">
         select u.consuma_use_id, u.consuma_id, u.device_id, u.replace_time, u.use_time, u.next_replace_time, u.remark, u.batch_no, u.attr2,
-        u.attr3, u.attr4, u.create_by, u.create_time, u.update_by, u.update_time,u.cycle,u.status,
+        u.attr3, u.repair_number, u.create_by, u.create_time, u.update_by, u.update_time,u.replace_cycle,u.status,
+        u.repair_time,u.repair_cycle,u.next_repair_time,u.repair_number,
         c.consuma_code,c.consuma_name,c.specs,
         a.device_code,a.name
         from csm_consuma_use u
@@ -84,37 +89,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="consumaId != null">consuma_id,</if>
             <if test="deviceId != null">device_id,</if>
             <if test="replaceTime != null">replace_time,</if>
-            <if test="cycle != null">cycle,</if>
+            <if test="replaceCycle != null">replace_cycle,</if>
             <if test="useTime != null">use_time,</if>
             <if test="nextReplaceTime != null">next_replace_time,</if>
             <if test="remark != null">remark,</if>
             <if test="batchNo != null">batch_no,</if>
             <if test="attr2 != null">attr2,</if>
             <if test="attr3 != null">attr3,</if>
-            <if test="attr4 != null">attr4,</if>
+            <if test="repairNumber != null">repair_number,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="status != null and status !=''">status,</if>
+            <if test="repairTime != null">repair_time,</if>
+            <if test="repairCycle != null">repair_cycle,</if>
+            <if test="nextRepairTime != null">next_repair_time,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="consumaId != null">#{consumaId},</if>
             <if test="deviceId != null">#{deviceId},</if>
             <if test="replaceTime != null">#{replaceTime},</if>
-            <if test="cycle != null">#{cycle},</if>
+            <if test="replaceCycle != null">#{replaceCycle},</if>
             <if test="useTime != null">#{useTime},</if>
             <if test="nextReplaceTime != null">#{nextReplaceTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="batchNo != null">#{batchNo},</if>
             <if test="attr2 != null">#{attr2},</if>
             <if test="attr3 != null">#{attr3},</if>
-            <if test="attr4 != null">#{attr4},</if>
+            <if test="repairNumber != null">#{repairNumber},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="status != null and status !=''">#{status},</if>
+            <if test="repairTime != null">#{repairTime},</if>
+            <if test="repairCycle != null">#{repairCycle},</if>
+            <if test="nextRepairTime != null">#{nextRepairTime},</if>
          </trim>
     </insert>
 
@@ -125,18 +137,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceId != null">device_id = #{deviceId},</if>
             <if test="replaceTime != null">replace_time = #{replaceTime},</if>
             <if test="useTime != null">use_time = #{useTime},</if>
-            <if test="cycle != null">cycle = #{cycle},</if>
+            <if test="replaceCycle != null">replace_cycle = #{replaceCycle},</if>
             <if test="nextReplaceTime != null">next_replace_time = #{nextReplaceTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="batchNo != null">batch_no = #{batchNo},</if>
             <if test="attr2 != null">attr2 = #{attr2},</if>
             <if test="attr3 != null">attr3 = #{attr3},</if>
-            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="repairNumber != null">repair_number = #{repairNumber},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="status != null"> status = #{status},</if>
+            <if test="repairTime != null">repair_time = #{repairTime},</if>
+            <if test="repairCycle != null">repair_cycle = #{repairCycle},</if>
+            <if test="nextRepairTime != null">next_repair_time = #{nextRepairTime},</if>
+            <if test="delFlag != null">repair_time = null,next_repair_time=null,repair_number = null,</if>
         </trim>
         where consuma_use_id = #{consumaUseId}
     </update>
@@ -155,4 +171,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="checkBatchNoUnique" parameterType="String" resultType="int">
         select count(1) from csm_consuma_use where batch_no = #{batchNo} limit 1
     </select>
+
+    <delete id="deleteUseByConsumaIds" parameterType="String">
+        delete from csm_consuma_use where consuma_id in
+        <foreach item="consumaId" collection="array" open="(" separator="," close=")">
+            #{consumaId}
+        </foreach>
+    </delete>
 </mapper>

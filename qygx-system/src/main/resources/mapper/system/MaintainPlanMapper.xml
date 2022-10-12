@@ -60,12 +60,15 @@
 
     </select>
 
-    <select id="selectMaintainPlanByPlanId" parameterType="Long" resultMap="MaintainPlanMaintainPlanDetailResult">
-        select a.plan_id, a.interval_days, a.use_state, a.maintainer_id, a.maintainer_nick_name, a.auditor_id, a.auditor_nick_name, a.level, a.name, a.first_maintain_time, a.last_maintain_time, a.create_by, a.create_time, a.update_by, a.update_time, a.remark, a.device_type,
-               b.plan_detail_id as sub_plan_detail_id, b.content as sub_content, b.standard as sub_standard, b.plan_id as sub_plan_id
-        from maintain_plan a
-                 left join maintain_plan_detail b on b.plan_id = a.plan_id
+    <select id="selectMaintainPlanByPlanId" parameterType="Long" resultMap="MaintainPlanResult">
+        <include refid="selectMaintainPlanVo"/>
         where a.plan_id = #{planId}
+    </select>
+
+    <select id="selectDetailByPlanId" parameterType="Long" resultMap="MaintainPlanDetailResult">
+        select b.plan_detail_id as sub_plan_detail_id, b.content as sub_content, b.standard as sub_standard, b.plan_id as sub_plan_id
+        from maintain_plan_detail b
+        where b.plan_id = #{planId}
     </select>
 
     <insert id="insertMaintainPlan" parameterType="MaintainPlan" useGeneratedKeys="true" keyProperty="planId">

@@ -5,15 +5,15 @@ import com.qygx.system.domain.DeviceMaintainSheet;
 
 /**
  * 保养记录Service接口
- * 
+ *
  * @author qygx
  * @date 2022-08-29
  */
-public interface IDeviceMaintainSheetService 
+public interface IDeviceMaintainSheetService
 {
     /**
      * 查询保养记录
-     * 
+     *
      * @param maintainSheetId 保养记录主键
      * @return 保养记录
      */
@@ -21,15 +21,24 @@ public interface IDeviceMaintainSheetService
 
     /**
      * 查询保养记录列表
-     * 
+     *
      * @param deviceMaintainSheet 保养记录
      * @return 保养记录集合
      */
     public List<DeviceMaintainSheet> selectDeviceMaintainSheetList(DeviceMaintainSheet deviceMaintainSheet);
 
+
+    /**
+     * 查询保养单列表
+     *
+     * @param deviceMaintainSheet 保养记录
+     * @return 保养记录集合
+     */
+    public List<DeviceMaintainSheet> selectSheetList(DeviceMaintainSheet deviceMaintainSheet);
+
     /**
      * 新增保养记录
-     * 
+     *
      * @param deviceMaintainSheet 保养记录
      * @return 结果
      */
@@ -37,7 +46,7 @@ public interface IDeviceMaintainSheetService
 
     /**
      * 修改保养记录
-     * 
+     *
      * @param deviceMaintainSheet 保养记录
      * @return 结果
      */
@@ -45,7 +54,7 @@ public interface IDeviceMaintainSheetService
 
     /**
      * 批量删除保养记录
-     * 
+     *
      * @param maintainSheetIds 需要删除的保养记录主键集合
      * @return 结果
      */
@@ -53,7 +62,7 @@ public interface IDeviceMaintainSheetService
 
     /**
      * 删除保养记录信息
-     * 
+     *
      * @param maintainSheetId 保养记录主键
      * @return 结果
      */

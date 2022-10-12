@@ -93,4 +93,12 @@ public interface MaintainPlanMapper
      * @return 结果
      */
     public int checkPlanUnique(MaintainPlan maintainPlan);
+
+    /**
+     * 查询保养计划
+     *
+     * @param planId 保养计划主键
+     * @return 保养计划
+     */
+    public List<MaintainPlanDetail> selectDetailByPlanId(Long planId);
 }

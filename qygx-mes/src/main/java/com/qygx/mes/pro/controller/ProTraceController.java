@@ -108,7 +108,7 @@ public class ProTraceController extends BaseController
             @ApiImplicitParam(name = "deviceParam", value = "设备运行参数", dataType = "String", dataTypeClass = String.class),
     })
     @PostMapping
-    public AjaxResult add(@RequestBody ProTrace proTrace) throws ParseException {
+    public AjaxResult add(@RequestBody ProTrace proTrace) throws ParseException, CloneNotSupportedException {
         return toAjax(proTraceService.insertProTrace(proTrace));
     }
 

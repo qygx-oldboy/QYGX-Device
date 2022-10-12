@@ -9,6 +9,15 @@ export function listArchives(query) {
   })
 }
 
+// 查询所有 使用的设备
+export function listAllArchives() {
+  return request({
+    url: '/device/archives/listAll',
+    method: 'get'
+  })
+}
+
+
 // 查询archives详细
 export function getArchives(deviceId) {
   return request({

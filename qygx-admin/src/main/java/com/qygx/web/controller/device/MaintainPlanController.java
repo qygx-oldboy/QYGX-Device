@@ -9,6 +9,7 @@ import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.common.utils.StringUtils;
 import com.qygx.mes.dv.domain.DvCheckMachinery;
 import com.qygx.mes.dv.service.IDvCheckMachineryService;
+import com.qygx.system.domain.MaintainPlanDetail;
 import com.qygx.system.service.IDeviceArchivesService;
 import com.qygx.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -85,7 +86,10 @@ public class MaintainPlanController extends BaseController
 //        SysUser user = new SysUser();
 //        List<SysUser> sysUsers = sysUserService.selectUserList(user);
 //        ajax.put("users", sysUsers);
-        return AjaxResult.success(maintainPlanService.selectMaintainPlanByPlanId(planId));
+        MaintainPlan maintainPlan = maintainPlanService.selectMaintainPlanByPlanId(planId);
+        List<MaintainPlanDetail> maintainPlanDetails = maintainPlanService.selectDetailByPlanId(maintainPlan.getPlanId());
+        maintainPlan.setMaintainPlanDetailList(maintainPlanDetails);
+        return AjaxResult.success(maintainPlan);
     }
 
     /**

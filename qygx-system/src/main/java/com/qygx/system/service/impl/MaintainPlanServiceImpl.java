@@ -3,7 +3,6 @@ package com.qygx.system.service.impl;
 import java.util.List;
 
 import com.qygx.common.constant.DeviceConstants;
-import com.qygx.common.constant.UserConstants;
 import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.common.utils.DateUtils;
 import com.qygx.system.mapper.SysUserMapper;
@@ -19,12 +18,12 @@ import com.qygx.system.service.IMaintainPlanService;
 
 /**
  * 保养计划Service业务层处理
- * 
+ *
  * @author qygx
  * @date 2022-08-12
  */
 @Service
-public class MaintainPlanServiceImpl implements IMaintainPlanService 
+public class MaintainPlanServiceImpl implements IMaintainPlanService
 {
     @Autowired
     private MaintainPlanMapper maintainPlanMapper;
@@ -34,7 +33,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 查询保养计划
-     * 
+     *
      * @param planId 保养计划主键
      * @return 保养计划
      */
@@ -44,9 +43,14 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
         return maintainPlanMapper.selectMaintainPlanByPlanId(planId);
     }
 
+    @Override
+    public List<MaintainPlanDetail> selectDetailByPlanId(Long planId) {
+        return maintainPlanMapper.selectDetailByPlanId(planId);
+    }
+
     /**
      * 查询保养计划列表
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 保养计划
      */
@@ -58,7 +62,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 新增保养计划
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 结果
      */
@@ -80,7 +84,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 修改保养计划
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 结果
      */
@@ -102,7 +106,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 批量删除保养计划
-     * 
+     *
      * @param planIds 需要删除的保养计划主键
      * @return 结果
      */
@@ -116,7 +120,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 删除保养计划信息
-     * 
+     *
      * @param planId 保养计划主键
      * @return 结果
      */
@@ -130,7 +134,7 @@ public class MaintainPlanServiceImpl implements IMaintainPlanService
 
     /**
      * 新增保养计划明细信息
-     * 
+     *
      * @param maintainPlan 保养计划对象
      */
     public void insertMaintainPlanDetail(MaintainPlan maintainPlan)

@@ -4,26 +4,36 @@ import java.util.List;
 
 import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.system.domain.MaintainPlan;
+import com.qygx.system.domain.MaintainPlanDetail;
 
 /**
  * 保养计划Service接口
- * 
+ *
  * @author qygx
  * @date 2022-08-12
  */
-public interface IMaintainPlanService 
+public interface IMaintainPlanService
 {
     /**
      * 查询保养计划
-     * 
+     *
      * @param planId 保养计划主键
      * @return 保养计划
      */
     public MaintainPlan selectMaintainPlanByPlanId(Long planId);
 
+
+    /**
+     * 查询保养计划明细
+     *
+     * @param planId 保养计划主键
+     * @return 保养计划明细
+     */
+    public List<MaintainPlanDetail> selectDetailByPlanId(Long planId);
+
     /**
      * 查询保养计划列表
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 保养计划集合
      */
@@ -31,7 +41,7 @@ public interface IMaintainPlanService
 
     /**
      * 新增保养计划
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 结果
      */
@@ -39,7 +49,7 @@ public interface IMaintainPlanService
 
     /**
      * 修改保养计划
-     * 
+     *
      * @param maintainPlan 保养计划
      * @return 结果
      */
@@ -47,7 +57,7 @@ public interface IMaintainPlanService
 
     /**
      * 批量删除保养计划
-     * 
+     *
      * @param planIds 需要删除的保养计划主键集合
      * @return 结果
      */
@@ -55,7 +65,7 @@ public interface IMaintainPlanService
 
     /**
      * 删除保养计划信息
-     * 
+     *
      * @param planId 保养计划主键
      * @return 结果
      */

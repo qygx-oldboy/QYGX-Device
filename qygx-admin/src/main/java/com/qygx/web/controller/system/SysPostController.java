@@ -1,5 +1,6 @@
 package com.qygx.web.controller.system;
 
+import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import com.qygx.system.service.ISysPostService;
 
 /**
  * 岗位信息操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -46,7 +47,7 @@ public class SysPostController extends BaseController
         List<SysPost> list = postService.selectPostList(post);
         return getDataTable(list);
     }
-    
+
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
     @PostMapping("/export")
@@ -126,5 +127,18 @@ public class SysPostController extends BaseController
     {
         List<SysPost> posts = postService.selectPostAll();
         return AjaxResult.success(posts);
+    }
+
+    /**
+     * 获取岗位精简信息列表
+     * 只包含被开启的岗位，主要用于前端的下拉选项
+     */
+    @GetMapping("/list-all-simple")
+    public AjaxResult getSimplePosts()
+    {
+        List<SysPost> list = postService.selectPostList(new SysPost());
+        // 排序后，返回给前端
+        list.sort(Comparator.comparing(SysPost::getPostSort));
+        return AjaxResult.success(list);
     }
 }

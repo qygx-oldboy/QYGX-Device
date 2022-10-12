@@ -5,7 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qygx.common.utils.DateUtils;
 import com.qygx.common.utils.SecurityUtils;
+import com.qygx.common.utils.StringUtils;
+import com.qygx.mes.csm.domain.CsmRepairRecord;
 import com.qygx.mes.csm.domain.CsmReplaceRecord;
+import com.qygx.mes.csm.service.ICsmRepairRecordService;
 import com.qygx.mes.csm.service.ICsmReplaceRecordService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +43,10 @@ public class CsmConsumaUseController extends BaseController
     private ICsmConsumaUseService csmConsumaUseService;
 
     @Autowired
-    private ICsmReplaceRecordService recordService;
+    private ICsmReplaceRecordService replaceRecordService;
+
+    @Autowired
+    private ICsmRepairRecordService repairRecordService;
 
     /**
      * 查询在用备件列表
@@ -96,7 +102,7 @@ public class CsmConsumaUseController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CsmConsumaUse csmConsumaUse)
     {
-        //唯一曾增加一条更换记录
+        //增加一条更换记录
         if("UNIQUE".equals(csmConsumaUseService.checkBatchNoUnique(csmConsumaUse.getbatchNo()))){
             CsmReplaceRecord record = new CsmReplaceRecord();
             record.setConsumaCode(csmConsumaUse.getConsuma().getConsumaCode());
@@ -104,11 +110,30 @@ public class CsmConsumaUseController extends BaseController
             record.setBatchNo(csmConsumaUse.getbatchNo());
             record.setdeviceCode(csmConsumaUse.getDevice().getDeviceCode());
             record.setdeviceName(csmConsumaUse.getDevice().getName());
-            record.setReplaceTime(DateUtils.getNowDate());
+            record.setReplaceTime(csmConsumaUse.getReplaceTime());
             record.setNickName(SecurityUtils.getUsername());
             record.setSpecs(csmConsumaUse.getConsuma().getSpecs());
-            recordService.insertCsmReplaceRecord(record);
+            replaceRecordService.insertCsmReplaceRecord(record);
+            csmConsumaUse.setDelFlag("0");
         }
+
+        if(csmConsumaUse.getRepairFlag()){
+            csmConsumaUse.setRepairNumber(StringUtils.isNotNull(csmConsumaUse.getRepairNumber()) ? csmConsumaUse.getRepairNumber() + 1 : 1);
+
+            //增加一条修复记录
+            CsmRepairRecord record = new CsmRepairRecord();
+            record.setConsumaCode(csmConsumaUse.getConsuma().getConsumaCode());
+            record.setConsumaName(csmConsumaUse.getConsuma().getConsumaName());
+            record.setBatchNo(csmConsumaUse.getbatchNo());
+            record.setNickName(SecurityUtils.getUsername());
+            record.setSpecs(csmConsumaUse.getConsuma().getSpecs());
+            record.setRepairTime(csmConsumaUse.getRepairTime());
+
+            repairRecordService.insertCsmRepairRecord(record);
+
+
+        }
+
         return toAjax(csmConsumaUseService.updateCsmConsumaUse(csmConsumaUse));
     }
 

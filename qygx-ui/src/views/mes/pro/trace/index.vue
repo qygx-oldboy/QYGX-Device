@@ -123,27 +123,42 @@
         <el-form-item label="产品物料编码" prop="itemCode">
           <el-input v-model="form.itemCode" placeholder="请输入产品物料编码" />
         </el-form-item>
-        <el-form-item label="产品物料名称" prop="itemName">
+        <!-- <el-form-item label="产品物料名称" prop="itemName">
           <el-input v-model="form.itemName" placeholder="请输入产品物料名称" />
+        </el-form-item> -->
+      
+       <el-form-item label="工序" prop="processName">
+              <el-select
+                v-model="form.processName"
+                value-key="processName"
+                placeholder="请选择工序"
+                @change="changeValue($event)"
+              >
+                <el-option
+                  v-for="item in processOptions"
+                  :key="item.processId"
+                  :label="item.processName"
+                  :value="item"
+                ></el-option>
+              </el-select>
         </el-form-item>
-        <el-form-item label="工序ID" prop="processId">
-          <el-input v-model="form.processId" placeholder="请输入工序ID" />
+       
+        <el-form-item label="设备" prop="machineryCode">
+          <el-select
+                v-model="form.machineryCode"
+                value-key="deviceCode"
+                placeholder="请选择设备"
+                @change="changeValue2($event)"
+              >
+                <el-option
+                  v-for="item in deviceOptions"
+                  :key="item.deviceId"
+                  :label="item.deviceCode" 
+                  :value="item"
+                ></el-option>
+              </el-select>
         </el-form-item>
-        <el-form-item label="工序编码" prop="processCode">
-          <el-input v-model="form.processCode" placeholder="请输入工序编码" />
-        </el-form-item>
-        <el-form-item label="工序名称" prop="processName">
-          <el-input v-model="form.processName" placeholder="请输入工序名称" />
-        </el-form-item>
-        <el-form-item label="设备ID" prop="machineryId">
-          <el-input v-model="form.machineryId" placeholder="请输入设备ID" />
-        </el-form-item>
-        <el-form-item label="设备编码" prop="machineryCode">
-          <el-input v-model="form.machineryCode" placeholder="请输入设备编码" />
-        </el-form-item>
-        <el-form-item label="设备名称" prop="machineryName">
-          <el-input v-model="form.machineryName" placeholder="请输入设备名称" />
-        </el-form-item>
+  
         <el-form-item label="作业人员" prop="operator">
           <el-input v-model="form.operator" placeholder="请输入作业人员" />
         </el-form-item>
@@ -155,9 +170,9 @@
             placeholder="请选择开始生产时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="生产时长" prop="duration">
+        <!-- <el-form-item label="生产时长" prop="duration">
           <el-input v-model="form.duration" placeholder="请输入生产时长" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="完成生产时间" prop="endTime">
           <el-date-picker clearable
             v-model="form.endTime"
@@ -183,6 +198,8 @@
 
 <script>
 import { listTrace, getTrace, delTrace, addTrace, updateTrace } from "@/api/mes/pro/trace";
+import {listAllProcess} from "@/api/mes/pro/process";
+import {listAllArchives} from "@/api/device/archives";
 export default {
   name: "Trace",
   data() {
@@ -224,13 +241,18 @@ export default {
         machineryId: [
           { required: true, message: "设备ID不能为空", trigger: "blur" }
         ],
-        machineryCode: [
-          { required: true, message: "设备编码不能为空", trigger: "blur" }
-        ],
+      
         machineryName: [
           { required: true, message: "设备名称不能为空", trigger: "blur" }
         ],
-      }
+      },
+       // 工序选项
+       processOptions: [],
+       // 设备选项
+       deviceOptions: [],
+      //  testList:{},
+      //  test2List:{}
+
     };
   },
   created() {
@@ -298,12 +320,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getTreeselect();
       this.open = true;
       this.title = "添加生产追溯";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getTreeselect();
       const traceId = row.traceId || this.ids
       getTrace(traceId).then(response => {
         this.form = response.data;
@@ -316,6 +340,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.traceId != null) {
+            console.info(this.form);
             updateTrace(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -348,7 +373,30 @@ export default {
       }, `trace_${new Date().getTime()}.xlsx`)
     },
 
-  
+     /** 查询下拉框 */
+     getTreeselect() {
+      listAllProcess().then((response) => {
+        this.processOptions = response.data;
+      });
+      listAllArchives().then((response) => {
+        console.info(response);
+        this.deviceOptions = response.data;
+      });
+    },
+    
+      //下拉框传递多个参数id
+      changeValue(event) {
+            this.form.processId = event.processId;
+            this.form.processCode = event.processCode;
+            this.form.processName = event.processName;
+      },
+       //下拉框传递多个参数id
+       changeValue2(event) {
+            this.form.machineryId = event.deviceId;
+            this.form.machineryCode = event.deviceCode;
+            this.form.machineryName = event.name;   
+      },
+
   }
 };
 </script>

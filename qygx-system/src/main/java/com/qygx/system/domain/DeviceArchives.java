@@ -58,6 +58,10 @@ public class DeviceArchives extends BaseEntity
     @Excel(name = "资产编号")
     private String assetCode;
 
+    /** 设备用途 */
+    @Excel(name = "设备用途")
+    private String deviceUsage;
+
     public void setAssetCode(String assetCode)
     {
         this.assetCode = assetCode;
@@ -150,22 +154,28 @@ public class DeviceArchives extends BaseEntity
         return location;
     }
 
+    public String getDeviceUsage() {
+        return deviceUsage;
+    }
+
+    public void setDeviceUsage(String deviceUsage) {
+        this.deviceUsage = deviceUsage;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("deviceId", getDeviceId())
-                .append("deviceCode", getDeviceCode())
-                .append("ip", getIp())
-                .append("name", getName())
-                .append("standard", getStandard())
-                .append("deviceType", getDeviceType())
-                .append("manufacturer", getManufacturer())
-                .append("status", getStatus())
-                .append("location", getLocation())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .toString();
+        return "DeviceArchives{" +
+                "deviceId=" + deviceId +
+                ", deviceCode='" + deviceCode + '\'' +
+                ", ip='" + ip + '\'' +
+                ", name='" + name + '\'' +
+                ", standard='" + standard + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", status='" + status + '\'' +
+                ", location='" + location + '\'' +
+                ", assetCode='" + assetCode + '\'' +
+                ", deviceUsage='" + deviceUsage + '\'' +
+                '}';
     }
 }

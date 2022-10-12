@@ -45,7 +45,7 @@ public class CsmConsumaUse extends BaseEntity
     private Long expireDay;
 
     /** 更换周期 */
-    private Long cycle;
+    private Long replaceCycle;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -60,7 +60,44 @@ public class CsmConsumaUse extends BaseEntity
     private String attr3;
 
     /** 预留字段4 */
-    private Long attr4;
+    private Long repairNumber;
+
+    /** 更换周期 */
+    private Long repairCycle;
+
+
+
+    /** 删除修复 标记 */
+    private String delFlag;
+
+    /** 修复 标记 */
+    private Boolean repairFlag;
+
+    public Boolean getRepairFlag() {
+        return repairFlag;
+    }
+
+    public void setRepairFlag(Boolean repairFlag) {
+        this.repairFlag = repairFlag;
+    }
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    /** 修复时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "修复时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date repairTime;
+
+    /** 下一次修复时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "下一次修复时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date nextRepairTime;
 
     private String consumaName;
 
@@ -122,6 +159,7 @@ public class CsmConsumaUse extends BaseEntity
     {
         return nextReplaceTime;
     }
+
     public void setbatchNo(String batchNo)
     {
         this.batchNo = batchNo;
@@ -131,6 +169,7 @@ public class CsmConsumaUse extends BaseEntity
     {
         return batchNo;
     }
+
     public void setAttr2(String attr2)
     {
         this.attr2 = attr2;
@@ -159,14 +198,14 @@ public class CsmConsumaUse extends BaseEntity
         this.expireDay = expireDay;
     }
 
-    public void setAttr4(Long attr4)
+    public void setRepairNumber(Long repairNumber)
     {
-        this.attr4 = attr4;
+        this.repairNumber = repairNumber;
     }
 
-    public Long getAttr4()
+    public Long getRepairNumber()
     {
-        return attr4;
+        return repairNumber;
     }
 
     public CsmConsuma getConsuma() {
@@ -193,13 +232,7 @@ public class CsmConsumaUse extends BaseEntity
         this.device = device;
     }
 
-    public Long getCycle() {
-        return cycle;
-    }
 
-    public void setCycle(Long cycle) {
-        this.cycle = cycle;
-    }
 
     public String getStatus() {
         return status;
@@ -207,6 +240,38 @@ public class CsmConsumaUse extends BaseEntity
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getReplaceCycle() {
+        return replaceCycle;
+    }
+
+    public void setReplaceCycle(Long replaceCycle) {
+        this.replaceCycle = replaceCycle;
+    }
+
+    public Date getRepairTime() {
+        return repairTime;
+    }
+
+    public void setRepairTime(Date repairTime) {
+        this.repairTime = repairTime;
+    }
+
+    public Date getNextRepairTime() {
+        return nextRepairTime;
+    }
+
+    public void setNextRepairTime(Date nextRepairTime) {
+        this.nextRepairTime = nextRepairTime;
+    }
+
+    public Long getRepairCycle() {
+        return repairCycle;
+    }
+
+    public void setRepairCycle(Long repairCycle) {
+        this.repairCycle = repairCycle;
     }
 
     @Override
@@ -219,12 +284,15 @@ public class CsmConsumaUse extends BaseEntity
                 ", useTime=" + useTime +
                 ", nextReplaceTime=" + nextReplaceTime +
                 ", expireDay=" + expireDay +
-                ", cycle=" + cycle +
+                ", replaceCycle=" + replaceCycle +
                 ", status='" + status + '\'' +
                 ", batchNo='" + batchNo + '\'' +
                 ", attr2='" + attr2 + '\'' +
                 ", attr3='" + attr3 + '\'' +
-                ", attr4=" + attr4 +
+                ", repairNumber=" + repairNumber +
+                ", repairCycle=" + repairCycle +
+                ", repairTime=" + repairTime +
+                ", nextRepairTime=" + nextRepairTime +
                 ", consumaName='" + consumaName + '\'' +
                 ", consuma=" + consuma +
                 ", device=" + device +

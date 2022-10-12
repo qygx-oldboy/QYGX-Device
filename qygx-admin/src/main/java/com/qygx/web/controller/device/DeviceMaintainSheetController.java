@@ -37,12 +37,25 @@ public class DeviceMaintainSheetController extends BaseController
     /**
      * 查询保养记录列表
      */
-//    @PreAuthorize("@ss.hasPermi('device:maintainSheet:list')")
+    // @PreAuthorize("@ss.hasPermi('device:maintainSheet:list')")
     @GetMapping("/list")
     public TableDataInfo list(DeviceMaintainSheet deviceMaintainSheet)
     {
         startPage();
         List<DeviceMaintainSheet> list = deviceMaintainSheetService.selectDeviceMaintainSheetList(deviceMaintainSheet);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询保养单列表
+     */
+    @PreAuthorize("@ss.hasPermi('device:maintainSheet:list')")
+    @GetMapping("/sheetList")
+    public TableDataInfo sheetList(DeviceMaintainSheet deviceMaintainSheet)
+    {
+        startPage();
+        List<DeviceMaintainSheet> list = deviceMaintainSheetService.selectSheetList(deviceMaintainSheet);
         return getDataTable(list);
     }
 

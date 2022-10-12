@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qygx.common.constant.DeviceConstants;
 import com.qygx.common.constant.UserConstants;
+import com.qygx.mes.pro.domain.ProProcess;
 import com.qygx.system.domain.ProInspect;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * archivesController
- * 
+ *
  * @author qygx
  * @date 2022-08-12
  */
@@ -49,6 +50,19 @@ public class DeviceArchivesController extends BaseController
         startPage();
         List<DeviceArchives> list = deviceArchivesService.selectDeviceArchivesList(deviceArchives);
         return getDataTable(list);
+    }
+
+
+    /**
+     *  查询所有 使用的设备
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('device:archives:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(){
+        DeviceArchives deviceArchives = new DeviceArchives();
+        List<DeviceArchives> list = deviceArchivesService.selectDeviceArchivesList(deviceArchives);
+        return AjaxResult.success(list);
     }
 
     /**
