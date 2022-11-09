@@ -2,6 +2,7 @@ package com.qygx.system.mapper;
 
 import java.util.List;
 import com.qygx.system.domain.DvMachineryRun;
+import com.qygx.system.domain.dto.DvRunDto;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -67,5 +68,10 @@ public interface DvMachineryRunMapper
      * @param shiftName 班次名称
      * @return 运行记录
      */
-    public DvMachineryRun selectDvRunByShift(@Param("date")String date, @Param("shiftName")String shiftName, @Param("deviceId")Long deviceId);
+    public DvMachineryRun selectDvRunByShift(@Param("date")String date, @Param("shiftName")String shiftName, @Param("deviceCode")String deviceCode);
+
+
+    /** 查询每天各工序总运行时间*/
+    public List<DvRunDto> selectDailyRunTime();
+
 }

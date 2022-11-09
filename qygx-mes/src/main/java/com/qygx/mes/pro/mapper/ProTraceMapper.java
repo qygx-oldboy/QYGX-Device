@@ -66,4 +66,13 @@ public interface ProTraceMapper
      * @return 生产追溯集合
      */
     public List<ProTrace> selectProTraceHistory(ProTrace proTrace);
+
+
+    /**
+     * 查询最后一道工序生产追溯列表
+     *
+     * @param proTrace 生产追溯
+     * @return 生产追溯集合
+     */
+    public List<ProTrace> selectLastProTraceList(ProTrace proTrace);
 }

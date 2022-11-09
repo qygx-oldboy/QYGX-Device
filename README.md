@@ -82,5 +82,15 @@
         <td>说明</td>
         <td>官网</td>
     </tr>
+    <tr>
+        <td>Paho</td>
+        <td>通过emq实现指标管理，告警管理</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>EMQ</td>
+        <td>通过emq实现指标管理，告警管理</td>
+        <td></td>
+    </tr>
 </table>
 

@@ -1,7 +1,9 @@
 package com.qygx.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.qygx.common.utils.DateUtils;
+import com.qygx.system.domain.dto.DvRunDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qygx.system.mapper.DvMachineryRunMapper;
@@ -103,7 +105,14 @@ public class DvMachineryRunServiceImpl implements IDvMachineryRunService
      * @return 运行记录
      */
     @Override
-    public DvMachineryRun selectDvRunByShift(String date, String shiftName,Long deviceId) {
-        return dvMachineryRunMapper.selectDvRunByShift(date,shiftName,deviceId);
+    public DvMachineryRun selectDvRunByShift(String date, String shiftName,String deviceCode) {
+        return dvMachineryRunMapper.selectDvRunByShift(date,shiftName,deviceCode);
+    }
+
+    @Override
+    public List<DvRunDto> selectDailyRunTime() {
+
+        List<DvRunDto> runList = dvMachineryRunMapper.selectDailyRunTime();
+        return runList;
     }
 }

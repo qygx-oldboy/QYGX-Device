@@ -17,18 +17,33 @@
         <result property="excepitonDownTime"    column="excepiton_down_time"    />
         <result property="movingTime"    column="moving_time"    />
         <result property="utilizationRate"    column="utilization_rate"    />
-        <result property="attr1"    column="attr1"    />
+        <result property="processId"    column="process_id"    />
         <result property="shiftName"    column="shift_name"    />
-        <result property="attr3"    column="attr3"    />
-        <result property="attr4"    column="attr4"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="processName"    column="process_name"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="operator"    column="operator"    />
     </resultMap>
 
+
+    <resultMap type="DvRunDto" id="DvRunDtoResult">
+        <result property="recordDate"    column="record_date"    />
+        <result property="cuPao"    column="cu_pao"    />
+        <result property="cuMo"    column="cu_mo"    />
+        <result property="shuiPao"    column="shui_pao"    />
+        <result property="jingPao"    column="jing_pao"    />
+        <result property="cuPaoNum"    column="cu_pao_num"    />
+        <result property="cuMoNum"    column="cu_mo_num"    />
+        <result property="shuiPaoNum"    column="shui_pao_num"    />
+        <result property="jingPaoNum"    column="jing_pao_num"    />
+    </resultMap>
+
+
     <sql id="selectDvMachineryRunVo">
-        select record_id, device_id, machinery_code, machinery_name, record_date, start_time, end_time, run_time, plan_down_time, excepiton_down_time, moving_time, utilization_rate, attr1, shift_name, attr3, attr4, create_by, create_time, update_by, update_time from dv_machinery_run
+        select record_id, device_id, machinery_code, machinery_name, record_date, start_time, end_time, run_time, plan_down_time, excepiton_down_time, moving_time, utilization_rate, process_id, shift_name, process_code, process_name,operator, create_by, create_time, update_by, update_time from dv_machinery_run
     </sql>
 
     <select id="selectDvMachineryRunList" parameterType="DvMachineryRun" resultMap="DvMachineryRunResult">
@@ -39,6 +54,7 @@
             <if test="recordDate != null "> and record_date = #{recordDate}</if>
             <if test="utilizationRate != null "> and utilization_rate = #{utilizationRate}</if>
         </where>
+        order by record_date desc
     </select>
 
     <select id="selectDvMachineryRunByRecordId" parameterType="Long" resultMap="DvMachineryRunResult">
@@ -60,10 +76,11 @@
             <if test="excepitonDownTime != null">excepiton_down_time,</if>
             <if test="movingTime != null">moving_time,</if>
             <if test="utilizationRate != null">utilization_rate,</if>
-            <if test="attr1 != null">attr1,</if>
+            <if test="processId != null">process_id,</if>
             <if test="shiftName != null">shift_name,</if>
-            <if test="attr3 != null">attr3,</if>
-            <if test="attr4 != null">attr4,</if>
+            <if test="processCode != null">process_code,</if>
+            <if test="processName != null">process_name,</if>
+            <if test="operator != null">operator,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -82,10 +99,11 @@
             <if test="excepitonDownTime != null">#{excepitonDownTime},</if>
             <if test="movingTime != null">#{movingTime},</if>
             <if test="utilizationRate != null">#{utilizationRate},</if>
-            <if test="attr1 != null">#{attr1},</if>
+            <if test="processId != null">#{processId},</if>
             <if test="shiftName != null">#{shiftName},</if>
-            <if test="attr3 != null">#{attr3},</if>
-            <if test="attr4 != null">#{attr4},</if>
+            <if test="processCode != null">#{processCode},</if>
+            <if test="processName != null">#{processName},</if>
+            <if test="operator != null">#{operator},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -108,10 +126,11 @@
             <if test="excepitonDownTime != null">excepiton_down_time = #{excepitonDownTime},</if>
             <if test="movingTime != null">moving_time = #{movingTime},</if>
             <if test="utilizationRate != null">utilization_rate = #{utilizationRate},</if>
-            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="processId != null">process_id = #{processId},</if>
             <if test="shiftName != null">shift_name = #{shiftName},</if>
-            <if test="attr3 != null">attr3 = #{attr3},</if>
-            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="processCode != null">process_code = #{processCode},</if>
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="operator != null">operator = #{operator},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -135,6 +154,28 @@
         <include refid="selectDvMachineryRunVo"/>
         where record_date = #{date}
         and shift_name = #{shiftName}
-        and device_id = #{deviceId}
+        and machinery_code = #{deviceCode}
     </select>
+
+    <select id="selectDailyRunTime" resultMap="DvRunDtoResult">
+
+
+        select record_date,max(cu_pao) cu_pao,max(cu_mo) cu_mo,max(shui_pao) shui_pao,max(jing_pao) jing_pao,
+               max(cu_pao_num) cu_pao_num,max(cu_mo_num) cu_mo_num,max(shui_pao_num) shui_pao_num,max(jing_pao_num) jing_pao_num
+        from (
+                 select  record_date,count(distinct  machinery_code) dv_num,
+                         (case process_name when '粗抛' then sum(run_time) else 0 end ) cu_pao,
+                         (case process_name when '粗磨' then sum(run_time) else 0 end) cu_mo,
+                         (case process_name when '水抛' then sum(run_time) else 0 end) shui_pao,
+                         (case process_name when '精抛' then sum(run_time) else 0 end) jing_pao,
+                         (case process_name when '粗抛' then count(distinct  machinery_code) else 0 end ) cu_pao_num,
+                         (case process_name when '粗磨' then count(distinct  machinery_code) else 0 end) cu_mo_num,
+                         (case process_name when '水抛' then count(distinct  machinery_code) else 0 end) shui_pao_num,
+                         (case process_name when '精抛' then count(distinct  machinery_code) else 0 end) jing_pao_num
+                 from dv_machinery_run group by process_name,record_date
+             ) t1
+        GROUP BY t1.record_date
+        ORDER BY record_date
+    </select>
+
 </mapper>

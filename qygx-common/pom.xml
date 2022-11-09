@@ -149,6 +149,18 @@
             <version>2.0</version>
         </dependency>
 
+        <!--邮箱验证-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--emq通信包-->
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.mqttv5.client</artifactId>
+            <version>1.2.5</version>
+        </dependency>
 
 
     </dependencies>

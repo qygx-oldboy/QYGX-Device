@@ -30,6 +30,7 @@
         <result property="ng10"    column="ng10"    />
         <result property="result"    column="result"    />
         <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
         <result property="remark1"    column="remark1"    />
         <result property="remark2"    column="remark2"    />
         <result property="remark3"    column="remark3"    />
@@ -37,23 +38,40 @@
         <result property="lianglv"    column="lianglv"    />
     </resultMap>
 
+
+    <resultMap type="InspectDto" id="InspectDtoResult">
+        <id     property="id"      column="id"      />
+        <result property="name"    column="name"    />
+        <result property="checkTotal"    column="inspected_num"    />
+        <result property="goodTotal"    column="ok_num"    />
+        <result property="okPercent"    column="ok_percent"    />
+        <result property="ng1"    column="ng1"    />
+        <result property="ng2"    column="ng2"    />
+        <result property="ng3"    column="ng3"    />
+        <result property="ng4"    column="ng4"    />
+        <result property="ng5"    column="ng5"    />
+        <result property="ng6"    column="ng6"    />
+        <result property="ng7"    column="ng7"    />
+        <result property="ng8"    column="ng8"    />
+        <result property="ng9"    column="ng9"    />
+        <result property="ng10"    column="ng10"  />
+        <result property="date"    column="date"    />
+        <result property="type"    column="type"    />
+        <result property="subType"    column="sub_type"    />
+    </resultMap>
+
+
+
+
+
+
+
     <sql id="selectInspectVo">
         select id,qr_code, product_code, product_type, material_type, material_quality, quantity_std, inspector, begin_time, end_time, run_time,inspected_num,ok_num,ng_num
-             ,ng1,ng2,ng3,ng4,ng5,ng6,ng7,ng8,ng9,ng10,status,remark1,remark2,remark3,remark4
+             ,ng1,ng2,ng3,ng4,ng5,ng6,ng7,ng8,ng9,ng10,status,remark,remark1,remark2,remark3,remark4
         from inspect
     </sql>
 
-<!--    &lt;!&ndash; 查询条件 &ndash;&gt;-->
-<!--    <sql id="sqlwhereSearch">-->
-<!--        <where>-->
-<!--            <if test="configId !=null">-->
-<!--                and config_id = #{configId}-->
-<!--            </if>-->
-<!--            <if test="configKey !=null and configKey != ''">-->
-<!--                and config_key = #{configKey}-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </sql>-->
 
 
     <select id="selectInspectChart" parameterType="ProInspect" resultMap="ProInspectResult">
@@ -138,6 +156,7 @@
             <if test="ng9 != null">ng9,</if>
             <if test="ng10 != null">ng10,</if>
             <if test="result != null">result,</if>
+            <if test="remark != null">remark</if>
             <if test="remark1 != null">remark1,</if>
             <if test="remark2 != null">remark2,</if>
             <if test="remark3 != null">remark3,</if>
@@ -170,6 +189,7 @@
             <if test="ng9 != null">#{ng9},</if>
             <if test="ng10 != null">#{ng10},</if>
             <if test="result != null">#{result},</if>
+            <if test="remark != null">${remark}</if>
             <if test="remark1 != null">${remark1}</if>
             <if test="remark2 != null">${remark2}</if>
             <if test="remark3 != null">${remark3}</if>
@@ -207,6 +227,7 @@
             <if test="ng9 != null">ng9 = #{ng9},</if>
             <if test="ng10 != null">ng10 = #{ng10},</if>
             <if test="result != null">result = #{result},</if>
+            <if test="remark != null and remark != ''">remark1 = #{remark},</if>
             <if test="remark1 != null and remark1 != ''">remark1 = #{remark1},</if>
             <if test="remark2 != null and remark2 != ''">remark2 = #{remark2},</if>
             <if test="remark3 != null and remark3 != ''">remark3 = #{remark3},</if>
@@ -231,5 +252,111 @@
         <include refid="selectInspectVo"/>
         where qr_code = #{qrCode}
     </select>
+
+
+    <select id="selectDailyInspect" parameterType="InspectDto" resultMap="InspectDtoResult">
+        select t1.id,t1.name,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
+               convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
+               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+        from  (select *,CONVERT(begin_time,date) as name from  inspect) t1
+        <where>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+        </where>
+        group by t1.name
+    </select>
+
+
+    <select id="selectDailyDetail" parameterType="InspectDto" resultMap="InspectDtoResult">
+        select id,sub_type,type,date,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
+            CONCAT_WS(".",product_type,material_specification) name,
+            convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
+            convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
+            convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
+            convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
+            convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
+            convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
+            convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
+            convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
+            convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
+            convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
+            convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+        from (
+            SELECT *,
+            CASE
+            WHEN locate('FG', qr_code) > 0 THEN '返工产品'
+            WHEN locate('FX', qr_code) > 0 THEN '返修产品'
+            ELSE '一次产品'
+            END
+            as sub_type,
+            if(ok_num=0,"抽检批退","全检挑选") as type,
+            CONVERT(begin_time,date) as date
+            from inspect
+            ) t1
+        where t1.date = #{date}
+          and type = #{type}
+          and t1.sub_type = #{subType}
+        group by product_type,material_specification
+    </select>
+
+    <select id="selectDailyFullOrSpot" parameterType="InspectDto" resultMap="InspectDtoResult">
+        select t1.id,t1.type as name,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
+               convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
+               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+        from  (select *,if(ok_num=0,"抽检批退","全检挑选") as type,CONVERT(begin_time,date) as date from inspect) t1
+        where t1.date = #{name}
+        group by t1.type
+    </select>
+
+
+    <select id="selectDailyByType" parameterType="InspectDto" resultMap="InspectDtoResult">
+        select t1.id,t1.sub_type as name,t1.type,t1.date,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
+               convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
+               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+        from (
+                 SELECT *,
+                        CASE
+                            WHEN locate('FG', qr_code) > 0 THEN '返工产品'
+                            WHEN locate('FX', qr_code) > 0 THEN '返修产品'
+                            ELSE '一次产品'
+                        END as sub_type,
+                        if(ok_num=0,"抽检批退","全检挑选") as type,
+                        CONVERT(begin_time,date) as date
+                 from inspect
+             ) t1
+        where t1.date = #{date}
+          and t1.type = #{type}
+        group by t1.sub_type
+    </select>
+
+
 
 </mapper>

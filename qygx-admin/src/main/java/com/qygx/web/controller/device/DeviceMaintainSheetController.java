@@ -77,7 +77,7 @@ public class DeviceMaintainSheetController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('device:maintainSheet:query')")
     @GetMapping(value = "/{maintainSheetId}")
-    public AjaxResult getInfo(@PathVariable("maintainSheetId") Long maintainSheetId)
+    public AjaxResult getInfo(@PathVariable Long maintainSheetId)
     {
         return AjaxResult.success(deviceMaintainSheetService.selectDeviceMaintainSheetByMaintainSheetId(maintainSheetId));
     }

@@ -62,6 +62,20 @@ public class ProTraceController extends BaseController
         return getDataTable(list);
     }
 
+
+    /**
+     * 查询最后一道工序的生产追溯列表
+     */
+    @PreAuthorize("@ss.hasPermi('mes:pro:trace:list')")
+    @GetMapping("/lastList")
+    public TableDataInfo lastList(ProTrace proTrace)
+    {
+        startPage();
+        List<ProTrace> list = proTraceService.selectLastProTraceList(proTrace);
+        return getDataTable(list);
+    }
+
+
     /**
      * 导出生产追溯列表
      */

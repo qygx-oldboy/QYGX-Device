@@ -125,6 +125,11 @@ public class ProInspect extends BaseEntity
     @Excel(name = "其他")
     private Integer ng10;
 
+
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remark;
+
     /** 处理结果 */
 
     private String result;
@@ -443,6 +448,14 @@ public class ProInspect extends BaseEntity
 
 
 
+    public String getRemark() {
+        return remark;
+    }
+
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getResult()
     {

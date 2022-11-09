@@ -37,16 +37,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectProTraceList" parameterType="ProTrace" resultMap="ProTraceResult">
         <include refid="selectProTraceVo"/>
-        where 1 = 1
+        <where>
+            <if test="itemCode != null  and itemCode != ''"> and item_code like concat('%', #{itemCode}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectLastProTraceList" parameterType="ProTrace" resultMap="ProTraceResult">
+        select t2.*
+        from (SELECT *,
+        LENGTH( item_code ) - LENGTH( REPLACE ( item_code, '.', '' ) ) as char_length
+        FROM
+        pro_trace  where create_time in (select max(create_time) from pro_trace group by item_code) ) t2
+        where 1=1
         <choose>
             <when test="itemCode != null  and itemCode != ''">
                 and item_code like concat('%', #{itemCode}, '%')
             </when>
             <otherwise>
-                and  char_length(item_code) > 14
+                and char_length = 4
             </otherwise>
         </choose>
+        order by create_time desc
     </select>
+
 
     <select id="selectProTraceHistory" parameterType="ProTrace" resultMap="ProTraceResult">
         select p.trace_id, p.item_code, p.item_name, p.process_id, p.process_code, p.process_name, p.machinery_id, p.machinery_code, p.machinery_name, p.operator, p.start_time, p.duration, p.end_time, p.remark,p.device_param

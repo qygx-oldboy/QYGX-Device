@@ -9,6 +9,7 @@ import com.qygx.common.core.page.TableSupport;
 import com.qygx.common.enums.BusinessType;
 import com.qygx.common.utils.poi.ExcelUtil;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.dto.InspectDto;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.service.IProReportService;
 import io.swagger.annotations.Api;
@@ -202,6 +203,57 @@ public class ProReportController extends BaseController {
         String message = reportService.importInspect(inspectList, updateSupport, operName);
         return AjaxResult.success(message);
     }
+
+
+
+    /**
+     * 查询每日质量汇总列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping("/dailyList")
+    public TableDataInfo dailyList(InspectDto inspectDto)
+    {
+        startPage();
+        List<InspectDto> inspectDtoList = reportService.selectDailyInspectList(inspectDto);
+        return getDataTable(inspectDtoList);
+    }
+
+
+    /**
+     * 查询subType下的的良率详情列表
+     *
+     *
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/getDailyDetail")
+    public AjaxResult getDailyDetail(InspectDto inspectDto)
+    {
+        List<InspectDto> inspectDtoList = reportService.selectDailyDetail(inspectDto);
+        return AjaxResult.success(inspectDtoList);
+    }
+
+    /**
+     * 查询某一天的 全检批退和抽检批退
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/getDailyFullOrSpot/{name}")
+    public AjaxResult getDailyFullOrSpot(@PathVariable("name") String name)
+    {
+        List<InspectDto> inspectDtoList = reportService.selectDailyFullOrSpot(name);
+        return AjaxResult.success(inspectDtoList);
+    }
+
+    /**
+     * 查询某一天的 全检批退或抽检批退 的子集
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/getDailyByType")
+    public AjaxResult getDailyByType(InspectDto inspectDto)
+    {
+        List<InspectDto> inspectDtoList = reportService.selectDailyByType(inspectDto);
+        return AjaxResult.success(inspectDtoList);
+    }
+
 
 }
 

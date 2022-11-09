@@ -2,6 +2,7 @@ package com.qygx.system.service;
 
 import java.util.List;
 import com.qygx.system.domain.DvMachineryRun;
+import com.qygx.system.domain.dto.DvRunDto;
 
 /**
  * 运行记录Service接口
@@ -65,8 +66,12 @@ public interface IDvMachineryRunService
      *
      * @param date 日期
      * @param shiftName 班次名称
-     * @param deviceId 设备id
+     * @param deviceCode 设备编号
      * @return 运行记录
      */
-    public DvMachineryRun selectDvRunByShift(String date,String shiftName,Long deviceId);
+    public DvMachineryRun selectDvRunByShift(String date,String shiftName,String deviceCode);
+
+
+    /** 查询每天各工序总运行时间*/
+    public List<DvRunDto> selectDailyRunTime();
 }

@@ -34,7 +34,7 @@ public class IWarnTaskServiceImpl implements IWarnTaskService {
 
 
     @Override
-    @DataSource(value = DataSourceType.SLAVE)
+  //  @DataSource(value = DataSourceType.SLAVE)
     public void warnTask() {
         System.out.println("定时任务开启了");
         //todo 查询上一次 时间点 到当前时间点的数据

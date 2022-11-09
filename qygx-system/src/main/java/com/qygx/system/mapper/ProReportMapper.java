@@ -1,5 +1,7 @@
 package com.qygx.system.mapper;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.dto.InspectDto;
+
 import java.util.List;
 
 public interface ProReportMapper {
@@ -88,4 +90,39 @@ public interface ProReportMapper {
      *
      */
     public ProInspect selectInspectByQrCode(String qrCode);
+
+
+    /**
+     * 查询每日的良率汇总情况
+     *
+     *
+     */
+    public List<InspectDto> selectDailyInspect(InspectDto inspectDto);
+
+
+    /**
+     * 查询subType下的的良率详情列表
+     *
+     *
+     */
+    public List<InspectDto> selectDailyDetail(InspectDto inspectDto);
+
+
+    /**
+     * 查询某一天的 全检批退和抽检批退
+     *
+     *
+     */
+    public List<InspectDto> selectDailyFullOrSpot(String name);
+
+
+    /**
+     * 查询某一天的 全检批退和抽检批退 的子集
+     *
+     *
+     */
+    public List<InspectDto> selectDailyByType(InspectDto inspectDto);
+
+
+
 }

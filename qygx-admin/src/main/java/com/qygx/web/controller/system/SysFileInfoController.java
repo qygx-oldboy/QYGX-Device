@@ -37,7 +37,7 @@ public class SysFileInfoController extends BaseController
     /**
      * 查询文件信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:info:list')")
+
     @GetMapping("/list")
     public TableDataInfo list(SysFileInfo sysFileInfo)
     {

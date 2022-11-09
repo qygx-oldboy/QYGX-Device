@@ -2,6 +2,7 @@ package com.qygx.system.service;
 
 import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.dto.InspectDto;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.domain.vo.QualityVo;
 
@@ -110,5 +111,37 @@ public interface IProReportService {
      * @return 结果
      */
     public String importInspect(List<ProInspect> inspectList, Boolean isUpdateSupport, String operName);
+
+
+    /**
+     * 查询每日质量列表
+     * @param inspectDto
+     * @return
+     */
+    public List<InspectDto> selectDailyInspectList(InspectDto inspectDto);
+
+
+    /**
+     * 查询subType下的的良率详情列表
+     *
+     *
+     */
+    public List<InspectDto> selectDailyDetail(InspectDto inspectDto);
+
+    /**
+     * 查询某一天的 全检批退和抽检批退
+     * @param name
+     * @return
+     */
+    public List<InspectDto> selectDailyFullOrSpot(String  name);
+
+    /**
+     * 查询某一天的全检批退和抽检批退 的子集
+     *
+     *
+     */
+    public List<InspectDto> selectDailyByType(InspectDto inspectDto);
+
+
 
 }

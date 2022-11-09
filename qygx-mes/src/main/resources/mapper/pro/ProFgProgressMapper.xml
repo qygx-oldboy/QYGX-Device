@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.pro.mapper.ProFgProgressMapper">
+    
+    <resultMap type="ProFgProgress" id="ProFgProgressResult">
+        <result property="id"    column="id"    />
+        <result property="batchCode"    column="batch_code"    />
+        <result property="reworkQuantity"    column="rework_quantity"    />
+        <result property="polishQuantity"    column="polish_quantity"    />
+        <result property="inspectQuantity"    column="inspect_quantity"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectProFgProgressVo">
+        select id, batch_code, rework_quantity, polish_quantity, inspect_quantity, status from pro_fg_progress
+    </sql>
+
+    <select id="selectProFgProgressList" parameterType="ProFgProgress" resultMap="ProFgProgressResult">
+        <include refid="selectProFgProgressVo"/>
+        <where>  
+            <if test="batchCode != null  and batchCode != ''"> and batch_code = #{batchCode}</if>
+            <if test="reworkQuantity != null "> and rework_quantity = #{reworkQuantity}</if>
+            <if test="polishQuantity != null "> and polish_quantity = #{polishQuantity}</if>
+            <if test="inspectQuantity != null "> and inspect_quantity = #{inspectQuantity}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectProFgProgressById" parameterType="String" resultMap="ProFgProgressResult">
+        <include refid="selectProFgProgressVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertProFgProgress" parameterType="ProFgProgress" useGeneratedKeys="true" keyProperty="id">
+        insert into pro_fg_progress
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchCode != null">batch_code,</if>
+            <if test="reworkQuantity != null">rework_quantity,</if>
+            <if test="polishQuantity != null">polish_quantity,</if>
+            <if test="inspectQuantity != null">inspect_quantity,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchCode != null">#{batchCode},</if>
+            <if test="reworkQuantity != null">#{reworkQuantity},</if>
+            <if test="polishQuantity != null">#{polishQuantity},</if>
+            <if test="inspectQuantity != null">#{inspectQuantity},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProFgProgress" parameterType="ProFgProgress">
+        update pro_fg_progress
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchCode != null">batch_code = #{batchCode},</if>
+            <if test="reworkQuantity != null">rework_quantity = #{reworkQuantity},</if>
+            <if test="polishQuantity != null">polish_quantity = #{polishQuantity},</if>
+            <if test="inspectQuantity != null">inspect_quantity = #{inspectQuantity},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProFgProgressById" parameterType="String">
+        delete from pro_fg_progress where id = #{id}
+    </delete>
+
+    <delete id="deleteProFgProgressByIds" parameterType="String">
+        delete from pro_fg_progress where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

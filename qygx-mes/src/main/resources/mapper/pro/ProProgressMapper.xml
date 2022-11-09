@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.pro.mapper.ProProgressMapper">
+
+    <resultMap type="ProProgress" id="ProProgressResult">
+        <result property="id"    column="id"    />
+        <result property="batchCode"    column="batch_code"    />
+        <result property="materialQuantity"    column="material_quantity"    />
+        <result property="storageQuantity"    column="storage_quantity"    />
+        <result property="grindQuantity"    column="grind_quantity"    />
+        <result property="polishQuantity"    column="polish_quantity"    />
+        <result property="inspectQuantity"    column="inspect_quantity"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectProProgressVo">
+        select id, batch_code, material_quantity, storage_quantity, grind_quantity, polish_quantity, inspect_quantity, status from pro_progress
+    </sql>
+
+    <select id="selectProProgressList" parameterType="ProProgress" resultMap="ProProgressResult">
+        <include refid="selectProProgressVo"/>
+        <where>
+            <if test="batchCode != null  and batchCode != ''"> and batch_code = #{batchCode}</if>
+            <if test="materialQuantity != null "> and material_quantity = #{materialQuantity}</if>
+            <if test="storageQuantity != null "> and storage_quantity = #{storageQuantity}</if>
+            <if test="grindQuantity != null "> and grind_quantity = #{grindQuantity}</if>
+            <if test="polishQuantity != null "> and polish_quantity = #{polishQuantity}</if>
+            <if test="inspectQuantity != null "> and inspect_quantity = #{inspectQuantity}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectProProgressById" parameterType="String" resultMap="ProProgressResult">
+        <include refid="selectProProgressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProProgress" parameterType="ProProgress" useGeneratedKeys="true" keyProperty="id">
+        insert into pro_progress
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchCode != null and batchCode != ''">batch_code,</if>
+            <if test="materialQuantity != null">material_quantity,</if>
+            <if test="storageQuantity != null">storage_quantity,</if>
+            <if test="grindQuantity != null">grind_quantity,</if>
+            <if test="polishQuantity != null">polish_quantity,</if>
+            <if test="inspectQuantity != null">inspect_quantity,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchCode != null and batchCode != ''">#{batchCode},</if>
+            <if test="materialQuantity != null">#{materialQuantity},</if>
+            <if test="storageQuantity != null">#{storageQuantity},</if>
+            <if test="grindQuantity != null">#{grindQuantity},</if>
+            <if test="polishQuantity != null">#{polishQuantity},</if>
+            <if test="inspectQuantity != null">#{inspectQuantity},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProProgress" parameterType="ProProgress">
+        update pro_progress
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchCode != null and batchCode != ''">batch_code = #{batchCode},</if>
+            <if test="materialQuantity != null">material_quantity = #{materialQuantity},</if>
+            <if test="storageQuantity != null">storage_quantity = #{storageQuantity},</if>
+            <if test="grindQuantity != null">grind_quantity = #{grindQuantity},</if>
+            <if test="polishQuantity != null">polish_quantity = #{polishQuantity},</if>
+            <if test="inspectQuantity != null">inspect_quantity = #{inspectQuantity},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProProgressById" parameterType="String">
+        delete from pro_progress where id = #{id}
+    </delete>
+
+    <delete id="deleteProProgressByIds" parameterType="String">
+        delete from pro_progress where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

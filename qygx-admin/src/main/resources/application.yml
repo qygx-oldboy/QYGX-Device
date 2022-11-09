@@ -83,6 +83,19 @@ spring:
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
 
+  mail: #邮箱
+    default-encoding: UTF-8
+    host: smtp.qq.com
+    username: 512196254@qq.com            #发送邮件的邮箱
+    password: sjzqqokbcrwebhfj  #发送邮件邮箱的KEY，可以去百度一下邮箱如何开启stmp 就知道了
+    port: 465
+    auth: true
+    properties:
+      mail.smtp.socketFactory.fallback: false
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+
 # token配置
 token:
     # 令牌自定义标识
@@ -128,5 +141,11 @@ xss:
 qygx:
   # 良率
   lianglv: 0.50
+
+
+emq:
+  mqttServerUrl: tcp://127.0.0.1:1883
+
+
 
 

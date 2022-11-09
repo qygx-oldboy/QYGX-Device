@@ -13,7 +13,7 @@ import com.qygx.common.core.domain.BaseEntity;
  * @author qygx
  * @date 2022-09-20
  */
-public class DvMachineryRun extends BaseEntity
+public class DvMachineryRun extends BaseEntity implements Cloneable
 {
     private static final long serialVersionUID = 1L;
 
@@ -67,21 +67,27 @@ public class DvMachineryRun extends BaseEntity
     private Double utilizationRate;
 
 
-    /** 预留字段1 */
-    @Excel(name = "预留字段1")
-    private String attr1;
-
     /** 班次名称 */
     @Excel(name = "班次名称")
     private String shiftName;
 
-    /** 预留字段3 */
-    @Excel(name = "预留字段3")
-    private Long attr3;
 
-    /** 预留字段4 */
-    @Excel(name = "预留字段4")
-    private Long attr4;
+
+    /** 工序id */
+    @Excel(name = "工序id")
+    private Long processId;
+
+    /** 工序编码 */
+    @Excel(name = "工序编号")
+    private String processCode;
+
+    /** 工序名称 */
+    @Excel(name = "工序名称")
+    private String processName;
+
+    /** 操作人 */
+    @Excel(name = "操作人")
+    private String operator;
 
     public void setRecordId(Long recordId)
     {
@@ -193,15 +199,7 @@ public class DvMachineryRun extends BaseEntity
         return utilizationRate;
     }
 
-    public void setAttr1(String attr1)
-    {
-        this.attr1 = attr1;
-    }
 
-    public String getAttr1()
-    {
-        return attr1;
-    }
     public void setShiftName(String shiftName)
     {
         this.shiftName = shiftName;
@@ -211,48 +209,63 @@ public class DvMachineryRun extends BaseEntity
     {
         return shiftName;
     }
-    public void setAttr3(Long attr3)
-    {
-        this.attr3 = attr3;
+
+    public Long getProcessId() {
+        return processId;
     }
 
-    public Long getAttr3()
-    {
-        return attr3;
-    }
-    public void setAttr4(Long attr4)
-    {
-        this.attr4 = attr4;
+    public void setProcessId(Long processId) {
+        this.processId = processId;
     }
 
-    public Long getAttr4()
-    {
-        return attr4;
+    public String getProcessCode() {
+        return processCode;
+    }
+
+    public void setProcessCode(String processCode) {
+        this.processCode = processCode;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("recordId", getRecordId())
-                .append("deviceId", getDeviceId())
-                .append("machineryCode", getMachineryCode())
-                .append("machineryName", getMachineryName())
-                .append("recordDate", getRecordDate())
-                .append("startTime", getStartTime())
-                .append("endTime", getEndTime())
-                .append("runTime", getRunTime())
-                .append("planDownTime", getPlanDownTime())
-                .append("excepitonDownTime", getExcepitonDownTime())
-                .append("movingTime", getMovingTime())
-                .append("utilizationRate", getUtilizationRate())
-                .append("attr1", getAttr1())
-                .append("shiftName", getShiftName())
-                .append("attr3", getAttr3())
-                .append("attr4", getAttr4())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .toString();
+        return "DvMachineryRun{" +
+                "recordId=" + recordId +
+                ", deviceId=" + deviceId +
+                ", machineryCode='" + machineryCode + '\'' +
+                ", machineryName='" + machineryName + '\'' +
+                ", recordDate=" + recordDate +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", runTime=" + runTime +
+                ", planDownTime=" + planDownTime +
+                ", excepitonDownTime=" + excepitonDownTime +
+                ", movingTime=" + movingTime +
+                ", utilizationRate=" + utilizationRate +
+                ", shiftName='" + shiftName + '\'' +
+                ", processId=" + processId +
+                ", processCode='" + processCode + '\'' +
+                ", processName='" + processName + '\'' +
+                '}';
+    }
+
+    //实现Cloneable的clone方法，将clone定义为public
+    public DvMachineryRun clone() throws CloneNotSupportedException {
+        return (DvMachineryRun) super.clone();
     }
 }

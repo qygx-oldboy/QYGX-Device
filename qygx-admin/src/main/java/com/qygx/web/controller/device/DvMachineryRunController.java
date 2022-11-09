@@ -1,7 +1,15 @@
 package com.qygx.web.controller.device;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.dto.DvRunDto;
+import com.qygx.system.domain.vo.InspectVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,5 +108,28 @@ public class DvMachineryRunController extends BaseController
     public AjaxResult remove(@PathVariable Long[] recordIds)
     {
         return toAjax(dvMachineryRunService.deleteDvMachineryRunByRecordIds(recordIds));
+    }
+
+
+    /**
+     * 获取稼动率图表
+     */
+    @ApiOperation("获取稼动率图表")
+    @PreAuthorize("@ss.hasPermi('device:run:query')")
+    @GetMapping("/getLineData")
+    public AjaxResult getLineData(DvMachineryRun dvMachineryRun) throws ParseException {
+
+        HashMap<String, Object> map = new HashMap<>();
+        //todo 返回一个map
+        ArrayList<String> cols = new ArrayList<>();
+        cols.add("recordDate");
+        cols.add("cuPao");
+        cols.add("cuMo");
+        cols.add("shuiPao");
+        cols.add("jingPao");
+        map.put("columns",cols);
+        List<DvRunDto> runList = dvMachineryRunService.selectDailyRunTime();
+        map.put("rows",runList);
+        return AjaxResult.success(map);
     }
 }
