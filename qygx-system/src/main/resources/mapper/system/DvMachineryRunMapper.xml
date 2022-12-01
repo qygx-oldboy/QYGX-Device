@@ -42,6 +42,15 @@
     </resultMap>
 
 
+    <resultMap type="CropRateDto" id="CropRateDtoResult">
+        <result property="recordDate"    column="record_date"    />
+        <result property="name"    column="name"    />
+        <result property="runTime"    column="run_time"    />
+        <result property="dvNum"    column="dv_num"    />
+    </resultMap>
+
+
+
     <sql id="selectDvMachineryRunVo">
         select record_id, device_id, machinery_code, machinery_name, record_date, start_time, end_time, run_time, plan_down_time, excepiton_down_time, moving_time, utilization_rate, process_id, shift_name, process_code, process_name,operator, create_by, create_time, update_by, update_time from dv_machinery_run
     </sql>
@@ -150,16 +159,15 @@
         </foreach>
     </delete>
 
-    <select id="selectDvRunByShift" resultMap="DvMachineryRunResult">
+    <select id="checkEmailUnique" resultMap="DvMachineryRunResult">
         <include refid="selectDvMachineryRunVo"/>
         where record_date = #{date}
         and shift_name = #{shiftName}
         and machinery_code = #{deviceCode}
+        limit 1
     </select>
 
-    <select id="selectDailyRunTime" resultMap="DvRunDtoResult">
-
-
+    <select id="selectProcessRunTime" parameterType="DvMachineryRun" resultMap="DvRunDtoResult">
         select record_date,max(cu_pao) cu_pao,max(cu_mo) cu_mo,max(shui_pao) shui_pao,max(jing_pao) jing_pao,
                max(cu_pao_num) cu_pao_num,max(cu_mo_num) cu_mo_num,max(shui_pao_num) shui_pao_num,max(jing_pao_num) jing_pao_num
         from (
@@ -174,8 +182,63 @@
                          (case process_name when '精抛' then count(distinct  machinery_code) else 0 end) jing_pao_num
                  from dv_machinery_run group by process_name,record_date
              ) t1
+
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(record_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(record_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
         GROUP BY t1.record_date
         ORDER BY record_date
+    </select>
+
+
+    <select id="selectPersonRunTime"  parameterType="DvMachineryRun" resultMap="CropRateDtoResult">
+        select  record_date,sum(run_time) run_time,operator name,count(distinct  machinery_code) dv_num
+        from dv_machinery_run
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(record_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(record_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            and operator in
+            <foreach collection="array" index="index" item="names" open="(" separator="," close=")">
+                #{names}
+            </foreach>
+        </where>
+        group by record_date,operator
+        order by operator
+    </select>
+
+    <select id="selectDeviceRunTime"  parameterType="DvMachineryRun" resultMap="CropRateDtoResult">
+        select  record_date,sum(run_time) run_time,machinery_code name
+        from dv_machinery_run
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(record_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(record_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            and machinery_code in
+            <foreach collection="array" index="index" item="names" open="(" separator="," close=")">
+                #{names}
+            </foreach>
+        </where>
+        group by record_date,machinery_code
+    </select>
+
+    <select id="selectPersonName"  resultType="String">
+        select operator from dv_machinery_run where not isnull(operator) group by operator
+    </select>
+
+    <select id="selectDeviceName"  resultType="String">
+        select machinery_code from dv_machinery_run  group by machinery_code
     </select>
 
 </mapper>

@@ -114,4 +114,9 @@
             #{deviceId}
         </foreach>
     </delete>
+
+    <select id="selectDeviceByDeviceCode" parameterType="String" resultMap="DeviceArchivesResult">
+        <include refid="selectDeviceArchivesVo"/>
+        where device_code = #{deviceCode}
+    </select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.qygx.system.service;
 
 import com.qygx.common.core.domain.entity.SysUser;
+import com.qygx.system.domain.Operators;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.QrCodeRecord;
 import com.qygx.system.domain.dto.InspectDto;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.domain.vo.QualityVo;
@@ -67,6 +69,15 @@ public interface IProReportService {
      * @return inspect
      */
     public ProInspect selectProInspectById(Long id);
+
+
+    /**
+     * 查询inspect
+     *
+     * @param code 批次号
+     * @return inspect
+     */
+    public ProInspect selectProInspectByCode(String code);
 
 
     /**
@@ -143,5 +154,28 @@ public interface IProReportService {
     public List<InspectDto> selectDailyByType(InspectDto inspectDto);
 
 
+    /**
+     * 查询批次号记录
+     *
+     *
+     */
+    public QrCodeRecord selectQrCodeRecord(String qrCode);
 
+
+    /**
+     * 查询检验员下的的良率详情列表
+     *
+     *
+     */
+    public List<InspectDto> selectDailyPerson(InspectDto inspectDto);
+
+    /**
+     * 查询操作人列表
+     *
+     *
+     */
+    public List<Operators> selectOperators(Operators operators);
+
+    /** 状态修改 **/
+    public int updateQrCodeRecordStatus(QrCodeRecord qrCodeRecord );
 }

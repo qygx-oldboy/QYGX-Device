@@ -15,16 +15,13 @@
         <result property="remark"    column="remark"    />
         <result property="deviceCode"    column="device_code"    />
         <result property="deviceName"    column="device_name"    />
-        <result property="attr3"    column="attr3"    />
+        <result property="consumaUseId"    column="consuma_use_id"    />
         <result property="attr4"    column="attr4"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+
     </resultMap>
 
     <sql id="selectCsmReplaceRecordVo">
-        select record_id, consuma_code, consuma_name, specs, nick_name, replace_time, batch_no, remark, device_code, device_name, attr3, attr4, create_by, create_time, update_by, update_time from csm_replace_record
+        select record_id, consuma_code, consuma_name, specs, nick_name, replace_time, batch_no, remark, device_code, device_name, consuma_use_id, attr4 from csm_replace_record
     </sql>
 
     <select id="selectCsmReplaceRecordList" parameterType="CsmReplaceRecord" resultMap="CsmReplaceRecordResult">
@@ -38,7 +35,7 @@
             <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
             <if test="deviceCode != null  and deviceCode != ''"> and device_code = #{deviceCode}</if>
             <if test="deviceName != null  and deviceName != ''"> and device_name = #{deviceName}</if>
-            <if test="attr3 != null "> and attr3 = #{attr3}</if>
+            <if test="consumaUseId != null "> and consuma_use_id = #{consumaUseId}</if>
             <if test="attr4 != null "> and attr4 = #{attr4}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(replace_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
@@ -66,12 +63,9 @@
             <if test="remark != null">remark,</if>
             <if test="deviceCode != null">device_code,</if>
             <if test="deviceName != null">device_name,</if>
-            <if test="attr3 != null">attr3,</if>
+            <if test="consumaUseId != null">consuma_use_id,</if>
             <if test="attr4 != null">attr4,</if>
-            <if test="createBy != null">create_by,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateBy != null">update_by,</if>
-            <if test="updateTime != null">update_time,</if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="consumaCode != null and consumaCode != ''">#{consumaCode},</if>
@@ -83,12 +77,9 @@
             <if test="remark != null">#{remark},</if>
             <if test="deviceCode != null">#{deviceCode},</if>
             <if test="deviceName != null">#{deviceName},</if>
-            <if test="attr3 != null">#{attr3},</if>
+            <if test="consumaUseId != null">#{consumaUseId},</if>
             <if test="attr4 != null">#{attr4},</if>
-            <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateBy != null">#{updateBy},</if>
-            <if test="updateTime != null">#{updateTime},</if>
+
         </trim>
     </insert>
 
@@ -104,12 +95,9 @@
             <if test="remark != null">remark = #{remark},</if>
             <if test="deviceCode != null">device_code = #{deviceCode},</if>
             <if test="deviceName != null">device_name = #{deviceName},</if>
-            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="consumaUseId != null">consuma_use_Id = #{consumaUseId},</if>
             <if test="attr4 != null">attr4 = #{attr4},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
+
         </trim>
         where record_id = #{recordId}
     </update>

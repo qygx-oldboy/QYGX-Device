@@ -89,6 +89,17 @@ public class DvMachineryRun extends BaseEntity implements Cloneable
     @Excel(name = "操作人")
     private String operator;
 
+    /** 人员姓名或设备名称 **/
+    private String[] array;
+
+    public String[] getArray() {
+        return array;
+    }
+
+    public void setArray(String[] array) {
+        this.array = array;
+    }
+
     public void setRecordId(Long recordId)
     {
         this.recordId = recordId;

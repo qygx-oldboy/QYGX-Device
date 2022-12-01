@@ -55,7 +55,7 @@ public class CsmReplaceRecord extends BaseEntity
 
     /** 预留字段3 */
     @Excel(name = "预留字段3")
-    private Long attr3;
+    private Long consumaUseId;
 
     /** 预留字段4 */
     @Excel(name = "预留字段4")
@@ -142,15 +142,15 @@ public class CsmReplaceRecord extends BaseEntity
     {
         return deviceName;
     }
-    public void setAttr3(Long attr3)
-    {
-        this.attr3 = attr3;
+
+    public Long getConsumaUseId() {
+        return consumaUseId;
     }
 
-    public Long getAttr3()
-    {
-        return attr3;
+    public void setConsumaUseId(Long consumaUseId) {
+        this.consumaUseId = consumaUseId;
     }
+
     public void setAttr4(Long attr4)
     {
         this.attr4 = attr4;
@@ -174,7 +174,7 @@ public class CsmReplaceRecord extends BaseEntity
             .append("remark", getRemark())
             .append("deviceCode", getdeviceCode())
             .append("deviceName", getdeviceName())
-            .append("attr3", getAttr3())
+            .append("consumaUseId", getConsumaUseId())
             .append("attr4", getAttr4())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

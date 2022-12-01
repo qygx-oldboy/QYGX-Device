@@ -1,5 +1,7 @@
 package com.qygx.system.mapper;
+import com.qygx.system.domain.Operators;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.QrCodeRecord;
 import com.qygx.system.domain.dto.InspectDto;
 
 import java.util.List;
@@ -49,6 +51,14 @@ public interface ProReportMapper {
      * @return inspect
      */
     public ProInspect selectInspectById(Long id);
+
+    /**
+     * 查询inspect
+     *
+     * @param code 批次码
+     * @return inspect
+     */
+    public ProInspect selectInspectByCode(String code);
 
 
 
@@ -123,6 +133,30 @@ public interface ProReportMapper {
      */
     public List<InspectDto> selectDailyByType(InspectDto inspectDto);
 
+    /**
+     * 查询批次号记录
+     *
+     *
+     */
+    public QrCodeRecord getQrCodeRecord(String qrCode);
 
+
+
+    /**
+     * 查询检验员下的的良率详情列表
+     *
+     *
+     */
+    public List<InspectDto> selectDailyPerson(InspectDto inspectDto);
+
+    /**
+     * 查询操作人列表
+     *
+     *
+     */
+    public List<Operators> selectOperators(Operators operators);
+
+    /** 状态修改 **/
+    public int updateQrCodeRecord(QrCodeRecord qrCodeRecord);
 
 }

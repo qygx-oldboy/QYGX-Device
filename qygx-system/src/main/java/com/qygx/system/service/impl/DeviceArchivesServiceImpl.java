@@ -23,12 +23,12 @@ import javax.validation.Validator;
 
 /**
  * archivesService业务层处理
- * 
+ *
  * @author qygx
  * @date 2022-08-12
  */
 @Service
-public class DeviceArchivesServiceImpl implements IDeviceArchivesService 
+public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 {
     private static final Logger log = LoggerFactory.getLogger(DeviceArchivesServiceImpl.class);
 
@@ -40,7 +40,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 查询archives
-     * 
+     *
      * @param deviceId archives主键
      * @return archives
      */
@@ -52,7 +52,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 查询archives列表
-     * 
+     *
      * @param deviceArchives archives
      * @return archives
      */
@@ -64,7 +64,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 新增archives
-     * 
+     *
      * @param deviceArchives archives
      * @return 结果
      */
@@ -77,7 +77,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 修改archives
-     * 
+     *
      * @param deviceArchives archives
      * @return 结果
      */
@@ -90,7 +90,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 批量删除archives
-     * 
+     *
      * @param deviceIds 需要删除的archives主键
      * @return 结果
      */
@@ -102,7 +102,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
 
     /**
      * 删除archives信息
-     * 
+     *
      * @param deviceId archives主键
      * @return 结果
      */
@@ -145,7 +145,7 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
             try
             {
 
-                DeviceArchives i = deviceArchivesMapper.selectDeviceByCode(device.getDeviceCode());
+                DeviceArchives i = deviceArchivesMapper.selectDeviceByDeviceCode(device.getDeviceCode());
                 if (StringUtils.isNull(i))
                 {
                     BeanValidators.validateWithException(validator, device);
@@ -185,5 +185,10 @@ public class DeviceArchivesServiceImpl implements IDeviceArchivesService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public DeviceArchives selectDeviceByDeviceCode(String deviceCode) {
+        return deviceArchivesMapper.selectDeviceByDeviceCode(deviceCode);
     }
 }

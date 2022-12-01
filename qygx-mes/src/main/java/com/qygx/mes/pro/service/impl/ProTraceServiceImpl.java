@@ -109,7 +109,7 @@ public class ProTraceServiceImpl implements IProTraceService
                 runRecord.setProcessId(proTrace.getProcessId());
                 runRecord.setProcessCode(proTrace.getProcessCode());
                 runRecord.setProcessName(proTrace.getProcessName());
-
+                runRecord.setOperator(proTrace.getOperator());
                 runRecord.setRecordDate(DateUtils.parseDate(date));
                 runRecord.setShiftName(shift.getShiftName());
                 runRecord.setStartTime(shift.getStartTime());
@@ -225,26 +225,19 @@ public class ProTraceServiceImpl implements IProTraceService
 
         for (DvMachineryRun runRecord :
                 runRecordList) {
-            String date = DateUtils.parseDateToStr("yyyy-MM-dd", runRecord.getRecordDate());
-            DvMachineryRun dvRun = dvRunMapper.selectDvRunByShift( date, runRecord.getShiftName(),runRecord.getMachineryCode());
 
-//            String upTime = date + " " +runRecord.getStartTime() + ":00";
-//            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            long diff  = DateUtils.getNowDate().getTime() - sf.parse(upTime).getTime();
-//            long min = Math.abs(diff)/ 60 / 1000; //分母
-            if(StringUtils.isNull(dvRun)){
-                //稼动率
-             //   Double rate = (double)runRecord.getRunTime()/(min - 0);
-             //   runRecord.setUtilizationRate(rate); //稼动率
-                dvRunMapper.insertDvMachineryRun(runRecord);
-            }
-            else{
+            Long recordId = StringUtils.isNull(runRecord.getRecordId()) ? -1L : runRecord.getRecordId();
+            String date = DateUtils.parseDateToStr("yyyy-MM-dd", runRecord.getRecordDate());
+            DvMachineryRun dvRun = dvRunMapper.checkEmailUnique( date, runRecord.getShiftName(),runRecord.getMachineryCode());
+
+            if (StringUtils.isNotNull(dvRun) && dvRun.getRecordId().longValue() != recordId.longValue()){
                 long time = dvRun.getRunTime() + runRecord.getRunTime();
                 dvRun.setRunTime(time);
-            //    Double rate = (double)time/(min - 0);
-             //   dvRun.setUtilizationRate(rate);
                 dvRunMapper.updateDvMachineryRun(dvRun);
+            }else{
+                dvRunMapper.insertDvMachineryRun(runRecord);
             }
+
         }
     }
 }

@@ -3,12 +3,15 @@ package com.qygx.web.controller.product;
 import com.qygx.common.annotation.Log;
 import com.qygx.common.core.controller.BaseController;
 import com.qygx.common.core.domain.AjaxResult;
+import com.qygx.common.core.domain.entity.SysUser;
 import com.qygx.common.core.page.PageDomain;
 import com.qygx.common.core.page.TableDataInfo;
 import com.qygx.common.core.page.TableSupport;
 import com.qygx.common.enums.BusinessType;
 import com.qygx.common.utils.poi.ExcelUtil;
+import com.qygx.system.domain.Operators;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.QrCodeRecord;
 import com.qygx.system.domain.dto.InspectDto;
 import com.qygx.system.domain.vo.InspectVo;
 import com.qygx.system.service.IProReportService;
@@ -48,7 +51,6 @@ public class ProReportController extends BaseController {
     public AjaxResult getChart(ProInspect proInspect) throws ParseException {
 
         HashMap<String, Object> map = new HashMap<>();
-
         //todo 返回一个map
         ArrayList<String> cols = new ArrayList<>();
         cols.add("date");
@@ -158,6 +160,18 @@ public class ProReportController extends BaseController {
         return AjaxResult.success(reportService.selectProInspectById(id));
     }
 
+
+    /**
+     * 获取inspect详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:query')")
+    @GetMapping(value = "/getInfoByCode/{code}")
+    public AjaxResult getInfoByCode(@PathVariable("code") String code)
+    {
+        return AjaxResult.success(reportService.selectProInspectByCode(code));
+    }
+
+
     /**
      * 新增inspect
      */
@@ -254,6 +268,56 @@ public class ProReportController extends BaseController {
         return AjaxResult.success(inspectDtoList);
     }
 
+
+    /**
+     * 解析批次号
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/readQrCode/{code}")
+    public AjaxResult readQrCode(@PathVariable("code") String code)
+    {
+        QrCodeRecord qrCodeRecord = reportService.selectQrCodeRecord(code);
+        return AjaxResult.success(qrCodeRecord);
+    }
+
+
+    /**
+     *   查询检验员下的的良率详情列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/getDailyPerson")
+    public AjaxResult getDailyPerson(InspectDto inspectDto)
+    {
+        List<InspectDto> inspectDtoList = reportService.selectDailyPerson(inspectDto);
+        return AjaxResult.success(inspectDtoList);
+    }
+
+
+    /**
+     *   查询操作人列表
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:list')")
+    @GetMapping(value = "/getOperators")
+    public AjaxResult getOperators()
+    {
+        Operators operators = new Operators();
+        operators.setDuty("检验");
+        List<Operators> operatorsList = reportService.selectOperators(operators);
+        return AjaxResult.success(operatorsList);
+    }
+
+
+
+
+    /**
+     * 状态修改
+     */
+    @PreAuthorize("@ss.hasPermi('product:inspect:edit')")
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody QrCodeRecord qrCodeRecord)
+    {
+        return toAjax(reportService.updateQrCodeRecordStatus(qrCodeRecord));
+    }
 
 }
 

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qygx.system.domain.ProInspect;
 import com.qygx.system.domain.dto.DvRunDto;
+import com.qygx.system.domain.dto.CropRateDto;
 import com.qygx.system.domain.vo.InspectVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -112,13 +113,12 @@ public class DvMachineryRunController extends BaseController
 
 
     /**
-     * 获取稼动率图表
+     * 获取各工序稼动率数据
      */
-    @ApiOperation("获取稼动率图表")
+    @ApiOperation("获取各工序稼动率数据")
     @PreAuthorize("@ss.hasPermi('device:run:query')")
     @GetMapping("/getLineData")
-    public AjaxResult getLineData(DvMachineryRun dvMachineryRun) throws ParseException {
-
+    public AjaxResult getLineData(DvMachineryRun dvMachineryRun){
         HashMap<String, Object> map = new HashMap<>();
         //todo 返回一个map
         ArrayList<String> cols = new ArrayList<>();
@@ -128,8 +128,52 @@ public class DvMachineryRunController extends BaseController
         cols.add("shuiPao");
         cols.add("jingPao");
         map.put("columns",cols);
-        List<DvRunDto> runList = dvMachineryRunService.selectDailyRunTime();
+        List<DvRunDto> runList = dvMachineryRunService.selectProcessRunTime(dvMachineryRun);
         map.put("rows",runList);
         return AjaxResult.success(map);
     }
+
+
+    /**
+     * 获取各人员稼动率数据
+     */
+    @ApiOperation("获取人员稼动率数据")
+    @PreAuthorize("@ss.hasPermi('device:run:query')")
+    @GetMapping("/getLinePersonData")
+    public AjaxResult getLinePersonData(DvMachineryRun dvMachineryRun){
+
+        List<CropRateDto> dtoList = dvMachineryRunService.selectPersonRunTime(dvMachineryRun);
+        return AjaxResult.success(dtoList);
+    }
+
+    /**
+     * 查询人员列表姓名
+     */
+    @PreAuthorize("@ss.hasPermi('device:run:query')")
+    @GetMapping("/getPersonName")
+    public AjaxResult getPersonName(){
+        List<String> list = dvMachineryRunService.selectPersonName();
+        return AjaxResult.success(list);
+    }
+
+    /** 查询设备名称列表*/
+    @PreAuthorize("@ss.hasPermi('device:run:query')")
+    @GetMapping("/getDeviceName")
+    public AjaxResult getDeviceName(){
+        List<String> list = dvMachineryRunService.selectDeviceName();
+        return AjaxResult.success(list);
+    }
+
+
+    /**
+     * 获取各设备稼动率数据
+     */
+    @ApiOperation("获取各设备稼动率数据")
+    @PreAuthorize("@ss.hasPermi('device:run:query')")
+    @GetMapping("/getLineDeviceData")
+    public AjaxResult getLineDeviceData(DvMachineryRun dvMachineryRun){
+        List<CropRateDto> dtoList = dvMachineryRunService.selectDeviceRunTime(dvMachineryRun);
+        return AjaxResult.success(dtoList);
+    }
+
 }

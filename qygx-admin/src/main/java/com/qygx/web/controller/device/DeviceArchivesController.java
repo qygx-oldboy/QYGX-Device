@@ -153,4 +153,13 @@ public class DeviceArchivesController extends BaseController
     {
         return toAjax(deviceArchivesService.deleteDeviceArchivesByDeviceIds(deviceIds));
     }
+
+    /**
+     * 获取archives详细信息
+     */
+    @GetMapping(value = "/getInfoByDeviceCode/{deviceCode}")
+    public AjaxResult getInfoByDeviceCode(@PathVariable("deviceCode") String deviceCode)
+    {
+        return AjaxResult.success(deviceArchivesService.selectDeviceByDeviceCode(deviceCode));
+    }
 }

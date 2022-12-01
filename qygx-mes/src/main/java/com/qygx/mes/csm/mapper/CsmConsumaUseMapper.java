@@ -75,4 +75,12 @@ public interface CsmConsumaUseMapper
      * @return 结果
      */
     public int deleteUseByConsumaIds(Long[] consumaIds);
+
+    /**
+     * 查询在用备件
+     *
+     * @param batchNo 批次号
+     * @return 在用备件
+     */
+    public CsmConsumaUse selectConsumaUseByBatchNo(String batchNo);
 }

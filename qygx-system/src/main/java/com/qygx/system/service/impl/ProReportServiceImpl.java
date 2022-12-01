@@ -7,7 +7,9 @@ import com.qygx.common.exception.ServiceException;
 import com.qygx.common.utils.DateUtils;
 import com.qygx.common.utils.StringUtils;
 import com.qygx.common.utils.bean.BeanValidators;
+import com.qygx.system.domain.Operators;
 import com.qygx.system.domain.ProInspect;
+import com.qygx.system.domain.QrCodeRecord;
 import com.qygx.system.domain.dto.InspectDto;
 import com.qygx.system.domain.vo.BreedVo;
 import com.qygx.system.domain.vo.InspectVo;
@@ -41,7 +43,7 @@ public class ProReportServiceImpl implements IProReportService {
 
 
     @Override
-   // @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectVo> selectInspectList(ProInspect proInspect) throws ParseException {
         List<ProInspect> listInspect = reportMapper.selectInspectChart(proInspect);
         List<InspectVo> inspectVos = new ArrayList<>();
@@ -74,7 +76,7 @@ public class ProReportServiceImpl implements IProReportService {
     }
 
     @Override
-    //@DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public List selectBreedList() {
         List<ProInspect> breeds = reportMapper.selectBreedList();
         List<BreedVo> result = new ArrayList<>();
@@ -97,7 +99,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @throws ParseException
      */
     @Override
-    //@DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectVo> selectShiftInspectList(ProInspect proInspect) throws ParseException {
         List<InspectVo> inspectVos = new ArrayList<>();
         Date nowDate = DateUtils.getNowDate();
@@ -139,10 +141,23 @@ public class ProReportServiceImpl implements IProReportService {
      * @return inspect
      */
     @Override
-  //  @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public ProInspect selectProInspectById(Long id)
     {
         return reportMapper.selectInspectById(id);
+    }
+
+    /**
+     * 查询inspect
+     *
+     * @param id inspect主键
+     * @return inspect
+     */
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public ProInspect selectProInspectByCode(String code)
+    {
+        return reportMapper.selectInspectByCode(code);
     }
 
 
@@ -153,14 +168,14 @@ public class ProReportServiceImpl implements IProReportService {
      * @return inspect
      */
     @Override
-   // @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public List<ProInspect> selectProInspectList(ProInspect proInspect)
     {
         return reportMapper.selectInspectList(proInspect);
     }
 
     @Override
-  //  @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public List<ProInspect> selectProInspectUnusualList(ProInspect proInspect) {
         proInspect.setLianglv(LIANGLV);
         List<ProInspect>  allList =  reportMapper.selectInspectList(proInspect);
@@ -206,7 +221,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return 结果
      */
     @Override
-  //  @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public int insertProInspect(ProInspect proInspect)
     {
         return reportMapper.insertInspect(proInspect);
@@ -219,7 +234,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return 结果
      */
     @Override
-   // @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public int updateProInspect(ProInspect proInspect)
     {
         proInspect.setStatus(1); //已处理
@@ -233,7 +248,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return 结果
      */
     @Override
-   // @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public int deleteProInspectByIds(Long[] ids)
     {
         return reportMapper.deleteInspectByIds(ids);
@@ -260,7 +275,7 @@ public class ProReportServiceImpl implements IProReportService {
      * @return 结果
      */
     @Override
-   // @DataSource(value = DataSourceType.SLAVE)
+    @DataSource(value = DataSourceType.SLAVE)
     public String importInspect(List<ProInspect> inspectList, Boolean isUpdateSupport, String operName) {
         if (StringUtils.isNull(inspectList) || inspectList.size() == 0)
         {
@@ -318,6 +333,7 @@ public class ProReportServiceImpl implements IProReportService {
     }
 
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectDto> selectDailyInspectList(InspectDto inspectDto) {
 
         List<InspectDto> inspectDtoList = reportMapper.selectDailyInspect(inspectDto);
@@ -328,22 +344,42 @@ public class ProReportServiceImpl implements IProReportService {
     }
 
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectDto> selectDailyDetail(InspectDto inspectDto) {
-        List<InspectDto> inspectDtoList = reportMapper.selectDailyDetail(inspectDto);
-        return inspectDtoList;
+        return  reportMapper.selectDailyDetail(inspectDto);
     }
 
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectDto> selectDailyFullOrSpot(String name) {
-        List<InspectDto> inspectDtoList = reportMapper.selectDailyFullOrSpot(name);
-        return inspectDtoList;
+        return reportMapper.selectDailyFullOrSpot(name);
     }
 
     @Override
+    @DataSource(value = DataSourceType.SLAVE)
     public List<InspectDto> selectDailyByType(InspectDto inspectDto) {
-        List<InspectDto> inspectDtoList = reportMapper.selectDailyByType(inspectDto);
-        return inspectDtoList;
+        return reportMapper.selectDailyByType(inspectDto);
+    }
+
+    @Override
+    public QrCodeRecord selectQrCodeRecord(String qrCode) {
+        return reportMapper.getQrCodeRecord(qrCode);
     }
 
 
+    @Override
+    @DataSource(value = DataSourceType.SLAVE)
+    public List<InspectDto> selectDailyPerson(InspectDto inspectDto) {
+        return reportMapper.selectDailyPerson(inspectDto);
+    }
+
+    @Override
+    public List<Operators> selectOperators(Operators operators) {
+        return reportMapper.selectOperators(operators);
+    }
+
+    @Override
+    public int updateQrCodeRecordStatus(QrCodeRecord qrCodeRecord) {
+        return reportMapper.updateQrCodeRecord(qrCodeRecord);
+    }
 }

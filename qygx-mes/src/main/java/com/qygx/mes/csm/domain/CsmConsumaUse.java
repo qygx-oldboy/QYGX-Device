@@ -23,8 +23,22 @@ public class CsmConsumaUse extends BaseEntity
     @Excel(name = "耗材周期ID")
     private Long consumaId;
 
+    /** 规格型号 */
+    private String specs;
+
+    private String consumaCode;
+
+    private String consumaName;
+
+
     /** 设备ID */
     private Long deviceId;
+
+    /** 设备编号 */
+    private String deviceCode;
+
+    /** 设备名称 */
+    private String deviceName;
 
     /** 更换时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -41,15 +55,8 @@ public class CsmConsumaUse extends BaseEntity
     @Excel(name = "下一次更换时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date nextReplaceTime;
 
-    /** 过期天数 */
-    private Long expireDay;
-
     /** 更换周期 */
     private Long replaceCycle;
-
-    /** 状态 */
-    @Excel(name = "状态")
-    private String status;
 
     /** 备件批次 */
     private String batchNo;
@@ -59,51 +66,42 @@ public class CsmConsumaUse extends BaseEntity
     /** 预留字段3 */
     private String attr3;
 
-    /** 预留字段4 */
-    private Long repairNumber;
+    //过期天数
+    private String expireDay;
 
-    /** 更换周期 */
-    private Long repairCycle;
+    private int repairNumber;
 
-
-
-    /** 删除修复 标记 */
-    private String delFlag;
-
-    /** 修复 标记 */
-    private Boolean repairFlag;
-
-    public Boolean getRepairFlag() {
-        return repairFlag;
-    }
-
-    public void setRepairFlag(Boolean repairFlag) {
-        this.repairFlag = repairFlag;
-    }
-
-    public String getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
-    }
-
-    /** 修复时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "修复时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date repairTime;
-
-    /** 下一次修复时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "下一次修复时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date nextRepairTime;
-
-    private String consumaName;
+    //延长小时数
+    private int expandTime;
 
     private CsmConsuma consuma;
 
     private DeviceArchives device;
+
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public String getConsumaCode() {
+        return consumaCode;
+    }
+
+    public void setConsumaCode(String consumaCode) {
+        this.consumaCode = consumaCode;
+    }
+
+    public String getExpireDay() {
+        return expireDay;
+    }
+
+    public void setExpireDay(String expireDay) {
+        this.expireDay = expireDay;
+    }
 
     public void setConsumaUseId(Long consumaUseId)
     {
@@ -190,22 +188,12 @@ public class CsmConsumaUse extends BaseEntity
         return attr3;
     }
 
-    public Long getExpireDay() {
-        return expireDay;
+    public int getExpandTime() {
+        return expandTime;
     }
 
-    public void setExpireDay(Long expireDay) {
-        this.expireDay = expireDay;
-    }
-
-    public void setRepairNumber(Long repairNumber)
-    {
-        this.repairNumber = repairNumber;
-    }
-
-    public Long getRepairNumber()
-    {
-        return repairNumber;
+    public void setExpandTime(int expandTime) {
+        this.expandTime = expandTime;
     }
 
     public CsmConsuma getConsuma() {
@@ -232,14 +220,12 @@ public class CsmConsumaUse extends BaseEntity
         this.device = device;
     }
 
-
-
-    public String getStatus() {
-        return status;
+    public String getSpecs() {
+        return specs;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSpecs(String specs) {
+        this.specs = specs;
     }
 
     public Long getReplaceCycle() {
@@ -250,28 +236,20 @@ public class CsmConsumaUse extends BaseEntity
         this.replaceCycle = replaceCycle;
     }
 
-    public Date getRepairTime() {
-        return repairTime;
+    public String getDeviceCode() {
+        return deviceCode;
     }
 
-    public void setRepairTime(Date repairTime) {
-        this.repairTime = repairTime;
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 
-    public Date getNextRepairTime() {
-        return nextRepairTime;
+    public int getRepairNumber() {
+        return repairNumber;
     }
 
-    public void setNextRepairTime(Date nextRepairTime) {
-        this.nextRepairTime = nextRepairTime;
-    }
-
-    public Long getRepairCycle() {
-        return repairCycle;
-    }
-
-    public void setRepairCycle(Long repairCycle) {
-        this.repairCycle = repairCycle;
+    public void setRepairNumber(int repairNumber) {
+        this.repairNumber = repairNumber;
     }
 
     @Override
@@ -280,19 +258,15 @@ public class CsmConsumaUse extends BaseEntity
                 "consumaUseId=" + consumaUseId +
                 ", consumaId=" + consumaId +
                 ", deviceId=" + deviceId +
+                ", deviceCode='" + deviceCode + '\'' +
                 ", replaceTime=" + replaceTime +
                 ", useTime=" + useTime +
                 ", nextReplaceTime=" + nextReplaceTime +
-                ", expireDay=" + expireDay +
                 ", replaceCycle=" + replaceCycle +
-                ", status='" + status + '\'' +
                 ", batchNo='" + batchNo + '\'' +
                 ", attr2='" + attr2 + '\'' +
                 ", attr3='" + attr3 + '\'' +
-                ", repairNumber=" + repairNumber +
-                ", repairCycle=" + repairCycle +
-                ", repairTime=" + repairTime +
-                ", nextRepairTime=" + nextRepairTime +
+                ", expireDay='" + expireDay + '\'' +
                 ", consumaName='" + consumaName + '\'' +
                 ", consuma=" + consuma +
                 ", device=" + device +

@@ -2,18 +2,19 @@ package com.qygx.mes.csm.service;
 
 import java.util.List;
 import com.qygx.mes.csm.domain.CsmConsuma;
+import com.qygx.mes.wm.domain.WmWarehouse;
 
 /**
  * 备件档案Service接口
- * 
+ *
  * @author qygx
  * @date 2022-09-09
  */
-public interface ICsmConsumaService 
+public interface ICsmConsumaService
 {
     /**
      * 查询备件档案
-     * 
+     *
      * @param consumaId 备件档案主键
      * @return 备件档案
      */
@@ -21,7 +22,7 @@ public interface ICsmConsumaService
 
     /**
      * 查询备件档案列表
-     * 
+     *
      * @param csmConsuma 备件档案
      * @return 备件档案集合
      */
@@ -29,7 +30,7 @@ public interface ICsmConsumaService
 
     /**
      * 新增备件档案
-     * 
+     *
      * @param csmConsuma 备件档案
      * @return 结果
      */
@@ -37,7 +38,7 @@ public interface ICsmConsumaService
 
     /**
      * 修改备件档案
-     * 
+     *
      * @param csmConsuma 备件档案
      * @return 结果
      */
@@ -45,7 +46,7 @@ public interface ICsmConsumaService
 
     /**
      * 批量删除备件档案
-     * 
+     *
      * @param consumaIds 需要删除的备件档案主键集合
      * @return 结果
      */
@@ -53,9 +54,26 @@ public interface ICsmConsumaService
 
     /**
      * 删除备件档案信息
-     * 
+     *
      * @param consumaId 备件档案主键
      * @return 结果
      */
     public int deleteCsmConsumaByConsumaId(Long consumaId);
+
+    /**
+     * 查询备件档案
+     *
+     * @param consumaCode 备件编号
+     * @return 备件档案
+     */
+    public CsmConsuma selectConsumaByCode(String consumaCode);
+
+
+    /**
+     * 检查备件编号是否重复
+     * @param csmConsuma
+     * @return
+     */
+    public String checkConsumaCodeUnique(CsmConsuma csmConsuma);
+
 }

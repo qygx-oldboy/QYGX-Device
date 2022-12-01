@@ -3,6 +3,7 @@ package com.qygx.system.mapper;
 import java.util.List;
 import com.qygx.system.domain.DvMachineryRun;
 import com.qygx.system.domain.dto.DvRunDto;
+import com.qygx.system.domain.dto.CropRateDto;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -68,10 +69,23 @@ public interface DvMachineryRunMapper
      * @param shiftName 班次名称
      * @return 运行记录
      */
-    public DvMachineryRun selectDvRunByShift(@Param("date")String date, @Param("shiftName")String shiftName, @Param("deviceCode")String deviceCode);
+    public DvMachineryRun checkEmailUnique(@Param("date")String date, @Param("shiftName")String shiftName, @Param("deviceCode")String deviceCode);
 
 
-    /** 查询每天各工序总运行时间*/
-    public List<DvRunDto> selectDailyRunTime();
+    /** 查询每天各工序运行时间*/
+    public List<DvRunDto> selectProcessRunTime(DvMachineryRun dvMachineryRun);
+
+    /** 查询每天各人员运行时间*/
+    public List<CropRateDto> selectPersonRunTime(DvMachineryRun dvMachineryRun);
+
+
+    /** 查询每天各设备运行时间*/
+    public List<CropRateDto> selectDeviceRunTime(DvMachineryRun dvMachineryRun);
+
+    /** 查询人员列表姓名*/
+    public List<String> selectPersonName();
+
+    /** 查询设备名称列表*/
+    public List<String> selectDeviceName();
 
 }

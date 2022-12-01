@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qygx.mes.csm.mapper.CsmRepairRecordMapper">
-    
+
     <resultMap type="CsmRepairRecord" id="CsmRepairRecordResult">
         <result property="recordId"    column="record_id"    />
         <result property="consumaCode"    column="consuma_code"    />
@@ -11,43 +11,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="specs"    column="specs"    />
         <result property="nickName"    column="nick_name"    />
         <result property="repairTime"    column="repair_time"    />
-        <result property="useTime"    column="use_time"    />
+        <result property="expandTime"    column="expand_time"    />
         <result property="batchNo"    column="batch_no"    />
         <result property="remark"    column="remark"    />
-        <result property="attr1"    column="attr1"    />
+        <result property="consumaUseId"    column="consuma_use_id"    />
         <result property="attr2"    column="attr2"    />
         <result property="attr3"    column="attr3"    />
         <result property="attr4"    column="attr4"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+
     </resultMap>
 
     <sql id="selectCsmRepairRecordVo">
-        select record_id, consuma_code, consuma_name, specs, nick_name, repair_time, use_time, batch_no, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from csm_repair_record
+        select record_id, consuma_code, consuma_name, specs, nick_name, repair_time, expand_time, batch_no, remark, consumaUseId, attr2, attr3, attr4
+        from csm_repair_record
     </sql>
 
     <select id="selectCsmRepairRecordList" parameterType="CsmRepairRecord" resultMap="CsmRepairRecordResult">
         <include refid="selectCsmRepairRecordVo"/>
-        <where>  
+        <where>
             <if test="consumaCode != null  and consumaCode != ''"> and consuma_code = #{consumaCode}</if>
             <if test="consumaName != null  and consumaName != ''"> and consuma_name like concat('%', #{consumaName}, '%')</if>
             <if test="repairTime != null "> and repair_time = #{repairTime}</if>
-            <if test="useTime != null "> and use_time = #{useTime}</if>
             <if test="batchNo != null  and batchNo != ''"> and batch_no = #{batchNo}</if>
-            <if test="attr1 != null  and attr1 != ''"> and attr1 = #{attr1}</if>
+            <if test="consumaUseId != null  and consumaUseId != ''"> and consuma_use_id = #{consumaUseId}</if>
             <if test="attr2 != null  and attr2 != ''"> and attr2 = #{attr2}</if>
             <if test="attr3 != null "> and attr3 = #{attr3}</if>
             <if test="attr4 != null "> and attr4 = #{attr4}</if>
         </where>
     </select>
-    
+
     <select id="selectCsmRepairRecordByRecordId" parameterType="Long" resultMap="CsmRepairRecordResult">
         <include refid="selectCsmRepairRecordVo"/>
         where record_id = #{recordId}
     </select>
-        
+
     <insert id="insertCsmRepairRecord" parameterType="CsmRepairRecord" useGeneratedKeys="true" keyProperty="recordId">
         insert into csm_repair_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -56,17 +53,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specs != null">specs,</if>
             <if test="nickName != null">nick_name,</if>
             <if test="repairTime != null">repair_time,</if>
-            <if test="useTime != null">use_time,</if>
+            <if test="expandTime != null">expand_time,</if>
             <if test="batchNo != null">batch_no,</if>
             <if test="remark != null">remark,</if>
-            <if test="attr1 != null">attr1,</if>
+            <if test="consumaUseId != null">consuma_use_id,</if>
             <if test="attr2 != null">attr2,</if>
             <if test="attr3 != null">attr3,</if>
             <if test="attr4 != null">attr4,</if>
-            <if test="createBy != null">create_by,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateBy != null">update_by,</if>
-            <if test="updateTime != null">update_time,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="consumaCode != null and consumaCode != ''">#{consumaCode},</if>
@@ -74,17 +68,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specs != null">#{specs},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="repairTime != null">#{repairTime},</if>
-            <if test="useTime != null">#{useTime},</if>
+            <if test="expandTime != null">#{expandTime},</if>
             <if test="batchNo != null">#{batchNo},</if>
             <if test="remark != null">#{remark},</if>
-            <if test="attr1 != null">#{attr1},</if>
+            <if test="consumaUseId != null">#{consumaUseId},</if>
             <if test="attr2 != null">#{attr2},</if>
             <if test="attr3 != null">#{attr3},</if>
             <if test="attr4 != null">#{attr4},</if>
-            <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateBy != null">#{updateBy},</if>
-            <if test="updateTime != null">#{updateTime},</if>
+
          </trim>
     </insert>
 
@@ -96,17 +87,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specs != null">specs = #{specs},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="repairTime != null">repair_time = #{repairTime},</if>
-            <if test="useTime != null">use_time = #{useTime},</if>
+            <if test="expandTime != null">expand_time = #{expandTime},</if>
             <if test="batchNo != null">batch_no = #{batchNo},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="consumaUseId != null">consuma_use_id = #{consumaUseId},</if>
             <if test="attr2 != null">attr2 = #{attr2},</if>
             <if test="attr3 != null">attr3 = #{attr3},</if>
             <if test="attr4 != null">attr4 = #{attr4},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
+
         </trim>
         where record_id = #{recordId}
     </update>
@@ -116,7 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCsmRepairRecordByRecordIds" parameterType="String">
-        delete from csm_repair_record where record_id in 
+        delete from csm_repair_record where record_id in
         <foreach item="recordId" collection="array" open="(" separator="," close=")">
             #{recordId}
         </foreach>

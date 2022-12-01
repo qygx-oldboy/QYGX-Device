@@ -62,7 +62,31 @@
 
 
 
+    <resultMap type="QrCodeRecord" id="QrCodeRecordResult">
+        <id     property="id"      column="id"      />
+        <result property="qrCode"    column="qr_code"    />
+        <result property="productCode"     column="product_code"     />
+        <result property="productType"   column="product_type"   />
+        <result property="materialType"    column="material_type"    />
+        <result property="materialQuality"      column="material_quality"      />
+        <result property="materialSpec"    column="material_specification"    />
+        <result property="quantity"      column="quantity"      />
+        <result property="quantitySum"    column="quantity_sum"    />
+        <result property="quantity3"    column="quantity3"    />
+        <result property="quantity4"    column="quantity4"    />
+        <result property="processName"    column="process_name"    />
+        <result property="processResult"    column="process_result"    />
+        <result property="processStatus"    column="process_status"    />
+        <result property="currentQuantity"    column="current_quantity"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
 
+    <resultMap type="Operators" id="OperatorsResult">
+        <id     property="id"      column="id"      />
+        <result property="operatorId"    column="operator_id"    />
+        <result property="name"     column="name"     />
+        <result property="duty"   column="duty"   />
+    </resultMap>
 
 
 
@@ -79,6 +103,12 @@
         <where>
             <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
             <if test="materialQuality != null  and materialQuality != ''"> and material_quality = #{materialQuality}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(begin_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(begin_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
         </where>
         order by begin_time asc
     </select>
@@ -125,6 +155,11 @@
     <select id="selectInspectById" parameterType="Long" resultMap="ProInspectResult">
         <include refid="selectInspectVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectInspectByCode" parameterType="String" resultMap="ProInspectResult">
+        <include refid="selectInspectVo"/>
+        where qr_code = #{code}
     </select>
 
     <insert id="insertInspect" parameterType="ProInspect" useGeneratedKeys="true" keyProperty="id">
@@ -257,40 +292,41 @@
     <select id="selectDailyInspect" parameterType="InspectDto" resultMap="InspectDtoResult">
         select t1.id,t1.name,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
                convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
-               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
-               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
-               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
-               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
-               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
-               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
-               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
-               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
-               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
-               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
-        from  (select *,CONVERT(begin_time,date) as name from  inspect) t1
+               convert(sum(t1.ng1)/sum(t1.inspected_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.inspected_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.inspected_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.inspected_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.inspected_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.inspected_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.inspected_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.inspected_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.inspected_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.inspected_num),decimal(15,2)) ng10
+        from  (select *,CONVERT(begin_time,date) as name from  inspect order by name) t1
         <where>
             <if test="name != null and name != ''">
                 AND name = #{name}
             </if>
         </where>
         group by t1.name
+        order by t1.name desc
     </select>
 
 
     <select id="selectDailyDetail" parameterType="InspectDto" resultMap="InspectDtoResult">
         select id,sub_type,type,date,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
-            CONCAT_WS(".",product_type,material_specification) name,
+            CONCAT_WS(".",product_type,material_quality) name,
             convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
-            convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
-            convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
-            convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
-            convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
-            convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
-            convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
-            convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
-            convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
-            convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
-            convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+            convert(sum(t1.ng1)/sum(t1.inspected_num),decimal(15,2)) ng1,
+            convert(sum(t1.ng2)/sum(t1.inspected_num),decimal(15,2)) ng2,
+            convert(sum(t1.ng3)/sum(t1.inspected_num),decimal(15,2)) ng3,
+            convert(sum(t1.ng4)/sum(t1.inspected_num),decimal(15,2)) ng4,
+            convert(sum(t1.ng5)/sum(t1.inspected_num),decimal(15,2)) ng5,
+            convert(sum(t1.ng6)/sum(t1.inspected_num),decimal(15,2)) ng6,
+            convert(sum(t1.ng7)/sum(t1.inspected_num),decimal(15,2)) ng7,
+            convert(sum(t1.ng8)/sum(t1.inspected_num),decimal(15,2)) ng8,
+            convert(sum(t1.ng9)/sum(t1.inspected_num),decimal(15,2)) ng9,
+            convert(sum(t1.ng10)/sum(t1.inspected_num),decimal(15,2)) ng10
         from (
             SELECT *,
             CASE
@@ -306,22 +342,22 @@
         where t1.date = #{date}
           and type = #{type}
           and t1.sub_type = #{subType}
-        group by product_type,material_specification
+        group by product_type,material_quality
     </select>
 
     <select id="selectDailyFullOrSpot" parameterType="InspectDto" resultMap="InspectDtoResult">
         select t1.id,t1.type as name,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
                convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
-               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
-               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
-               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
-               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
-               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
-               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
-               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
-               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
-               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
-               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+               convert(sum(t1.ng1)/sum(t1.inspected_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.inspected_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.inspected_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.inspected_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.inspected_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.inspected_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.inspected_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.inspected_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.inspected_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.inspected_num),decimal(15,2)) ng10
         from  (select *,if(ok_num=0,"抽检批退","全检挑选") as type,CONVERT(begin_time,date) as date from inspect) t1
         where t1.date = #{name}
         group by t1.type
@@ -331,16 +367,16 @@
     <select id="selectDailyByType" parameterType="InspectDto" resultMap="InspectDtoResult">
         select t1.id,t1.sub_type as name,t1.type,t1.date,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
                convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
-               convert(sum(t1.ng1)/sum(t1.ng_num),decimal(15,2)) ng1,
-               convert(sum(t1.ng2)/sum(t1.ng_num),decimal(15,2)) ng2,
-               convert(sum(t1.ng3)/sum(t1.ng_num),decimal(15,2)) ng3,
-               convert(sum(t1.ng4)/sum(t1.ng_num),decimal(15,2)) ng4,
-               convert(sum(t1.ng5)/sum(t1.ng_num),decimal(15,2)) ng5,
-               convert(sum(t1.ng6)/sum(t1.ng_num),decimal(15,2)) ng6,
-               convert(sum(t1.ng7)/sum(t1.ng_num),decimal(15,2)) ng7,
-               convert(sum(t1.ng8)/sum(t1.ng_num),decimal(15,2)) ng8,
-               convert(sum(t1.ng9)/sum(t1.ng_num),decimal(15,2)) ng9,
-               convert(sum(t1.ng10)/sum(t1.ng_num),decimal(15,2)) ng10
+               convert(sum(t1.ng1)/sum(t1.inspected_num),decimal(15,2)) ng1,
+               convert(sum(t1.ng2)/sum(t1.inspected_num),decimal(15,2)) ng2,
+               convert(sum(t1.ng3)/sum(t1.inspected_num),decimal(15,2)) ng3,
+               convert(sum(t1.ng4)/sum(t1.inspected_num),decimal(15,2)) ng4,
+               convert(sum(t1.ng5)/sum(t1.inspected_num),decimal(15,2)) ng5,
+               convert(sum(t1.ng6)/sum(t1.inspected_num),decimal(15,2)) ng6,
+               convert(sum(t1.ng7)/sum(t1.inspected_num),decimal(15,2)) ng7,
+               convert(sum(t1.ng8)/sum(t1.inspected_num),decimal(15,2)) ng8,
+               convert(sum(t1.ng9)/sum(t1.inspected_num),decimal(15,2)) ng9,
+               convert(sum(t1.ng10)/sum(t1.inspected_num),decimal(15,2)) ng10
         from (
                  SELECT *,
                         CASE
@@ -358,5 +394,62 @@
     </select>
 
 
+    <select id="getQrCodeRecord" parameterType="String" resultMap="QrCodeRecordResult">
+        select id,qr_code,product_code,product_type,material_quality,material_specification,quantity,
+               quantity_sum,quantity3,quantity4,process_name,process_result,process_status,current_quantity,remark
+        from qrcode_records where  qr_code = #{qrCode}
+    </select>
+
+
+    <select id="selectDailyPerson" parameterType="InspectDto" resultMap="InspectDtoResult">
+        select id,sub_type,type,date,sum(t1.inspected_num) inspected_num,sum(t1.ok_num) ok_num,
+            product,inspector name,
+            convert(sum(t1.ok_num)/sum(t1.inspected_num),decimal(15,2)) ok_percent,
+            convert(sum(t1.ng1)/sum(t1.inspected_num),decimal(15,2)) ng1,
+            convert(sum(t1.ng2)/sum(t1.inspected_num),decimal(15,2)) ng2,
+            convert(sum(t1.ng3)/sum(t1.inspected_num),decimal(15,2)) ng3,
+            convert(sum(t1.ng4)/sum(t1.inspected_num),decimal(15,2)) ng4,
+            convert(sum(t1.ng5)/sum(t1.inspected_num),decimal(15,2)) ng5,
+            convert(sum(t1.ng6)/sum(t1.inspected_num),decimal(15,2)) ng6,
+            convert(sum(t1.ng7)/sum(t1.inspected_num),decimal(15,2)) ng7,
+            convert(sum(t1.ng8)/sum(t1.inspected_num),decimal(15,2)) ng8,
+            convert(sum(t1.ng9)/sum(t1.inspected_num),decimal(15,2)) ng9,
+            convert(sum(t1.ng10)/sum(t1.inspected_num),decimal(15,2)) ng10
+        from (
+            SELECT *,CONCAT_WS(".",product_type,material_quality) product,
+            CASE
+            WHEN locate('FG', qr_code) > 0 THEN '返工产品'
+            WHEN locate('FX', qr_code) > 0 THEN '返修产品'
+            ELSE '一次产品'
+            END
+            as sub_type,
+            if(ok_num=0,"抽检批退","全检挑选") as type,
+            CONVERT(begin_time,date) as date
+            from inspect
+            ) t1
+        where t1.date = #{date}
+          and type = #{type}
+          and t1.sub_type = #{subType}
+          and t1.product = #{product}
+        group by product_type,material_quality,inspector
+    </select>
+
+    <select id="selectOperators" parameterType="Operators" resultMap="OperatorsResult">
+        select * from operators
+        <where>
+            <if test="duty != null and duty != ''">
+                AND duty = #{duty}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateQrCodeRecord" parameterType="QrCodeRecord">
+        update qrcode_records
+        <set>
+            <if test="processStatus != null and processStatus != ''">process_status = #{processStatus},</if>
+            update_time = sysdate()
+        </set>
+        where qr_code = #{qrCode}
+    </update>
 
 </mapper>

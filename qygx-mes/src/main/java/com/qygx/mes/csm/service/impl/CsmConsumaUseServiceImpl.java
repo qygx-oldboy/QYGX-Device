@@ -55,7 +55,7 @@ public class CsmConsumaUseServiceImpl implements ICsmConsumaUseService
     @Override
     public int insertCsmConsumaUse(CsmConsumaUse csmConsumaUse)
     {
-        csmConsumaUse.setCreateTime(DateUtils.getNowDate());
+//        csmConsumaUse.setCreateTime(DateUtils.getNowDate());
         return csmConsumaUseMapper.insertCsmConsumaUse(csmConsumaUse);
     }
 
@@ -121,5 +121,10 @@ public class CsmConsumaUseServiceImpl implements ICsmConsumaUseService
      */
     public int deleteUseByConsumaIds(Long[] consumaIds){
         return csmConsumaUseMapper.deleteUseByConsumaIds(consumaIds);
+    }
+
+    @Override
+    public CsmConsumaUse selectConsumaUseByBatchNo(String batchNo) {
+        return csmConsumaUseMapper.selectConsumaUseByBatchNo(batchNo);
     }
 }

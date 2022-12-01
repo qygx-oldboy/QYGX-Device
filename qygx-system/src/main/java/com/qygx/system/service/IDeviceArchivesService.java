@@ -6,15 +6,15 @@ import com.qygx.system.domain.ProInspect;
 
 /**
  * archivesService接口
- * 
+ *
  * @author qygx
  * @date 2022-08-12
  */
-public interface IDeviceArchivesService 
+public interface IDeviceArchivesService
 {
     /**
      * 查询archives
-     * 
+     *
      * @param deviceId archives主键
      * @return archives
      */
@@ -22,7 +22,7 @@ public interface IDeviceArchivesService
 
     /**
      * 查询archives列表
-     * 
+     *
      * @param deviceArchives archives
      * @return archives集合
      */
@@ -30,7 +30,7 @@ public interface IDeviceArchivesService
 
     /**
      * 新增archives
-     * 
+     *
      * @param deviceArchives archives
      * @return 结果
      */
@@ -38,7 +38,7 @@ public interface IDeviceArchivesService
 
     /**
      * 修改archives
-     * 
+     *
      * @param deviceArchives archives
      * @return 结果
      */
@@ -46,7 +46,7 @@ public interface IDeviceArchivesService
 
     /**
      * 批量删除archives
-     * 
+     *
      * @param deviceIds 需要删除的archives主键集合
      * @return 结果
      */
@@ -54,7 +54,7 @@ public interface IDeviceArchivesService
 
     /**
      * 删除archives信息
-     * 
+     *
      * @param deviceId archives主键
      * @return 结果
      */
@@ -76,4 +76,12 @@ public interface IDeviceArchivesService
      * @return
      */
     public String importDevice(List<DeviceArchives> deviceList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 查询archives
+     *
+     * @param deviceCode 设备编号
+     * @return archives
+     */
+    public DeviceArchives selectDeviceByDeviceCode(String deviceCode);
 }

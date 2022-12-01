@@ -84,6 +84,9 @@ public class CsmConsumaController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CsmConsuma csmConsuma)
     {
+        if(UserConstants.NOT_UNIQUE.equals(csmConsumaService.checkConsumaCodeUnique(csmConsuma))){
+            return AjaxResult.error("备件编号已存在！");
+        }
         return toAjax(csmConsumaService.insertCsmConsuma(csmConsuma));
     }
 
@@ -106,13 +109,10 @@ public class CsmConsumaController extends BaseController
 	@DeleteMapping("/{consumaIds}")
     public AjaxResult remove(@PathVariable Long[] consumaIds)
     {
-        //todo 如果该备件有 在用备件，不允许删除
-
         for (Long consumaId:
             consumaIds) {
             CsmConsumaUse csmConsumaUse = new CsmConsumaUse();
             csmConsumaUse.setConsumaId(consumaId);
-            csmConsumaUse.setStatus("FINISHED");
             List<CsmConsumaUse> csmConsumaUses = csmUseService.selectCsmConsumaUseList(csmConsumaUse);
             if (csmConsumaUses.size() > 0)
             {

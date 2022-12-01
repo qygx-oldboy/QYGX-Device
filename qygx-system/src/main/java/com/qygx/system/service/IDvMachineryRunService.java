@@ -3,6 +3,7 @@ package com.qygx.system.service;
 import java.util.List;
 import com.qygx.system.domain.DvMachineryRun;
 import com.qygx.system.domain.dto.DvRunDto;
+import com.qygx.system.domain.dto.CropRateDto;
 
 /**
  * 运行记录Service接口
@@ -72,6 +73,20 @@ public interface IDvMachineryRunService
     public DvMachineryRun selectDvRunByShift(String date,String shiftName,String deviceCode);
 
 
-    /** 查询每天各工序总运行时间*/
-    public List<DvRunDto> selectDailyRunTime();
+    /** 查询各工序运行时间*/
+    public List<DvRunDto> selectProcessRunTime(DvMachineryRun dvMachineryRun);
+
+
+    /** 查询各人员运行时间*/
+    public List<CropRateDto> selectPersonRunTime(DvMachineryRun dvMachineryRun);
+
+    /** 查询各设备运行时间*/
+    public List<CropRateDto> selectDeviceRunTime(DvMachineryRun dvMachineryRun);
+
+
+    /** 查询人员列表姓名*/
+    public List<String> selectPersonName();
+
+    /** 查询设备名称列表*/
+    public List<String> selectDeviceName();
 }

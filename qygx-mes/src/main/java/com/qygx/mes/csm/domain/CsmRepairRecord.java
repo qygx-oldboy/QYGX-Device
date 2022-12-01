@@ -20,6 +20,12 @@ public class CsmRepairRecord extends BaseEntity
     /** 记录ID */
     private Long recordId;
 
+
+    /** 备件批次 */
+    @Excel(name = "备件批次")
+    private String batchNo;
+
+
     /** 备件编号 */
     @Excel(name = "备件编号")
     private String consumaCode;
@@ -33,7 +39,7 @@ public class CsmRepairRecord extends BaseEntity
     private String specs;
 
     /** 昵称 */
-    @Excel(name = "昵称")
+    @Excel(name = "操作人")
     private String nickName;
 
     /** 修复时间 */
@@ -41,18 +47,13 @@ public class CsmRepairRecord extends BaseEntity
     @Excel(name = "修复时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date repairTime;
 
-    /** 使用时长 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "使用时长", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    private Date useTime;
+    /** 延长时间 */
+    @Excel(name = "延长时间")
+    private int expandTime;
 
-    /** 备件批次 */
-    @Excel(name = "备件批次")
-    private String batchNo;
-
-    /** 预留字段1 */
-    @Excel(name = "预留字段1")
-    private String attr1;
+    /** 在用id */
+    @Excel(name = "在用id")
+    private Long consumaUseId;
 
     /** 预留字段2 */
     @Excel(name = "预留字段2")
@@ -120,15 +121,15 @@ public class CsmRepairRecord extends BaseEntity
     {
         return repairTime;
     }
-    public void setUseTime(Date useTime)
-    {
-        this.useTime = useTime;
+
+    public int getExpandTime() {
+        return expandTime;
     }
 
-    public Date getUseTime()
-    {
-        return useTime;
+    public void setExpandTime(int expandTime) {
+        this.expandTime = expandTime;
     }
+
     public void setBatchNo(String batchNo)
     {
         this.batchNo = batchNo;
@@ -138,15 +139,15 @@ public class CsmRepairRecord extends BaseEntity
     {
         return batchNo;
     }
-    public void setAttr1(String attr1)
-    {
-        this.attr1 = attr1;
+
+    public Long getConsumaUseId() {
+        return consumaUseId;
     }
 
-    public String getAttr1()
-    {
-        return attr1;
+    public void setConsumaUseId(Long consumaUseId) {
+        this.consumaUseId = consumaUseId;
     }
+
     public void setAttr2(String attr2)
     {
         this.attr2 = attr2;
@@ -177,24 +178,19 @@ public class CsmRepairRecord extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("recordId", getRecordId())
-            .append("consumaCode", getConsumaCode())
-            .append("consumaName", getConsumaName())
-            .append("specs", getSpecs())
-            .append("nickName", getNickName())
-            .append("repairTime", getRepairTime())
-            .append("useTime", getUseTime())
-            .append("batchNo", getBatchNo())
-            .append("remark", getRemark())
-            .append("attr1", getAttr1())
-            .append("attr2", getAttr2())
-            .append("attr3", getAttr3())
-            .append("attr4", getAttr4())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .toString();
+        return "CsmRepairRecord{" +
+                "recordId=" + recordId +
+                ", batchNo='" + batchNo + '\'' +
+                ", consumaCode='" + consumaCode + '\'' +
+                ", consumaName='" + consumaName + '\'' +
+                ", specs='" + specs + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", repairTime=" + repairTime +
+                ", expandTime=" + expandTime +
+                ", consumaUseId=" + consumaUseId +
+                ", attr2='" + attr2 + '\'' +
+                ", attr3=" + attr3 +
+                ", attr4=" + attr4 +
+                '}';
     }
 }

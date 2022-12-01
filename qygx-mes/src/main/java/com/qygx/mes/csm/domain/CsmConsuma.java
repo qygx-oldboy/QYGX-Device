@@ -40,11 +40,7 @@ public class CsmConsuma extends BaseEntity
     /** 预留字段2 */
     private String attr2;
 
-    /** 预留字段3 */
-    private Long replaceCycle;
 
-    /** 预留字段4 */
-    private Long repairCycle;
 
     public void setConsumaId(Long consumaId)
     {
@@ -109,24 +105,7 @@ public class CsmConsuma extends BaseEntity
     {
         return attr2;
     }
-    public void setreplaceCycle(Long replaceCycle)
-    {
-        this.replaceCycle = replaceCycle;
-    }
 
-    public Long getreplaceCycle()
-    {
-        return replaceCycle;
-    }
-    public void setrepairCycle(Long repairCycle)
-    {
-        this.repairCycle = repairCycle;
-    }
-
-    public Long getrepairCycle()
-    {
-        return repairCycle;
-    }
 
     @Override
     public String toString() {
@@ -139,8 +118,6 @@ public class CsmConsuma extends BaseEntity
             .append("remark", getRemark())
             .append("attr1", getAttr1())
             .append("attr2", getAttr2())
-            .append("replaceCycle", getreplaceCycle())
-            .append("repairCycle", getrepairCycle())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

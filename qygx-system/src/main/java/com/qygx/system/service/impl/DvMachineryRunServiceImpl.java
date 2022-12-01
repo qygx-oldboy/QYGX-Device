@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.qygx.common.utils.DateUtils;
 import com.qygx.system.domain.dto.DvRunDto;
+import com.qygx.system.domain.dto.CropRateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qygx.system.mapper.DvMachineryRunMapper;
@@ -106,13 +107,34 @@ public class DvMachineryRunServiceImpl implements IDvMachineryRunService
      */
     @Override
     public DvMachineryRun selectDvRunByShift(String date, String shiftName,String deviceCode) {
-        return dvMachineryRunMapper.selectDvRunByShift(date,shiftName,deviceCode);
+        return dvMachineryRunMapper.checkEmailUnique(date,shiftName,deviceCode);
     }
 
     @Override
-    public List<DvRunDto> selectDailyRunTime() {
+    public List<DvRunDto> selectProcessRunTime(DvMachineryRun dvMachineryRun) {
 
-        List<DvRunDto> runList = dvMachineryRunMapper.selectDailyRunTime();
+        List<DvRunDto> runList = dvMachineryRunMapper.selectProcessRunTime(dvMachineryRun);
         return runList;
+    }
+
+    @Override
+    public List<CropRateDto> selectPersonRunTime(DvMachineryRun dvMachineryRun) {
+        List<CropRateDto> runDtoList = dvMachineryRunMapper.selectPersonRunTime(dvMachineryRun);
+        return runDtoList;
+    }
+
+    @Override
+    public List<CropRateDto> selectDeviceRunTime(DvMachineryRun dvMachineryRun) {
+        return dvMachineryRunMapper.selectDeviceRunTime(dvMachineryRun);
+    }
+
+    @Override
+    public List<String> selectPersonName() {
+        return dvMachineryRunMapper.selectPersonName();
+    }
+
+    @Override
+    public List<String> selectDeviceName() {
+        return dvMachineryRunMapper.selectDeviceName();
     }
 }

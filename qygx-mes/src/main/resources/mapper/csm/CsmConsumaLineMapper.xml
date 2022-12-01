@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qygx.mes.csm.mapper.CsmConsumaLineMapper">
+
+    <resultMap type="CsmConsumaLine" id="CsmConsumaLineResult">
+        <result property="lineId"    column="line_id"    />
+        <result property="consumaId"    column="consuma_id"    />
+        <result property="processName"    column="process_name"    />
+        <result property="replaceCycle"    column="replace_cycle"    />
+    </resultMap>
+
+    <sql id="selectCsmConsumaLineVo">
+        select line_id,consuma_id, process_name, replace_cycle from csm_consuma_line
+    </sql>
+
+    <select id="selectCsmConsumaLineList" parameterType="CsmConsumaLine" resultMap="CsmConsumaLineResult">
+        <include refid="selectCsmConsumaLineVo"/>
+        <where>
+            <if test="processName != null  and processName != ''"> and process_name like concat('%', #{processName}, '%')</if>
+            <if test="replaceCycle != null "> and replace_cycle = #{replaceCycle}</if>
+            <if test="consumaId != null "> and consuma_id = #{consumaId}</if>
+        </where>
+    </select>
+
+    <select id="selectCsmConsumaLineByLineId" parameterType="Long" resultMap="CsmConsumaLineResult">
+        <include refid="selectCsmConsumaLineVo"/>
+        where line_id = #{lineId}
+    </select>
+
+    <insert id="insertCsmConsumaLine" parameterType="CsmConsumaLine" useGeneratedKeys="true" keyProperty="lineId">
+        insert into csm_consuma_line
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processName != null">process_name,</if>
+            <if test="replaceCycle != null">replace_cycle,</if>
+            <if test="consumaId != null">consuma_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processName != null">#{processName},</if>
+            <if test="replaceCycle != null">#{replaceCycle},</if>
+            <if test="consumaId != null">#{consumaId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsmConsumaLine" parameterType="CsmConsumaLine">
+        update csm_consuma_line
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="replaceCycle != null">replace_cycle = #{replaceCycle},</if>
+            <if test="consumaId != null">consuma_id = #{consumaId},</if>
+        </trim>
+        where line_id = #{lineId}
+    </update>
+
+    <delete id="deleteCsmConsumaLineByLineId" parameterType="Long">
+        delete from csm_consuma_line where line_id = #{lineId}
+    </delete>
+
+    <delete id="deleteCsmConsumaLineByLineIds" parameterType="String">
+        delete from csm_consuma_line where line_id in
+        <foreach item="lineId" collection="array" open="(" separator="," close=")">
+            #{lineId}
+        </foreach>
+    </delete>
+
+    <select id="selectLineByConsumaId" parameterType="Long" resultMap="CsmConsumaLineResult">
+        <include refid="selectCsmConsumaLineVo"/>
+        where consuma_id = #{consumaId}
+    </select>
+</mapper>

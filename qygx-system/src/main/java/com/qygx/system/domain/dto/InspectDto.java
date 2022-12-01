@@ -64,6 +64,9 @@ public class InspectDto implements Serializable {
     /** 子类型*/
     private String subType;
 
+    /** 产品*/
+    private String product;
+
 
     public Long getId() {
         return id;
@@ -215,5 +218,13 @@ public class InspectDto implements Serializable {
 
     public void setSubType(String subType) {
         this.subType = subType;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
     }
 }
